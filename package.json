@@ -1,0 +1,102 @@
+{
+  "name": "@pixagram/paph-js",
+  "version": "4.1.0",
+  "description": "PAPH 4.1 — integer-only perceptual hash and calibrated comparator for pixel-art plagiarism detection. Two engines, byte-identical wires, verdicts you can recompute.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.cjs",
+  "module": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.cjs"
+    },
+    "./js": {
+      "types": "./index.d.ts",
+      "import": "./src/paph3.js",
+      "require": "./src/paph3.cjs"
+    },
+    "./wire": {
+      "types": "./index.d.ts",
+      "import": "./src/paph3.js",
+      "require": "./src/paph3.cjs"
+    },
+    "./wasm": {
+      "types": "./index.d.ts",
+      "import": "./wasm/paph3-wasm.js"
+    },
+    "./paph3.wasm": "./wasm/paph3.wasm",
+    "./demo": "./demo/paph3-playground.html",
+    "./demo/v41": "./demo/paph41-playground.html",
+    "./demo/bench": "./demo/paph4x.html",
+    "./calibration": "./demo/cal-core.cjs",
+    "./v41": {
+      "types": "./index.d.ts",
+      "import": "./src/paph4.js",
+      "require": "./src/paph4.cjs"
+    },
+    "./comparator": {
+      "types": "./index.d.ts",
+      "import": "./src/paph4.js",
+      "require": "./src/paph4.cjs"
+    },
+    "./v4": {
+      "types": "./index.d.ts",
+      "import": "./src/paph4.js",
+      "require": "./src/paph4.cjs"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.cjs",
+    "index.d.ts",
+    "src/",
+    "wasm/",
+    "rust/",
+    "test/",
+    "tools/",
+    "demo/",
+    "docs/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test/test.cjs",
+    "parity": "node test/parity.mjs",
+    "tables": "node tools/tables.cjs",
+    "build:wasm": "bash rust/build.sh",
+    "build:bench": "node tools/build-paph4x.mjs",
+    "test:v4": "node test/v4.cjs",
+    "parity4": "node test/parity4.mjs",
+    "test:playground": "node test/playground.mjs",
+    "test:bench": "node test/bench4x.mjs",
+    "verify": "node test/test.cjs && node test/v4.cjs && node test/playground.mjs && node test/bench4x.mjs"
+  },
+  "keywords": [
+    "perceptual-hash",
+    "pixel-art",
+    "plagiarism",
+    "copy-detection",
+    "wasm",
+    "deterministic",
+    "nft",
+    "paph",
+    "image-similarity"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pixagram-blockchain/paph-js.git"
+  },
+  "author": "Pixagram SA",
+  "homepage": "https://github.com/pixagram-blockchain/paph-js#readme",
+  "bugs": {
+    "url": "https://github.com/pixagram-blockchain/paph-js/issues"
+  }
+}
