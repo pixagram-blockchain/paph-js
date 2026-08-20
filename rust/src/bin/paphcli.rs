@@ -2,8 +2,15 @@
 //!   hash:    [b"H"][u32 w][u32 h][RGBA]  ->  [u32 t1len][u32 t2len][t1][t2]
 //!   compare: [b"C"][u32 a1][u32 a2][u32 b1][u32 b2][wires] -> [u32 len][json]
 //!   golden:  [b"G"] -> the SPEC-004 §20 golden vectors as JSON (see golden.rs)
+//!   bench:   [b"B"][u32 w][u32 h][u32 iters][RGBA] -> stage timings as JSON.
+//!            Split by stage on purpose: the interesting question is never
+//!            "how long did it take" but "whose code was it", and the answer
+//!            here is that hashing is the frozen v3 wire and not the 4.2
+//!            keypoint budget.
 //!   v4:      [b"V"][u32 a1][u32 a2][u32 b1][u32 b2][wires] -> compare_v4 JSON
 //!            (Config::default + CAL-001-PROVISIONAL; the parity4 surface)
+//!   v41:     [b"W"] same framing -> compare_v41 JSON under CAL-003-PROPOSED
+//!   v42:     [b"X"] same framing -> compare_v42 JSON under CAL-004-PROPOSED
 use paph3::compare::compare;
 use paph3::config::Config;
 use paph3::keypoints::{pattern, RotCache};
@@ -61,6 +68,140 @@ fn main() {
                 &cfg, &prof, None, None,
             );
             o.write_all(paph3::v41::to_json_v41(&r).as_bytes()).unwrap();
+        }
+        b'X' => {
+            // SPEC-004.2: same framing as 'V'/'W', comparator 42 under cal004.
+            let (a1, a2, b1, b2) = (rd(&buf, 1), rd(&buf, 5), rd(&buf, 9), rd(&buf, 13));
+            let mut p = 17usize;
+            let at1 = &buf[p..p + a1];
+            p += a1;
+            let at2 = &buf[p..p + a2];
+            p += a2;
+            let bt1 = &buf[p..p + b1];
+            p += b1;
+            let bt2 = &buf[p..p + b2];
+            let prof = paph3::calibration::Profile::cal004();
+            let r = paph3::v42::compare_v42(
+                at1, if a2 > 0 { Some(at2) } else { None },
+                bt1, if b2 > 0 { Some(bt2) } else { None },
+                &cfg, &prof, None, None,
+            );
+            o.write_all(paph3::v42::to_json_v42(&r).as_bytes()).unwrap();
+        }
+        b'B' => {
+            // Bench: [b"B"][u32 w][u32 h][u32 iters][RGBA] -> timings, one line each.
+            let (w, h, iters) = (rd(&buf, 1), rd(&buf, 5), rd(&buf, 9));
+            let px = &buf[13..13 + w * h * 4];
+            let rot = RotCache::new(&pattern());
+            let t0 = std::time::Instant::now();
+            let mut fp = hash(px, w, h, &cfg, &rot);
+            for _ in 1..iters {
+                fp = hash(px, w, h, &cfg, &rot);
+            }
+            let hash_ms = t0.elapsed().as_secs_f64() * 1000.0 / iters as f64;
+
+            // per-section split of the tier-1 body — implementation timing only,
+            // every function is the shipped one
+            {
+                use paph3::sections as sec;
+                let norm = paph3::front::normalise(px, w, h, &cfg);
+                let im = &norm.im;
+                let reps = iters.max(3);
+                macro_rules! t {
+                    ($name:expr, $e:expr) => {{
+                        let t = std::time::Instant::now();
+                        for _ in 0..reps { let _ = $e; }
+                        eprintln!("  {:>12} {:8.2} ms", $name, t.elapsed().as_secs_f64() * 1000.0 / reps as f64);
+                    }};
+                }
+                eprintln!("hash sections at {}x{}:", w, h);
+                t!("normalise", paph3::front::normalise(px, w, h, &cfg));
+                let thumb = sec::thumbnail16(im);
+                t!("thumb16", sec::thumbnail16(im));
+                t!("dct", sec::hierarchical_dct(&thumb));
+                t!("brightness", sec::brightness_record(&thumb));
+                t!("palette", sec::identity_palette(im));
+                t!("rag", sec::sparse_rag(im));
+                t!("shapes", sec::shape_signatures(im));
+                t!("runs", sec::run_lengths(im));
+                t!("local", sec::local_fingerprints(im, &cfg));
+                t!("silhouette", sec::silhouette(im));
+                t!("colour", sec::colour_digest(im));
+                t!("keypoints", paph3::keypoints::keypoints(im, &cfg, &rot));
+            }
+
+            // stage split: the same hash with the 4.1 grid selector (cheap) and
+            // at the 4.1 budget, so the selector and the budget are separable
+            let mut c_grid = cfg.clone();
+            c_grid.kp_select = paph3::config::KP_SELECT_LEGACY;
+            let t = std::time::Instant::now();
+            for _ in 0..iters { let _ = hash(px, w, h, &c_grid, &rot); }
+            let grid_ms = t.elapsed().as_secs_f64() * 1000.0 / iters as f64;
+
+            let mut c41 = c_grid.clone();
+            c41.kp_count = 256;
+            let t = std::time::Instant::now();
+            for _ in 0..iters { let _ = hash(px, w, h, &c41, &rot); }
+            let kp41_ms = t.elapsed().as_secs_f64() * 1000.0 / iters as f64;
+
+            // keypoint stage alone, both selectors
+            let norm = paph3::front::normalise(px, w, h, &cfg);
+            let t = std::time::Instant::now();
+            for _ in 0..iters { let _ = paph3::keypoints::keypoints(&norm.im, &cfg, &rot); }
+            let kpq_ms = t.elapsed().as_secs_f64() * 1000.0 / iters as f64;
+            let t = std::time::Instant::now();
+            for _ in 0..iters { let _ = paph3::keypoints::keypoints(&norm.im, &c_grid, &rot); }
+            let kpg_ms = t.elapsed().as_secs_f64() * 1000.0 / iters as f64;
+
+            // three pairs, because they exercise completely different amounts of
+            // the geometry stage: a mirrored copy runs the full multi-model
+            // extraction and all five null members on large pools, an unrelated
+            // pair breaks out of round 0, and v3-only isolates the frozen
+            // structural half from anything 4.2 owns.
+            let mut px2 = px.to_vec();
+            for (i, bb) in px2.iter_mut().enumerate() {
+                if i % 4 != 3 {
+                    *bb = bb.wrapping_add(((i * 37) % 61) as u8);
+                }
+            }
+            let mut pxm = vec![0u8; px.len()];
+            for y in 0..h {
+                for x in 0..w {
+                    let s0 = (y * w + (w - 1 - x)) * 4;
+                    let d0 = (y * w + x) * 4;
+                    pxm[d0..d0 + 4].copy_from_slice(&px[s0..s0 + 4]);
+                }
+            }
+            let fp2 = hash(&px2, w, h, &cfg, &rot);
+            let fpm = hash(&pxm, w, h, &cfg, &rot);
+            let prof = paph3::calibration::Profile::cal004();
+            let mut acc = 0i64;
+            let mut timed = |x: &paph3::wire::Fingerprint, y: &paph3::wire::Fingerprint| -> f64 {
+                let t = std::time::Instant::now();
+                for _ in 0..iters {
+                    let r = paph3::v42::compare_v42(
+                        &x.t1, Some(&x.t2), &y.t1, Some(&y.t2), &cfg, &prof, None, None,
+                    );
+                    acc += r.base.total_inliers;
+                }
+                t.elapsed().as_secs_f64() * 1000.0 / iters as f64
+            };
+            let cmp_ms = timed(&fp, &fp2);
+            let mir_ms = timed(&fp, &fpm);
+            let self_ms = timed(&fp, &fp);
+            let tv = std::time::Instant::now();
+            for _ in 0..iters {
+                let v = compare(&fp.t1, Some(&fp.t2), &fpm.t1, Some(&fpm.t2), &cfg).unwrap();
+                acc += v.geo.inliers;
+            }
+            let v3_ms = tv.elapsed().as_secs_f64() * 1000.0 / iters as f64;
+
+            let j = format!(
+                "{{\"w\":{},\"h\":{},\"iters\":{},\"kp\":{},\"hashMs\":{:.2},\"gridSelMs\":{:.2},\"budget256Ms\":{:.2},\"kpStageQualityMs\":{:.2},\"kpStageGridMs\":{:.2},\"cmpUnrelMs\":{:.2},\"cmpMirrorMs\":{:.2},\"cmpSelfMs\":{:.2},\"v3OnlyMs\":{:.2},\"acc\":{}}}",
+                w, h, iters, fp.kp_count, hash_ms, grid_ms, kp41_ms, kpq_ms, kpg_ms,
+                cmp_ms, mir_ms, self_ms, v3_ms, acc
+            );
+            o.write_all(j.as_bytes()).unwrap();
         }
         b'G' => {
             o.write_all(paph3::golden::golden_json().as_bytes()).unwrap();

@@ -14,8 +14,24 @@ pub const COMPARATOR_VERSION: u16 = 4;
 /// SPEC-004.1: container 2 carries nine per-channel tables; comparator 41.
 pub const CONTAINER_V2: u16 = 2;
 pub const COMPARATOR_V41: u16 = 41;
+/// SPEC-004.2: container 3 carries the nine per-channel tables of container 2
+/// PLUS the eight matcher/geometry scalars comparator 42 introduces.
+pub const CONTAINER_V3: u16 = 3;
+pub const COMPARATOR_V42: u16 = 42;
 const MAGIC: &[u8; 4] = b"PCAL";
-const FIXED: usize = 144; // bytes before the LUT block, Appendix B
+const FIXED: usize = 144; // bytes before the v42 block, Appendix B
+/// Container 3 appends eight i32 after the container-1/2 fixed block, so a
+/// container-1 or container-2 artefact keeps the byte layout it shipped with
+/// and its identity hash does not move.
+const FIXED_V3: usize = FIXED + 8 * 4;
+
+const fn fixed_len(container: u16) -> usize {
+    if container == CONTAINER_V3 {
+        FIXED_V3
+    } else {
+        FIXED
+    }
+}
 const MAX_BREAKPOINTS: usize = 33;
 
 /// Monotone breakpoint table (§8.3): x strictly increasing 0 → SCALE,
@@ -93,6 +109,29 @@ pub struct Profile {
     pub rep_extreme_at: i32,
     pub coverage_floor: i32,
     pub min_secondaries: i32,
+
+    // ---- SPEC-004.2, container 3 only (defaults below are the 4.1 behaviour,
+    // so a container-1/2 profile widened to container 3 does not move) ----
+    /// §4 the Lowe ratio, as a fraction: accept when `d1 * den < num * d2`
+    pub lowe_num: i32,
+    pub lowe_den: i32,
+    /// §4 the ABSOLUTE margin beside the ratio: `d2 - d1 >= lowe_margin`,
+    /// two-sided like the ratio itself.  0 disables it.
+    pub lowe_margin: i32,
+    /// §4 the hard descriptor-distance ceiling
+    pub ham_max: i32,
+    /// §6 correspondences that must share the winning Hough cell before a fit
+    /// is attempted at all
+    pub min_peak_members: i32,
+    /// §7 soft exclusion around a consumed keypoint, as a percentage of the
+    /// descriptor patch footprint at that keypoint's own pyramid level.  0
+    /// disables it and restores the 4.1 consumption rule exactly.
+    pub excl_pct: i32,
+    /// §3 the keypoint-selection rule this calibration was derived on
+    pub kp_select: i32,
+    /// §5 soft scale binning in the Hough vote (0 = the 4.1 hard bucket)
+    pub scale_soft: i32,
+
     /// identical, struct strong/moderate/weak, struct solo,
     /// geo strong, geo weak, geo solo inliers, topology dominant at
     pub thresholds: [i32; 9],
@@ -110,6 +149,11 @@ pub struct Profile {
     pub lut_runs: Lut,
     pub lut_palette: Lut,
     pub lut_silhouette: Lut,
+    /// SPEC-004.2 §8 — the GEOMETRIC diversity multiplier.  Deliberately NOT
+    /// `lut_diversity`: that one modulates the local channel by its own
+    /// repetition reading (Appendix C) and moving it would move the structural
+    /// axis.  This table sees the diversity of the geometric evidence only.
+    pub lut_geo_diversity: Lut,
 }
 
 fn w32(b: &mut Vec<u8>, v: i32) {
@@ -152,6 +196,15 @@ impl Profile {
             w32(&mut b, v);
         }
         debug_assert_eq!(b.len(), FIXED);
+        if self.container == CONTAINER_V3 {
+            for v in [
+                self.lowe_num, self.lowe_den, self.lowe_margin, self.ham_max,
+                self.min_peak_members, self.excl_pct, self.kp_select, self.scale_soft,
+            ] {
+                w32(&mut b, v);
+            }
+            debug_assert_eq!(b.len(), FIXED_V3);
+        }
         for lut in self.lut_table() {
             b.extend_from_slice(&(lut.0.len() as u16).to_le_bytes());
             for &(x, y) in &lut.0 {
@@ -165,9 +218,12 @@ impl Profile {
     /// The container's table list, canonical order (SPEC-004.1 §A3).
     fn lut_table(&self) -> Vec<&Lut> {
         let mut v = vec![&self.lut_local, &self.lut_geometry, &self.lut_diversity];
-        if self.container == CONTAINER_V2 {
+        if self.container == CONTAINER_V2 || self.container == CONTAINER_V3 {
             v.extend([&self.lut_dct, &self.lut_shape, &self.lut_topology,
                       &self.lut_runs, &self.lut_palette, &self.lut_silhouette]);
+        }
+        if self.container == CONTAINER_V3 {
+            v.push(&self.lut_geo_diversity);
         }
         v
     }
@@ -198,11 +254,16 @@ impl Profile {
         let nlut = match (container, comparator) {
             (CONTAINER_VERSION, COMPARATOR_VERSION) => 3,
             (CONTAINER_V2, COMPARATOR_V41) => 9,
-            (CONTAINER_VERSION, _) | (CONTAINER_V2, _) => {
+            (CONTAINER_V3, COMPARATOR_V42) => 10,
+            (CONTAINER_VERSION, _) | (CONTAINER_V2, _) | (CONTAINER_V3, _) => {
                 return Err("profile targets another comparator")
             }
             _ => return Err("unsupported container version"),
         };
+        let fixed = fixed_len(container);
+        if b.len() < fixed + 3 * 2 {
+            return Err("profile too short");
+        }
         let mut name = [0u8; 16];
         name.copy_from_slice(&b[8..24]);
         let mut p = Profile {
@@ -223,6 +284,14 @@ impl Profile {
             rep_extreme_at: r32(b, 56),
             coverage_floor: r32(b, 60),
             min_secondaries: r32(b, 64),
+            lowe_num: 82,
+            lowe_den: 100,
+            lowe_margin: 0,
+            ham_max: 88,
+            min_peak_members: 3,
+            excl_pct: 0,
+            kp_select: 0,
+            scale_soft: 0,
             thresholds: [0; 9],
             weights: [0; 7],
             limits: [0; 3],
@@ -235,6 +304,7 @@ impl Profile {
             lut_runs: Lut::identity(),
             lut_palette: Lut::identity(),
             lut_silhouette: Lut::identity(),
+            lut_geo_diversity: Lut::neutral(),
         };
         for i in 0..9 {
             p.thresholds[i] = r32(b, 68 + i * 4);
@@ -245,7 +315,17 @@ impl Profile {
         for i in 0..3 {
             p.limits[i] = r32(b, 132 + i * 4);
         }
-        let mut o = FIXED;
+        if container == CONTAINER_V3 {
+            p.lowe_num = r32(b, FIXED);
+            p.lowe_den = r32(b, FIXED + 4);
+            p.lowe_margin = r32(b, FIXED + 8);
+            p.ham_max = r32(b, FIXED + 12);
+            p.min_peak_members = r32(b, FIXED + 16);
+            p.excl_pct = r32(b, FIXED + 20);
+            p.kp_select = r32(b, FIXED + 24);
+            p.scale_soft = r32(b, FIXED + 28);
+        }
+        let mut o = fixed;
         let mut luts = Vec::with_capacity(nlut);
         for _ in 0..nlut {
             if o + 2 > b.len() {
@@ -269,7 +349,10 @@ impl Profile {
         if o != b.len() {
             return Err("trailing bytes in profile");
         }
-        if nlut == 9 {
+        if nlut == 10 {
+            p.lut_geo_diversity = luts.pop().unwrap();
+        }
+        if nlut >= 9 {
             p.lut_silhouette = luts.pop().unwrap();
             p.lut_palette = luts.pop().unwrap();
             p.lut_runs = luts.pop().unwrap();
@@ -286,8 +369,30 @@ impl Profile {
 
     pub fn validate(&self) -> Result<(), &'static str> {
         match (self.container, self.comparator) {
-            (CONTAINER_VERSION, COMPARATOR_VERSION) | (CONTAINER_V2, COMPARATOR_V41) => {}
-            _ => return Err("container/comparator pair outside 4 or 4.1"),
+            (CONTAINER_VERSION, COMPARATOR_VERSION)
+            | (CONTAINER_V2, COMPARATOR_V41)
+            | (CONTAINER_V3, COMPARATOR_V42) => {}
+            _ => return Err("container/comparator pair outside 4, 4.1 or 4.2"),
+        }
+        if self.container == CONTAINER_V3 {
+            if !(1..=self.lowe_den).contains(&self.lowe_num) || !(1..=1000).contains(&self.lowe_den) {
+                return Err("lowe ratio range");
+            }
+            if !(0..=64).contains(&self.lowe_margin) {
+                return Err("lowe_margin range");
+            }
+            if !(0..=256).contains(&self.ham_max) {
+                return Err("ham_max range");
+            }
+            if !(2..=64).contains(&self.min_peak_members) {
+                return Err("min_peak_members range");
+            }
+            if !(0..=1000).contains(&self.excl_pct) {
+                return Err("excl_pct range");
+            }
+            if !(0..=1).contains(&self.kp_select) || !(0..=1).contains(&self.scale_soft) {
+                return Err("kp_select / scale_soft are flags");
+            }
         }
         if self.evidence_rule != 0 || self.scoring_rule != 1 || self.rag_endpoint != 1 {
             return Err("bound rule outside v4 (Proportion/Gate are retired)");
@@ -316,7 +421,7 @@ impl Profile {
             return Err("min_secondaries range");
         }
         for (i, &t) in self.thresholds.iter().enumerate() {
-            let hi = if i == 7 { 256 } else { SCALE as i32 }; // GEO_SOLO_INLIERS is a count
+            let hi = if i == 7 { 512 } else { SCALE as i32 }; // GEO_SOLO_INLIERS is a count
             if !(0..=hi).contains(&t) {
                 return Err("threshold range");
             }
@@ -335,7 +440,8 @@ impl Profile {
         self.lut_topology.validate()?;
         self.lut_runs.validate()?;
         self.lut_palette.validate()?;
-        self.lut_silhouette.validate()
+        self.lut_silhouette.validate()?;
+        self.lut_geo_diversity.validate()
     }
 
     /// calibration_profile_id = SHA-256 over the artefact bytes (§8.2).
@@ -382,6 +488,8 @@ impl Profile {
             lut_runs: Lut::identity(),
             lut_palette: Lut::identity(),
             lut_silhouette: Lut::identity(),
+            lut_geo_diversity: Lut::neutral(),
+            ..Profile::v42_defaults()
         }
     }
 
@@ -422,6 +530,130 @@ impl Profile {
             lut_runs: Lut(vec![(0, 0), (9100, 900), (9700, 4500), (10000, 10000)]),
             lut_palette: Lut(vec![(0, 0), (3000, 800), (6500, 4000), (10000, 10000)]),
             lut_silhouette: Lut::identity(),
+            lut_geo_diversity: Lut::neutral(),
+            ..Profile::v42_defaults()
+        }
+    }
+
+    /// The container-1/2 reading of the container-3 scalars.  A profile that
+    /// does not carry the v42 block decodes to exactly these, so every
+    /// container-1/2 artefact keeps round-tripping bit for bit AND the
+    /// comparator-42 code reading such a profile sees 4.1 behaviour rather
+    /// than zeroes.
+    fn v42_defaults() -> Profile {
+        Profile {
+            container: CONTAINER_VERSION,
+            comparator: COMPARATOR_VERSION,
+            name: [0u8; 16],
+            evidence_rule: 0,
+            scoring_rule: 1,
+            rag_endpoint: 1,
+            grid_g: 4,
+            hamming_t: 8,
+            confidence_at: 16,
+            geo_conf_at: 16,
+            geo_eps: 1600,
+            geo_min_corr: 8,
+            min_model_inliers: 6,
+            max_models: 4,
+            rep_extreme_at: 1500,
+            coverage_floor: 2500,
+            min_secondaries: 3,
+            lowe_num: 82,
+            lowe_den: 100,
+            lowe_margin: 0,
+            ham_max: 88,
+            min_peak_members: 3,
+            excl_pct: 0,
+            kp_select: 0,
+            scale_soft: 0,
+            thresholds: [0; 9],
+            weights: [0; 7],
+            limits: [1, 1, 1],
+            lut_local: Lut::identity(),
+            lut_geometry: Lut::identity(),
+            lut_diversity: Lut::neutral(),
+            lut_dct: Lut::identity(),
+            lut_shape: Lut::identity(),
+            lut_topology: Lut::identity(),
+            lut_runs: Lut::identity(),
+            lut_palette: Lut::identity(),
+            lut_silhouette: Lut::identity(),
+            lut_geo_diversity: Lut::neutral(),
+        }
+    }
+
+    /// SPEC-004.2 Part II — CAL-004-PROPOSED, the comparator-42 default.
+    ///
+    /// Every DECISION constant is CAL-003's, unchanged.  That is the claim
+    /// 4.2 is making: a larger budget changes how well the pair is measured,
+    /// not what a copy is.
+    ///
+    /// The two count-valued knobs were the temptation.  `geo_conf_at` and the
+    /// geometry-solo inlier floor are absolute counts, and 512 keypoints
+    /// plainly put more inliers through them, so doubling both looked
+    /// obligatory — the argument being that a control saturating at SCALE
+    /// zeroes the margin by construction (`chance_correct`).  That argument
+    /// was MEASURED rather than assumed, and it does not hold: on 512-keypoint
+    /// works the GN control reaches roughly 3125 of 10000, nowhere near the
+    /// saturation point, while doubling `geo_conf_at` halves the reading on
+    /// every small work and doubling the solo floor turned a genuine crop from
+    /// Copy into Suspected at 128x128.  A floor that only large works can clear
+    /// is a size-dependent bias, which is the defect class this family has
+    /// already paid for once (v2 indexing its pyramid by width).
+    ///
+    /// The guard against a repetitive work manufacturing inliers at 512 is
+    /// therefore §8 diversity, which measures the problem directly, and not a
+    /// raised saturation point, which only measures it by proxy.
+    ///
+    /// PROPOSED because the corpus has not been re-hashed at 512 yet; §19 must
+    /// re-derive the geometric side on 4.2 wires before the word comes off.
+    pub fn cal004() -> Profile {
+        let mut name = [0u8; 16];
+        name.copy_from_slice(b"CAL-004-PROPOSED");
+        Profile {
+            container: CONTAINER_V3,
+            comparator: COMPARATOR_V42,
+            name,
+            evidence_rule: 0,
+            scoring_rule: 1,
+            rag_endpoint: 1,
+            grid_g: 4,
+            hamming_t: 8,
+            confidence_at: 16,
+            geo_conf_at: 16,
+            geo_eps: 1600,
+            geo_min_corr: 8,
+            min_model_inliers: 6,
+            max_models: 4,
+            rep_extreme_at: 1500,
+            coverage_floor: 2500,
+            min_secondaries: 3,
+            lowe_num: 82,
+            lowe_den: 100,
+            lowe_margin: 6,
+            ham_max: 88,
+            min_peak_members: 3,
+            excl_pct: 100,
+            kp_select: 1,
+            scale_soft: 1,
+            thresholds: [8000, 4000, 2400, 1000, 6000, 3500, 1200, 11, 6000],
+            weights: [35, 25, 15, 10, 10, 5, 10],
+            limits: [16384, 16384, 16_777_216],
+            lut_local: Lut(vec![(0, 0), (5000, 1000), (8800, 4200), (9400, 8800), (10000, 10000)]),
+            lut_geometry: Lut(vec![(0, 0), (1900, 1100), (3000, 3000), (10000, 10000)]),
+            lut_diversity: Lut::neutral(),
+            lut_dct: Lut::identity(),
+            lut_shape: Lut::identity(),
+            lut_topology: Lut::identity(),
+            lut_runs: Lut(vec![(0, 0), (9100, 900), (9700, 4500), (10000, 10000)]),
+            lut_palette: Lut(vec![(0, 0), (3000, 800), (6500, 4000), (10000, 10000)]),
+            lut_silhouette: Lut::identity(),
+            // §8 — a floor, not a cliff.  Geometry that agrees in one corner
+            // of the canvas, at one scale, under one model, on one repeated
+            // texture keeps 60% of its evidence; anything spread past 4000 in
+            // the diversity currency keeps all of it.
+            lut_geo_diversity: Lut(vec![(0, 6000), (2000, 8000), (4000, 10000), (10000, 10000)]),
         }
     }
 }

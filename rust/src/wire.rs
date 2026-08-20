@@ -11,7 +11,7 @@
 //! CRC-32 rather than v2's XOR: an XOR cannot detect a transposition of two
 //! bytes, which is exactly the corruption a byte-range index introduces.
 
-use crate::config::{clamp, idiv, Config};
+use crate::config::{clamp, idiv, Config, KP_SELECT_QUALITY, MAX_KP_COUNT};
 use crate::front::normalise;
 use crate::keypoints::{keypoints, Keypoint, RotCache};
 use crate::sections::*;
@@ -26,6 +26,10 @@ pub const F_FLAT: u16 = 2;
 pub const F_INVFOLD: u16 = 4;
 pub const F_SIL: u16 = 8;
 pub const F_UPSCALED: u16 = 16;
+/// SPEC-004.2 §3 — Tier 2 was selected by the 4.2 quality rule, not by the
+/// 4.1 strength/grid rule.  A 4.1 wire has this bit clear, which is exactly
+/// what a 4.1 wire means, so nothing has to be re-hashed to be readable.
+pub const F_KPQ: u16 = 32;
 
 pub struct SectionDef {
     pub id: u8,
@@ -162,6 +166,10 @@ pub struct Tier2 {
     pub list: Vec<Keypoint>,
     pub max_dim: i64,
     pub xmax: i32,
+    /// SPEC-004.2 §3 — the selection rule that built these records.  Byte 16
+    /// of the Tier-2 header was reserved and therefore zero on every 4.1
+    /// wire, which reads back as `KP_SELECT_LEGACY` without a version bump.
+    pub select: i32,
 }
 
 pub fn parse_t2(b: &[u8]) -> Result<Tier2, &'static str> {
@@ -200,11 +208,12 @@ pub fn parse_t2(b: &[u8]) -> Result<Tier2, &'static str> {
         list,
         max_dim: u16::from_le_bytes([b[12], b[13]]) as i64,
         xmax: u16::from_le_bytes([b[14], b[15]]) as i32,
+        select: b[16] as i32,
     })
 }
 
-fn serialize_t2(kps: &[Keypoint], t1crc: u32, max_dim: i64, xmax: i32) -> Vec<u8> {
-    let n = kps.len().min(256);
+fn serialize_t2(kps: &[Keypoint], t1crc: u32, max_dim: i64, xmax: i32, select: i32) -> Vec<u8> {
+    let n = kps.len().min(MAX_KP_COUNT);
     let mut b = vec![0u8; HEADER2 + n * KP_REC];
     b[0..4].copy_from_slice(b"PAP2");
     b[4] = VERSION;
@@ -213,6 +222,7 @@ fn serialize_t2(kps: &[Keypoint], t1crc: u32, max_dim: i64, xmax: i32) -> Vec<u8
     b[8..12].copy_from_slice(&t1crc.to_le_bytes());
     b[12..14].copy_from_slice(&(max_dim as u16).to_le_bytes());
     b[14..16].copy_from_slice(&(xmax as u16).to_le_bytes());
+    b[16] = select as u8;
     for (i, k) in kps.iter().take(n).enumerate() {
         let o = HEADER2 + i * KP_REC;
         for j in 0..8 {
@@ -294,6 +304,9 @@ pub fn hash(px: &[u8], w: usize, h: usize, cfg: &Config, rot: &RotCache) -> Fing
     if flat {
         flags |= F_FLAT;
     }
+    if cfg.kp_select == KP_SELECT_QUALITY {
+        flags |= F_KPQ;
+    }
 
     let dct = hierarchical_dct(&thumb);
     let brt = brightness_record(&thumb);
@@ -356,7 +369,7 @@ pub fn hash(px: &[u8], w: usize, h: usize, cfg: &Config, rot: &RotCache) -> Fing
     let c = crc32(&b[HEADER1..]);
     b[60..64].copy_from_slice(&c.to_le_bytes());
 
-    let t2 = serialize_t2(&kp.list, c, kp.max_dim, kp.xmax);
+    let t2 = serialize_t2(&kp.list, c, kp.max_dim, kp.xmax, cfg.kp_select);
     Fingerprint {
         t1: b,
         t2,

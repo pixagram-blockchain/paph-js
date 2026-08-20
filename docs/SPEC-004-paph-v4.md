@@ -1034,6 +1034,14 @@ milestone M6 adds `assignment_sparse`, `weak_geometry`, and
 `profile_cal003`; both engines satisfy all sections, and cross-engine parity
 holds field-for-field on both comparators.
 
+> **Superseded as the package default, not as a record.**  SPEC-004.2 raised
+> the Tier-2 budget to 512 and made comparator 42 the entry; comparator 41 and
+> `CAL-003-PROPOSED` stay frozen and callable (`compare41` / `cal41`), and this
+> chapter remains the specification of what they do.  The numbers below were
+> measured at 256 keypoints and have NOT been re-derived on 4.2 wires.  The
+> golden file has since moved to milestone M8.  See
+> `docs/SPEC-004.2-paph-v42.md`.
+
 On the 496-pair development corpus (real engine, not the offline evaluator):
 zero false certifications; every §19 negative-category invariant lands
 exactly (review negatives 9, Related 402, Unrelated 34, negative structural

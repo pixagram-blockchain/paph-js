@@ -645,6 +645,77 @@ fn bits_of(g: &[i32; 64], med2: i64) -> (u32, u32) {
 /// of the lexicographic MAXIMUM, not of the minimum, and the two do not meet.
 /// The cost is real: light/dark polarity is discarded.
 fn canonical64(cell: &[i32; 64], fold_invert: bool, maps: &[[usize; 64]; 8]) -> (u32, u32) {
+    let _ = maps; // kept in the signature: the reference implementation below uses them
+    // Only the two central order statistics are wanted, and a selection puts
+    // the 31st in place with everything >= it to its right — s[32] is then the
+    // minimum of that right half.  Same two values the full sort produced.
+    let mut srt = *cell;
+    let (_, m31, rest) = srt.select_nth_unstable(31);
+    let s31 = *m31 as i64;
+    let s32 = *rest.iter().min().unwrap() as i64;
+    let med2 = s31 + s32;
+
+    // The eight D4 variants are BIT PERMUTATIONS of one mask, so the threshold
+    // runs once and the geometry runs on a u64.  Pack the identity mask with
+    // cell index i at bit (63 - i) — exactly the bit `bits_of` would set, so
+    // hi/lo are the top and bottom halves unchanged.  On that packing, byte
+    // (7-y) holds row y with x at bit (7-x): a horizontal flip reverses the
+    // bits of every byte, a vertical flip is `swap_bytes`, and the transpose is
+    // the three-mask 8x8 bit-matrix exchange.  Per variant that is a handful of
+    // scalar ops where the reference walks 64 permuted loads and 64 tests —
+    // and this function runs sixteen times per candidate window, thousands of
+    // windows per hash.
+    let mut b0 = 0u64;
+    for (i, &v) in cell.iter().enumerate() {
+        if 2 * v as i64 > med2 {
+            b0 |= 1u64 << (63 - i);
+        }
+    }
+    let fx = |b: u64| -> u64 {
+        // reverse the bits of every byte in parallel
+        let b = ((b & 0x5555_5555_5555_5555) << 1) | ((b >> 1) & 0x5555_5555_5555_5555);
+        let b = ((b & 0x3333_3333_3333_3333) << 2) | ((b >> 2) & 0x3333_3333_3333_3333);
+        ((b & 0x0f0f_0f0f_0f0f_0f0f) << 4) | ((b >> 4) & 0x0f0f_0f0f_0f0f_0f0f)
+    };
+    let tr = |mut b: u64| -> u64 {
+        // 8x8 bit-matrix transpose (Hacker's Delight 7-3)
+        let t = (b ^ (b >> 7)) & 0x00aa_00aa_00aa_00aa;
+        b ^= t ^ (t << 7);
+        let t = (b ^ (b >> 14)) & 0x0000_cccc_0000_cccc;
+        b ^= t ^ (t << 14);
+        let t = (b ^ (b >> 28)) & 0x0000_0000_f0f0_f0f0;
+        b ^ t ^ (t << 28)
+    };
+    let b0t = tr(b0);
+    // maps[0..8] in their exact order: id, flip-x, flip-y, both, transpose and
+    // the transpose's three flips
+    let variants = [
+        b0,
+        fx(b0),
+        b0.swap_bytes(),
+        fx(b0.swap_bytes()),
+        b0t,
+        b0t.swap_bytes(),
+        fx(b0t),
+        fx(b0t).swap_bytes(),
+    ];
+    let mut best = u64::MAX;
+    for &v in variants.iter() {
+        if v < best {
+            best = v;
+        }
+        if fold_invert && !v < best {
+            best = !v;
+        }
+    }
+    ((best >> 32) as u32, best as u32)
+}
+
+/// The map-walking reference `canonical64` is checked against, kept so the
+/// bit-permutation version above is held to something written independently
+/// of it.
+#[cfg(test)]
+fn canonical64_ref(cell: &[i32; 64], fold_invert: bool, maps: &[[usize; 64]; 8]) -> (u32, u32) {
     let mut srt = *cell;
     srt.sort_unstable();
     let med2 = srt[31] as i64 + srt[32] as i64;
@@ -824,6 +895,9 @@ pub fn local_fingerprints(im: &Indexed, cfg: &Config) -> LocalOut {
     let so = integral_u8(&op, sw, sh);
     let maps = d4_maps();
     let pts = content_peaks(&qmap, sw, sh, cfg.peak_radius as usize);
+    // the transparent-or-scale transform ran per gather, inside four nested
+    // loops; it depends only on the pixel, so it runs once per pixel here
+    let qv: Vec<i32> = qmap.iter().map(|&v| if v < 0 { 257 } else { 2 * (v + 1) }).collect();
 
     let mut cand: Vec<Region> = Vec::new();
     let mut cell = [0i32; 64];
@@ -853,24 +927,24 @@ pub fn local_fingerprints(im: &Indexed, cfg: &Config) -> LocalOut {
                     for cy in 0..8usize {
                         for cx in 0..8usize {
                             if q == 1 {
-                                let v1 = qmap[(y0 + cy) * sw + x0 + cx];
-                                cell[cy * 8 + cx] = if v1 < 0 { 257 } else { 2 * (v1 + 1) };
+                                cell[cy * 8 + cx] = qv[(y0 + cy) * sw + x0 + cx];
                             } else {
+                                // the lower median is the (nv>>1)-th ORDER
+                                // STATISTIC — the same value whether the rest
+                                // of the window is sorted around it or not, so
+                                // a selection replaces the insertion sort this
+                                // loop ran per cell per candidate window
                                 let mut nv = 0usize;
                                 for by in 0..q {
-                                    for bx in 0..q {
-                                        let vq = qmap[(y0 + cy * q + by) * sw + x0 + cx * q + bx];
-                                        let val = if vq < 0 { 257 } else { 2 * (vq + 1) };
-                                        let mut j = nv;
-                                        while j > 0 && scratch[j - 1] > val {
-                                            scratch[j] = scratch[j - 1];
-                                            j -= 1;
-                                        }
-                                        scratch[j] = val;
-                                        nv += 1;
-                                    }
+                                    let row = (y0 + cy * q + by) * sw + x0 + cx * q;
+                                    scratch[nv..nv + q].copy_from_slice(
+                                        &qv[row..row + q],
+                                    );
+                                    nv += q;
                                 }
-                                cell[cy * 8 + cx] = scratch[nv >> 1];
+                                let m = nv >> 1;
+                                scratch[..nv].select_nth_unstable(m);
+                                cell[cy * 8 + cx] = scratch[m];
                             }
                         }
                     }
@@ -1150,4 +1224,44 @@ pub fn colour_digest(im: &Indexed) -> (Vec<u8>, usize) {
         out[o + 4] = p.quantile as u8;
     }
     (out, n)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// D4 as bit permutations must equal D4 as index maps, variant order and
+    /// all — on dense, sparse, tied and constant cells, with and without the
+    /// inversion fold.  One disagreeing bit here is one wrong local code on
+    /// the wire, so this is exhaustive-ish rather than a smoke test.
+    #[test]
+    fn canonical64_bitperm_matches_reference() {
+        let maps = d4_maps();
+        let mut s = 0x1234_5678_9abc_def0u64;
+        let mut r = move || {
+            s ^= s << 13;
+            s ^= s >> 7;
+            s ^= s << 17;
+            s
+        };
+        for case in 0..2000 {
+            let mut cell = [0i32; 64];
+            for v in cell.iter_mut() {
+                *v = match case % 5 {
+                    0 => (r() % 512) as i32,
+                    1 => (r() % 3) as i32 * 257,      // heavy ties
+                    2 => 7,                            // constant
+                    3 => (r() % 2) as i32,             // binary
+                    _ => 2 * ((r() % 256) as i32 + 1), // the caller's actual range
+                };
+            }
+            for fold in [false, true] {
+                assert_eq!(
+                    canonical64(&cell, fold, &maps),
+                    canonical64_ref(&cell, fold, &maps),
+                    "case {case} fold {fold}"
+                );
+            }
+        }
+    }
 }

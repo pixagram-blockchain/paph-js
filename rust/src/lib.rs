@@ -1,11 +1,14 @@
-//! PAPH v3 — integer-only perceptual hash for pixel-art plagiarism detection.
-//! Reference: PAPH-SPEC-003.  Zero dependencies, on purpose.
+//! PAPH — integer-only perceptual hash for pixel-art plagiarism detection.
+//! Wire: PAPH-SPEC-003 (format 3, unchanged).  Comparator: PAPH-SPEC-004.2
+//! (comparator 42) with 4 and 41 frozen beside it.  Zero dependencies, on
+//! purpose.
 pub mod assignment;
 pub mod calibration;
 pub mod compare;
 pub mod coverage;
 pub mod config;
 pub mod front;
+pub mod geom42;
 pub mod golden;
 pub mod keypoints;
 pub mod lattice;
@@ -15,6 +18,7 @@ pub mod nulls;
 pub mod sha256;
 pub mod v4;
 pub mod v41;
+pub mod v42;
 pub mod sections;
 pub mod tables;
 pub mod wire;
@@ -37,10 +41,10 @@ pub mod wire;
 // The config is a flat i32 array so the glue never has to serialise a struct.
 // ===================================================================== //
 
-use crate::config::{Config, Evidence, RagEndpoint, Scoring};
+use crate::config::{Config, Evidence, RagEndpoint, Scoring, MAX_KP_COUNT};
 use crate::keypoints::{pattern, RotCache};
 
-pub const CFG_FIELDS: usize = 20;
+pub const CFG_FIELDS: usize = 21;
 
 fn config_from(p: *const i32) -> Config {
     let mut c = Config::default();
@@ -55,7 +59,7 @@ fn config_from(p: *const i32) -> Config {
     c.fold_invert = v[4] != 0;
     c.local_windows = [v[5], v[6]];
     c.local_count = v[7].clamp(4, 128) as usize;
-    c.kp_count = v[8].clamp(0, 256) as usize;
+    c.kp_count = v[8].clamp(0, MAX_KP_COUNT as i32) as usize;
     c.sketch_count = v[9].clamp(0, 32) as usize;
     c.hamming_t = v[10];
     c.evidence = if v[11] == 1 { Evidence::Proportion } else { Evidence::Lift };
@@ -67,6 +71,7 @@ fn config_from(p: *const i32) -> Config {
     c.geo_eps = v[17];
     c.mirror_hypothesis = v[18] != 0;
     c.geo_min_corr = v[19].clamp(2, 64) as usize;
+    c.kp_select = v[20].clamp(0, 1);
     c
 }
 
@@ -95,6 +100,7 @@ pub extern "C" fn paph_default_config(out: *mut i32) {
     v[17] = c.geo_eps;
     v[18] = c.mirror_hypothesis as i32;
     v[19] = c.geo_min_corr as i32;
+    v[20] = c.kp_select;
 }
 
 #[no_mangle]

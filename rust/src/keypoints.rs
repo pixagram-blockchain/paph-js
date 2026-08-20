@@ -10,7 +10,7 @@
 //!
 //! Nothing below uses a float, a PRNG, or a transcendental.
 
-use crate::config::{clamp, idiv, Config};
+use crate::config::{clamp, idiv, Config, KP_SELECT_QUALITY, MAX_KP_COUNT};
 use crate::front::Indexed;
 use crate::tables::*;
 
@@ -25,7 +25,34 @@ pub const N_BITS: usize = 256;
 pub const N_PAIRS: usize = 128;
 pub const FAST_T: i32 = 18;
 pub const NMS_R: i64 = 4;
-pub const KP_PER_LEVEL: usize = 256;
+/// SPEC-004.2 §2 — 512, not 256.  The per-level cap and the Tier-2 budget are
+/// the same number on purpose: a level that could fill the whole budget on its
+/// own is a level whose keypoints the selector should be allowed to weigh
+/// against every other level's, rather than one the detector truncated first.
+pub const KP_PER_LEVEL: usize = MAX_KP_COUNT;
+
+/// SPEC-004.2 §3 — the selection score, in hundredths so the four weights are
+/// literally the percentages the specification states.
+pub const Q_W_STRENGTH: i64 = 40;
+pub const Q_W_SPATIAL: i64 = 25;
+pub const Q_W_SCALE: i64 = 20;
+pub const Q_W_DESC: i64 = 15;
+/// Hamming distance at which descriptor novelty saturates.  Below it a
+/// candidate is repeating a structure the selection already holds.
+pub const DESC_NOVEL_AT: i64 = 16;
+/// `SCALE_Q / DESC_NOVEL_AT`, and it is EXACT: 10000 / 16 = 625.  The
+/// descriptor-novelty term is therefore a multiply, not a division that
+/// happens to round the same way.
+pub const DESC_NOVEL_STEP: i32 = 625;
+/// Candidates considered by the selector, as a multiple of the budget.  The
+/// pool is the strongest `want * SEL_POOL_MULT` under the pooled order, which
+/// bounds the selector at `want x pool` operations without ever discarding a
+/// candidate that could have won on strength alone.
+pub const SEL_POOL_MULT: usize = 4;
+/// The spatial grid the selection counts occupancy over.
+pub const SEL_GRID: i64 = 8;
+/// The selector's own currency, the same 0..10000 every channel reports in.
+pub const SCALE_Q: i64 = 10_000;
 /// The smallest level that still HAS an interior.  v2's floor of 96 was set for
 /// a 119-736 px corpus and starves small pixel art — a 72 px sprite got ONE
 /// scale, so it could not be matched against the same sprite inside a 220 px
@@ -304,20 +331,49 @@ fn nms(mut kps: Vec<(i64, i64, i64)>, r: i64) -> Vec<(i64, i64, i64)> {
     kps.sort_by(|a, b| b.2.cmp(&a.2).then(a.1.cmp(&b.1)).then(a.0.cmp(&b.0)));
     let r2 = r * r;
     let mut kept: Vec<(i64, i64, i64)> = Vec::new();
+    if kps.is_empty() {
+        return kept;
+    }
+    // Bucket the KEPT points on a grid of cell size r.  `dx*dx + dy*dy <= r2`
+    // forces |dx| <= r and |dy| <= r, so a suppressor can only live in the
+    // candidate's own cell or one of its eight neighbours — the 3x3 probe sees
+    // every point the full scan saw, and the scan runs in the identical sorted
+    // order with the identical strict test, so it keeps the identical set.
+    // The v2 defect this stage's comment warns about is not reintroduced: the
+    // grid here narrows WHERE to look for an exact test, it never IS the test.
+    //
+    // The full scan was `candidates x kept`, and 4.2 doubled `kept` to 512 —
+    // on a busy level that was tens of millions of distance checks and most of
+    // the detection stage's time.
+    let (mut maxx, mut maxy) = (0i64, 0i64);
+    for k in kps.iter() {
+        maxx = maxx.max(k.0);
+        maxy = maxy.max(k.1);
+    }
+    let gw = (maxx / r + 1) as usize;
+    let gh = (maxy / r + 1) as usize;
+    let mut grid: Vec<Vec<u32>> = vec![Vec::new(); gw * gh];
     for k in kps {
         if kept.len() >= KP_PER_LEVEL {
             break;
         }
+        let (cx, cy) = ((k.0 / r) as usize, (k.1 / r) as usize);
         let mut ok = true;
-        for j in kept.iter() {
-            let dx = j.0 - k.0;
-            let dy = j.1 - k.1;
-            if dx * dx + dy * dy <= r2 {
-                ok = false;
-                break;
+        'probe: for ny in cy.saturating_sub(1)..=(cy + 1).min(gh - 1) {
+            for nx in cx.saturating_sub(1)..=(cx + 1).min(gw - 1) {
+                for &ji in grid[ny * gw + nx].iter() {
+                    let j = &kept[ji as usize];
+                    let dx = j.0 - k.0;
+                    let dy = j.1 - k.1;
+                    if dx * dx + dy * dy <= r2 {
+                        ok = false;
+                        break 'probe;
+                    }
+                }
             }
         }
         if ok {
+            grid[cy * gw + cx].push(kept.len() as u32);
             kept.push(k);
         }
     }
@@ -405,6 +461,249 @@ pub fn mirror_desc(d: &[u32; 8]) -> [u32; 8] {
     [d[4], d[5], d[6], d[7], d[0], d[1], d[2], d[3]]
 }
 
+
+/// The 8x8 cell a keypoint falls in, in the shared 16-bit frame.
+#[inline]
+fn sel_cell(k: &Keypoint) -> usize {
+    (idiv(k.y as i64 * SEL_GRID, 65536) * SEL_GRID + idiv(k.x as i64 * SEL_GRID, 65536)) as usize
+}
+
+#[inline]
+fn ham_desc(a: &[u32; 8], b: &[u32; 8]) -> i64 {
+    let mut d = 0u32;
+    for k in 0..8 {
+        d += (a[k] ^ b[k]).count_ones();
+    }
+    d as i64
+}
+
+/// PAPH 4.1 selection, kept verbatim so a 4.1 wire can still be reproduced.
+///
+/// Spread the budget over an 8x8 spatial grid before capping.  Taking the
+/// globally strongest `want` keypoints looks fair and is not: a busy host
+/// out-scores a pasted figure and crowds every one of its keypoints out of the
+/// budget, so the collage case the geometric stage EXISTS for is exactly the
+/// one the cap silences.
+pub fn select_grid(all: &[Keypoint], want: usize) -> Vec<Keypoint> {
+    let mut cells: std::collections::BTreeMap<i64, Vec<usize>> = std::collections::BTreeMap::new();
+    for (i, k) in all.iter().enumerate() {
+        let gk = idiv(k.y as i64 * 8, 65536) * 8 + idiv(k.x as i64 * 8, 65536);
+        cells.entry(gk).or_default().push(i);
+    }
+    let mut picked: Vec<usize> = Vec::with_capacity(want);
+    let mut round = 0usize;
+    loop {
+        let mut took = 0;
+        for bucket in cells.values() {
+            if picked.len() >= want {
+                break;
+            }
+            if round < bucket.len() {
+                picked.push(bucket[round]);
+                took += 1;
+            }
+        }
+        if took == 0 || picked.len() >= want {
+            break;
+        }
+        round += 1;
+    }
+    picked.into_iter().map(|i| all[i].clone()).collect()
+}
+
+/// SPEC-004.2 §3 — selection by quality rather than by strength.
+///
+/// 512 keypoints are not 512 pieces of evidence.  A brick wall yields two
+/// hundred keypoints describing one local texture; a round-robin over a spatial
+/// grid spreads them out but does nothing about the fact that they say the same
+/// thing.  The score therefore pays for four different kinds of being new:
+///
+/// ```text
+///     Q = 40 strength + 25 spatial novelty + 20 scale novelty + 15 descriptor novelty
+/// ```
+///
+/// all in the 0..10000 currency, all integer, greedy, ties to the strongest
+/// candidate under the pooled order.  Spatial and scale novelty decay as
+/// `1/(1+n)` in the number already taken from that cell or level, so the first
+/// keypoint in an empty region is worth eight of the eighth in a crowded one;
+/// descriptor novelty saturates at Hamming `DESC_NOVEL_AT` from the nearest
+/// already-selected descriptor, so a near-duplicate of something held scores
+/// zero on that term however strong it is.
+pub fn select_quality(all: &[Keypoint], want: usize) -> Vec<Keypoint> {
+    let n = all.len().min(want * SEL_POOL_MULT);
+    let pool = &all[..n];
+    let smax = pool.iter().map(|k| k.s as i64).max().unwrap_or(1).max(1);
+
+    // Structure of arrays.  The selector touches `desc` n times per round and
+    // nothing else in the Keypoint, so walking a contiguous descriptor block
+    // beats striding a 40-byte record: at want=512 that is a megabyte of
+    // pointer-chasing removed from the hash's hottest loop.
+    let mut dpack: Vec<[u64; 4]> = Vec::with_capacity(n);
+    let mut q_strength = vec![0i32; n];
+    let mut cell = vec![0u16; n];
+    let mut level = vec![0u16; n];
+    for i in 0..n {
+        dpack.push(pack4(&pool[i].desc));
+        q_strength[i] = clamp(pool[i].s as i64 * SCALE_Q / smax, 0, SCALE_Q) as i32;
+        cell[i] = sel_cell(&pool[i]) as u16;
+        level[i] = pool[i].level as u16;
+    }
+
+    let mut cellc = vec![0u32; (SEL_GRID * SEL_GRID) as usize];
+    let mut levc = vec![0u32; 256];
+    let mut dmin = vec![N_BITS as i32; n];
+    let mut taken = vec![false; n];
+    let mut picked: Vec<usize> = Vec::with_capacity(want);
+
+    while picked.len() < want {
+        let (mut best_i, mut best_q) = (usize::MAX, -1i32);
+        for i in 0..n {
+            if taken[i] {
+                continue;
+            }
+            // Both novelty terms are `SCALE_Q / (1 + count)` — a division by a
+            // small integer, in a loop that runs `want x n` times.  The table
+            // makes it a load.  `q_desc` divides by DESC_NOVEL_AT = 16, which
+            // divides 10000 exactly, so it is a multiply by 625 and not an
+            // approximation of one.
+            let q_spatial = recip(cellc[cell[i] as usize]);
+            let q_scale = recip(levc[level[i] as usize]);
+            let q_desc = (dmin[i] * DESC_NOVEL_STEP).min(SCALE_Q as i32);
+            let q = ((Q_W_STRENGTH as i32 * q_strength[i]
+                + Q_W_SPATIAL as i32 * q_spatial
+                + Q_W_SCALE as i32 * q_scale
+                + Q_W_DESC as i32 * q_desc)
+                / 100) as i32;
+            // strictly greater: ties go to the lower index, i.e. the stronger
+            // candidate under the pooled total order
+            if q > best_q {
+                best_q = q;
+                best_i = i;
+            }
+        }
+        if best_i == usize::MAX {
+            break;
+        }
+        taken[best_i] = true;
+        cellc[cell[best_i] as usize] += 1;
+        levc[level[best_i] as usize] += 1;
+        picked.push(best_i);
+        hamming_min_into(&dpack[best_i], &dpack, &taken, &mut dmin);
+    }
+    picked.into_iter().map(|i| pool[i].clone()).collect()
+}
+
+/// `SCALE_Q / (1 + k)`, tabulated.  `k` is a count of already-selected
+/// keypoints in one cell or one level, so it cannot exceed the budget.
+#[inline(always)]
+fn recip(k: u32) -> i32 {
+    const N: usize = MAX_KP_COUNT + 1;
+    static TABLE: [i32; N] = {
+        let mut t = [0i32; N];
+        let mut i = 0;
+        while i < N {
+            t[i] = (SCALE_Q / (1 + i as i64)) as i32;
+            i += 1;
+        }
+        t
+    };
+    let k = k as usize;
+    if k < N {
+        TABLE[k]
+    } else {
+        (SCALE_Q / (1 + k as i64)) as i32
+    }
+}
+
+#[inline(always)]
+pub fn pack4(d: &[u32; 8]) -> [u64; 4] {
+    [
+        (d[0] as u64) | ((d[1] as u64) << 32),
+        (d[2] as u64) | ((d[3] as u64) << 32),
+        (d[4] as u64) | ((d[5] as u64) << 32),
+        (d[6] as u64) | ((d[7] as u64) << 32),
+    ]
+}
+
+/// `dmin[j] = min(dmin[j], hamming(q, pack[j]))` over every candidate not yet
+/// taken.  Batched deliberately: one query against a contiguous stream is the
+/// shape a vector unit can use, and it is the only shape in this file that
+/// can.  See `simd_batch` for the vectorised body and the test that holds it
+/// to this one, bit for bit.
+fn hamming_min_into(q: &[u64; 4], pack: &[[u64; 4]], taken: &[bool], dmin: &mut [i32]) {
+    #[cfg(all(target_arch = "wasm32", target_feature = "simd128"))]
+    {
+        simd_batch::hamming_min_into(q, pack, taken, dmin);
+        return;
+    }
+    #[allow(unreachable_code)]
+    {
+        hamming_min_into_scalar(q, pack, taken, dmin)
+    }
+}
+
+#[inline]
+pub(crate) fn hamming_min_into_scalar(
+    q: &[u64; 4],
+    pack: &[[u64; 4]],
+    taken: &[bool],
+    dmin: &mut [i32],
+) {
+    for j in 0..pack.len() {
+        if taken[j] {
+            continue;
+        }
+        let p = &pack[j];
+        let d = ((q[0] ^ p[0]).count_ones()
+            + (q[1] ^ p[1]).count_ones()
+            + (q[2] ^ p[2]).count_ones()
+            + (q[3] ^ p[3]).count_ones()) as i32;
+        if d < dmin[j] {
+            dmin[j] = d;
+        }
+    }
+}
+
+/// WebAssembly SIMD128.  `i8x16.popcnt` is a single instruction, and the two
+/// pairwise widening adds turn sixteen byte counts into four lane sums without
+/// leaving the vector unit.  Every operation here is an exact integer
+/// operation on the same bits the scalar path reads, so the two cannot
+/// disagree — `simd_matches_scalar` asserts that rather than assuming it.
+#[cfg(all(target_arch = "wasm32", target_feature = "simd128"))]
+mod simd_batch {
+    use core::arch::wasm32::*;
+
+    #[inline(always)]
+    unsafe fn ham(qa: v128, qb: v128, p: &[u64; 4]) -> i32 {
+        let pa = v128_load(p.as_ptr() as *const v128);
+        let pb = v128_load(p.as_ptr().add(2) as *const v128);
+        let x = i8x16_popcnt(v128_xor(qa, pa));
+        let y = i8x16_popcnt(v128_xor(qb, pb));
+        let s = u16x8_extadd_pairwise_u8x16(u8x16_add(x, y)); // counts <= 8, no overflow
+        let s = u32x4_extadd_pairwise_u16x8(s);
+        (u32x4_extract_lane::<0>(s)
+            + u32x4_extract_lane::<1>(s)
+            + u32x4_extract_lane::<2>(s)
+            + u32x4_extract_lane::<3>(s)) as i32
+    }
+
+    pub fn hamming_min_into(q: &[u64; 4], pack: &[[u64; 4]], taken: &[bool], dmin: &mut [i32]) {
+        unsafe {
+            let qa = v128_load(q.as_ptr() as *const v128);
+            let qb = v128_load(q.as_ptr().add(2) as *const v128);
+            for j in 0..pack.len() {
+                if taken[j] {
+                    continue;
+                }
+                let d = ham(qa, qb, &pack[j]);
+                if d < dmin[j] {
+                    dmin[j] = d;
+                }
+            }
+        }
+    }
+}
+
 pub struct KpOut {
     pub list: Vec<Keypoint>,
     pub max_dim: i64,
@@ -483,41 +782,13 @@ pub fn keypoints(im: &Indexed, cfg: &Config, rot: &RotCache) -> KpOut {
             .then(a.x.cmp(&b.x))
     });
 
-    // Spread the budget over an 8x8 spatial grid before capping.  Taking the
-    // globally strongest `want` keypoints looks fair and is not: a busy host
-    // out-scores a pasted figure and crowds every one of its keypoints out of
-    // the budget, so the collage case the geometric stage EXISTS for is exactly
-    // the one the cap silences.
     let want = cfg.kp_count;
     if all.len() > want {
-        let mut cells: std::collections::BTreeMap<i64, Vec<usize>> = std::collections::BTreeMap::new();
-        for (i, k) in all.iter().enumerate() {
-            let gk = idiv(k.y as i64 * 8, 65536) * 8 + idiv(k.x as i64 * 8, 65536);
-            cells.entry(gk).or_default().push(i);
-        }
-        let mut picked: Vec<usize> = Vec::with_capacity(want);
-        let mut round = 0usize;
-        loop {
-            let mut took = 0;
-            for bucket in cells.values() {
-                if picked.len() >= want {
-                    break;
-                }
-                if round < bucket.len() {
-                    picked.push(bucket[round]);
-                    took += 1;
-                }
-            }
-            if took == 0 || picked.len() >= want {
-                break;
-            }
-            round += 1;
-        }
-        let mut next: Vec<Keypoint> = Vec::with_capacity(picked.len());
-        for i in picked {
-            next.push(all[i].clone());
-        }
-        all = next;
+        all = if cfg.kp_select == KP_SELECT_QUALITY {
+            select_quality(&all, want)
+        } else {
+            select_grid(&all, want)
+        };
     }
     all.truncate(want);
 

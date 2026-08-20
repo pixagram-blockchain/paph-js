@@ -235,7 +235,11 @@ pub fn fold_matte(px: &[u8], w: usize, h: usize, tol: i32) -> Option<Vec<u8>> {
 pub fn index_image(px: &[u8], w: usize, h: usize) -> Indexed {
     let n = w * h;
     let mut key = vec![-1i32; n];
-    let mut map: HashMap<i32, usize> = HashMap::new();
+    // The 5-5-5-guard key is 16 bits by construction, so "map" is a 65536-entry
+    // array and not a hash table.  This function runs per pixel, and a SipHash
+    // per pixel was a fifth of the whole hash's time.
+    const NO: u32 = u32::MAX;
+    let mut map = vec![NO; 65536];
     let mut pal: Vec<PalEntry> = Vec::new();
 
     for i in 0..n {
@@ -249,15 +253,16 @@ pub fn index_image(px: &[u8], w: usize, h: usize) -> Indexed {
             | (((px[o + 2] >> 3) as i32) << 1)
             | 1;
         key[i] = k;
-        match map.get(&k) {
-            Some(&e) => {
+        match map[k as usize] {
+            e if e != NO => {
+                let e = e as usize;
                 pal[e].n += 1;
                 pal[e].rs += px[o] as i64;
                 pal[e].gs += px[o + 1] as i64;
                 pal[e].bs += px[o + 2] as i64;
             }
-            None => {
-                map.insert(k, pal.len());
+            _ => {
+                map[k as usize] = pal.len() as u32;
                 pal.push(PalEntry {
                     r: 0,
                     g: 0,
@@ -285,47 +290,51 @@ pub fn index_image(px: &[u8], w: usize, h: usize) -> Indexed {
         p.b = idiv(p.bs, p.n as i64) as u8;
         p.lum = luma(p.r as i32, p.g as i32, p.b as i32);
     }
-    let mut by_key: HashMap<i32, usize> = HashMap::new();
-    for (i, p) in pal.iter().enumerate() {
-        by_key.insert(p.k, i);
+    // one table serves as both directories: survivors first (their slots are
+    // rewritten to the post-sort index), spill entries cached as they fold
+    for v in map.iter_mut() {
+        *v = NO;
     }
+    for (i, p) in pal.iter().enumerate() {
+        map[p.k as usize] = i as u32;
+    }
+    let mut spilled = vec![false; 65536];
 
     // anything past the cap folds onto its nearest surviving entry
     let mut idx = vec![-1i32; n];
-    let mut spill: HashMap<i32, usize> = HashMap::new();
     for i in 0..n {
         let kk = key[i];
         if kk < 0 {
             idx[i] = -1;
             continue;
         }
-        let v = match by_key.get(&kk) {
-            Some(&v) => v,
-            None => {
-                let v = match spill.get(&kk) {
-                    Some(&v) => v,
-                    None => {
-                        let rr = (kk >> 11) & 31;
-                        let gg = (kk >> 6) & 31;
-                        let bb = (kk >> 1) & 31;
-                        let (mut best, mut bd) = (0usize, i32::MAX);
-                        for (j, p) in pal.iter().enumerate() {
-                            let dr = (p.r >> 3) as i32 - rr;
-                            let dg = (p.g >> 3) as i32 - gg;
-                            let db = (p.b >> 3) as i32 - bb;
-                            let d = dr * dr + dg * dg + db * db;
-                            if d < bd {
-                                bd = d;
-                                best = j;
-                            }
-                        }
-                        spill.insert(kk, best);
-                        best
+        let slot = map[kk as usize];
+        let v = if slot != NO && !spilled[kk as usize] {
+            slot as usize
+        } else {
+            let v = if slot != NO {
+                slot as usize
+            } else {
+                let rr = (kk >> 11) & 31;
+                let gg = (kk >> 6) & 31;
+                let bb = (kk >> 1) & 31;
+                let (mut best, mut bd) = (0usize, i32::MAX);
+                for (j, p) in pal.iter().enumerate() {
+                    let dr = (p.r >> 3) as i32 - rr;
+                    let dg = (p.g >> 3) as i32 - gg;
+                    let db = (p.b >> 3) as i32 - bb;
+                    let d = dr * dr + dg * dg + db * db;
+                    if d < bd {
+                        bd = d;
+                        best = j;
                     }
-                };
-                pal[v].n += 1;
-                v
-            }
+                }
+                map[kk as usize] = best as u32;
+                spilled[kk as usize] = true;
+                best
+            };
+            pal[v].n += 1;
+            v
         };
         idx[i] = v as i32;
     }

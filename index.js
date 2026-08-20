@@ -1,73 +1,82 @@
 /**
- * @pixagram/paph-js — entry point.
+ * @pixagram/paph-js — PAPH 4.2.
  *
- * PAPH 4.1: the v3 wire, hashed by either of two engines, judged by
- * comparator 41.  The source files are named for the specification layer they
- * implement — `paph3.*` is the wire engine (SPEC-003), `paph4.*` is the
- * comparator (SPEC-004 and SPEC-004.1) — which is why a 4.1 package still
- * carries a paph3 module.  The wire has not moved and should not.
+ * One wire, one comparator on the entry, one shipped calibration.  The wire is
+ * the v3 fingerprint (tier 1 exactly 3952 bytes, tier 2 32 + 40n) and does not
+ * move — SPEC-004.2 raised the Tier-2 budget from 256 keypoints to 512, which
+ * the format already allowed: the record count was always a u16.  Comparator 42
+ * decides what a pair of wires MEANS, and needs a container-3 calibration
+ * artefact to do it.
  *
- * Two backends, one API.  `load()` prefers WebAssembly and falls back to the
- * JavaScript engine; both produce byte-identical wires and identical verdicts,
- * which `npm run parity` checks.  Import a backend directly if you want to pin
- * one:
+ * Comparator 41 is FROZEN, not deleted: `compare41` / `cal41` still compute, so
+ * a verdict issued under 4.1 stays reproducible.
  *
- *     import { Config, Paph } from '@pixagram/paph-js/js';     // synchronous
- *     import { init, Paph }   from '@pixagram/paph-js/wasm';   // await init()
+ *     import { hash, compare, cal } from '@pixagram/paph-js';
+ *
+ *     const profile = cal();
+ *     const a = hash(imageA, {}, profile.limits);
+ *     const b = hash(imageB, {}, profile.limits);
+ *     compare(a.t1, a.t2, b.t1, b.t2, {}, profile).verdict;   // 'Copy'
+ *
+ * Pin a layer if you would rather not go through the entry:
+ *
+ *     import { Config, Paph } from '@pixagram/paph-js/wire';   // fingerprints only
+ *     import { init, Paph }   from '@pixagram/paph-js/wasm';   // await init() once
  */
-import js from './src/paph3.js';
-import v4mod from './src/paph4.js';
+import wire from './src/wire.js';
+import paph from './src/paph-js.js';
 
-export const VERSION = js.VERSION;
-export const T1_BYTES = js.T1_BYTES;
-export const SECTIONS = js.SECTIONS;
-export const SECTION_OFFSETS = js.SECTION_OFFSETS;
-export const THRESHOLDS = js.THRESHOLDS;
-export const DEFAULT_CONFIG = js.DEFAULT_CONFIG;
+export const VERSION = paph.VERSION;
+export const COMPARATOR = paph.COMPARATOR;
+export const CONTAINER = paph.CONTAINER;
 
-/** Synchronous JavaScript backend — always available. */
-export const Config = js.Config;
-export const Paph = js.Paph;
-export const hash = js.hash;
-export const compare = js.compare;
-export const parseT1 = js.parseT1;
-export const parseT2 = js.parseT2;
+export const hash = paph.hash;
+export const compare = paph.compare;
+export const screen = paph.screen;
+export const cal = paph.cal;
+export const calibration = paph.calibration;
+export const profileEncode = paph.profileEncode;
+export const profileDecode = paph.profileDecode;
+export const profileId = paph.profileId;
+export const profileName = paph.profileName;
+export const legacyCal001 = paph.legacyCal001;
 
-/* ---------------------------------------------------------- the comparator
- * SPEC-004 (comparator 4) and SPEC-004.1 (comparator 41) decide what a pair
- * of wires MEANS.  Hashing is v3 and unchanged; a comparator needs a
- * calibration profile, and each refuses the other's.
- */
-export const v4 = v4mod;
-export const compareV4 = v4mod.compareV4;
-export const compareV41 = v4mod.compareV41;
-export const screenV41 = v4mod.screenV41;
-export const hashChecked = v4mod.hashChecked;
-export const cal001 = v4mod.cal001;
-export const cal003 = v4mod.cal003;
-export const profileEncode = v4mod.profileEncode;
-export const profileDecode = v4mod.profileDecode;
-export const profileId = v4mod.profileId;
-export const COMPARATOR = v4mod.COMPARATOR;
-export const COMPARATOR_V41 = v4mod.COMPARATOR_V41;
+/** comparator 41, frozen — for reproducing verdicts issued under 4.1 */
+export const compare41 = paph.compare41;
+export const screen41 = paph.screen41;
+export const cal41 = paph.cal41;
+export const lutEval = paph.lutEval;
+export const lutChannel = paph.lutChannel;
+
+/** the wire layer */
+export const Config = wire.Config;
+export const Paph = wire.Paph;
+export const parseT1 = wire.parseT1;
+export const parseT2 = wire.parseT2;
+export const WIRE_VERSION = wire.VERSION;
+export const T1_BYTES = wire.T1_BYTES;
+export const KP_MAX = wire.KP_MAX;
+export const F_KPQ = wire.F_KPQ;
+export const SECTIONS = wire.SECTIONS;
+export const SECTION_OFFSETS = wire.SECTION_OFFSETS;
+export const DEFAULT_CONFIG = wire.DEFAULT_CONFIG;
 
 /**
- * Resolve the fastest available backend.
+ * Resolve the fastest available wire backend.  Both produce byte-identical
+ * fingerprints — `npm run parity` is the check that says so — so the JavaScript
+ * fallback is not a degraded mode, only a slower one.
  * @param {{ prefer?: 'wasm'|'js', wasm?: any }} [opts]
- * @returns {Promise<{ backend: string, Config: any, Paph: any }>}
  */
 export async function load(opts) {
   const prefer = (opts && opts.prefer) || 'wasm';
-  if (prefer === 'js') return { backend: 'js', Config: js.Config, Paph: js.Paph };
+  if (prefer === 'js') return { backend: 'js', Config: wire.Config, Paph: wire.Paph };
   try {
-    const w = await import('./wasm/paph3-wasm.js');
+    const w = await import('./wasm/paph-js-wasm.js');
     await w.init(opts && opts.wasm);
     return { backend: 'wasm', Config: w.Config, Paph: w.Paph };
   } catch (e) {
-    /* no WebAssembly, or the module could not be fetched — the JS engine is
-       not a degraded mode, it produces the same bytes, only slower */
-    return { backend: 'js', Config: js.Config, Paph: js.Paph, reason: String(e && e.message || e) };
+    return { backend: 'js', Config: wire.Config, Paph: wire.Paph, reason: String(e && e.message || e) };
   }
 }
 
-export default { ...js, ...v4mod, load, v4: v4mod };
+export default { ...wire, ...paph, load, wire };

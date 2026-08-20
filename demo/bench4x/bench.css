@@ -345,4 +345,56 @@ footer.foot code { font-family: var(--font-mono); color: var(--text-secondary); 
   .lattice { padding-left: var(--space-5); }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+
+/* --- print: the bench is evidence, so it has to survive being paper --------
+   A dark, borderless, gradient-typed instrument prints as blank paper: browsers
+   drop backgrounds, and every element this system relies on — surface steps,
+   the rainbow text clip, the bars, the lit lattice cell — is a background.  So
+   print gets an ink-on-paper token set, outlines where surfaces carried the
+   structure, and solid ink where the rainbow carried the emphasis.  The channel
+   detail is opened, because a printed page cannot be clicked. */
+@page { margin: 14mm; }
+@media print {
+  :root {
+    --bg-base: #fff; --bg-raised: #fff; --surface-1: #fff; --surface-2: #f2f2f2;
+    --surface-3: #e8e8e8; --surface-4: #dcdcdc;
+    --text-primary: #000; --text-secondary: #2b2b2b; --text-tertiary: #555;
+    --text-disabled: #8a8a8a; --text-inverse: #000;
+    --grey-400: #b6b6b6; --grey-500: #8a8a8a; --grey-600: #6f6f6f;
+    --grey-700: #4a4a4a; --grey-900: #111; --grey-1000: #000;
+    --divider: rgba(0,0,0,.16); --divider-strong: rgba(0,0,0,.30);
+  }
+  body { background: #fff; color: #000; }
+  .toc, #busy, .bar, .chan-caret { display: none !important; }
+  .card, .plate, .stat, .frame { box-shadow: none !important; outline: 1px solid rgba(0,0,0,.18); }
+  section, .card, .plate, .chan, table.data tr { break-inside: avoid; page-break-inside: avoid; }
+  h2, h3 { break-after: avoid; page-break-after: avoid; }
+  /* the rainbow is a background-clip; on paper it is simply absent */
+  .px-rainbow-text, .verdict-big, table.data tr.hero td.verdict {
+    -webkit-text-fill-color: #000 !important; color: #000 !important;
+    background: none !important; }
+  .px-rainbow-rule, .card.rainbow-edge::before, .cell.on::after, .chan.hero .track::after {
+    background: #000 !important; }
+  .chip.hero, .pill.on { background: none !important; color: #000 !important;
+    outline: 1px solid #000; }
+  .pill, .chip { outline: 1px solid rgba(0,0,0,.25); }
+  /* bars, cells and the dot carried meaning in fills — give them ink */
+  .track { outline: 1px solid rgba(0,0,0,.28); background: #fff !important; }
+  .track .raw { background: #c9c9c9 !important; }
+  .track .val { background: #000 !important; }
+  .track .ctl::before { background: #000 !important; }
+  .chan.abst .track { background: repeating-linear-gradient(-45deg,#fff,#fff 5px,#e2e2e2 5px,#e2e2e2 10px) !important; }
+  .chan-body { display: block !important; }
+  .cell { outline: 1px solid rgba(0,0,0,.14); }
+  .cell.on { outline: 2px solid #000; }
+  .cell.on .cv, .cell.on .cl, .cell.on .cs { color: #000 !important; }
+  .dot { background: #000 !important; box-shadow: 0 0 0 3px #fff !important; }
+  .covgrid i { outline: 1px solid rgba(0,0,0,.25); }
+  .ribbon i { outline: 1px solid rgba(0,0,0,.2); }
+  svg.curve { outline: 1px solid rgba(0,0,0,.15); }
+  canvas, .ribbon i, .track .raw, .track .val, .covgrid i {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hexview { max-height: none; overflow: visible; }
+  footer.foot { break-before: page; page-break-before: always; }
+}
 </style>

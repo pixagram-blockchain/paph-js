@@ -1,6 +1,8 @@
 # @pixagram/paph-js
 
-**PAPH 4.1** — an integer-only perceptual hash for detecting plagiarised pixel art, with a calibrated comparator on top of it.
+**PAPH 4.2** — an integer-only perceptual hash for detecting plagiarised pixel art, with a calibrated comparator on top of it.
+
+One wire. One comparator. One shipped calibration. Nothing else in the box.
 
 [github.com/pixagram-blockchain/paph-js](https://github.com/pixagram-blockchain/paph-js)
 
@@ -12,11 +14,11 @@ $ npm run parity
 tier 1 and tier 2 wires, byte for byte
   PASS 96x96                3952 + 2712 B,   67 keypoints
   PASS 160x120              3952 + 10232 B, 255 keypoints
-  PASS 220x170              3952 + 10272 B, 256 keypoints
+  PASS 220x170              3952 + 20512 B, 512 keypoints
   PASS 128x128 with alpha   3952 + 7952 B,  198 keypoints
-  PASS 301x97 with alpha    3952 + 10272 B, 256 keypoints
+  PASS 301x97 with alpha    3952 + 14352 B, 358 keypoints
   PASS 64x64                3952 + 272 B,     6 keypoints
-  PASS 400x300              3952 + 10272 B, 256 keypoints
+  PASS 400x300              3952 + 20512 B, 512 keypoints
 
 25 passed, 0 failed
 ```
@@ -27,24 +29,33 @@ That is the point of the whole design, not a nice extra. An index, a consensus r
 
 ## Two layers, versioned separately
 
-The package version tracks the **comparator** — 4.1, the thing that decides what a pair of wires *means*. The **wire** underneath it is v3 and stays v3, because measurements should not move every time a judgement does.
+The package version tracks the **comparator** — 4.2, the thing that decides what a pair of wires *means*. The **wire** underneath it is v3 and stays v3, because measurements should not move every time a judgement does. 4.2 raised the Tier-2 keypoint budget from 256 to 512, which is a change to what gets *stored*, not to the format that stores it: the record count was always a `u16`.
 
 | layer | version | what it is | changes when |
 |---|---|---|---|
-| wire | **v3** | 3952-byte Tier 1, 32 + 40n Tier 2, eleven sections, CRC-32 | only with a new wire specification |
-| comparator | **4.1** (field value `41`) | channels, nulls, geometry, the verdict lattice | when the evidence says the judgement should |
-| calibration | **CAL-xxx** | one immutable artefact with a SHA-256 identity | whenever a corpus is re-derived |
+| wire | fixed | 3952-byte Tier 1, 32 + 40n Tier 2, eleven sections, CRC-32 | only with a new wire specification |
+| comparator | **4.2** (field value `42`) | channels, nulls, geometry, diversity, the verdict lattice | when the evidence says the judgement should |
+| calibration | **CAL-004-PROPOSED** | one immutable artefact with a SHA-256 identity | whenever a corpus is re-derived |
 
-That split is visible in the source: `src/paph3.*` is the wire engine (SPEC-003), `src/paph4.*` is the comparator (SPEC-004 and its 4.1 amendment). A 4.1 package carrying a `paph3` module is not a leftover — it is the wire holding still while the judgement moves.
+That split is the whole source tree: `src/wire.cjs` produces fingerprints, `src/paph-js.cjs` decides what a pair of them means. **Comparator 4 is not in this package.** A container-1 artefact from that era still *decodes* — so an old verdict's provenance can be read and argued about — but nothing here will compute with it:
+
+```js
+const legacy = profileDecode(oldArtefactBytes);   // reads fine
+compare(a.t1, a.t2, b.t1, b.t2, {}, legacy);      // Indeterminate · PROFILE_UNSUPPORTED
+```
 
 A verdict cites its comparator *and* its calibration identity, so a disputed decision can be recomputed exactly as it was made. A calibration profile targets exactly one comparator, and every other comparator refuses it — in both directions, tested in both engines.
 
-Comparator 4.1 adds four things to comparator 4, which stays frozen, shipped and fully supported:
+Comparator 4.2 keeps everything 4.1 does — weak-signal geometry, per-channel calibration tables, assignment on the edge-induced subgraph, the stage-1 screen — and spends a doubled keypoint budget on measuring better rather than on deciding differently:
 
-- **weak-signal geometry** — when no model clears the acceptance floor, the best single verified model still counts as evidence, with the whole control family measured the same way. Reported as `geoWeakInliers`, and never enough on its own to certify.
-- **per-channel calibration** — container-2 profiles carry nine monotone tables, one per structural channel, instead of three shared ones.
-- **assignment on the edge-induced subgraph** — the local matcher ignores rows and columns with no edge. Same cardinality, same total cost, different tie-breaking; that difference is exactly why it is a new comparator and not a patch.
-- **a stage-1 screen** — correspondence pools only, no verification, no verdict. A pair the screen rejects is *unscreened*, never *unrelated*.
+- **512 keypoints, selected for independence** — `40 strength + 25 spatial novelty + 20 scale novelty + 15 descriptor novelty`. A brick wall yields two hundred keypoints describing one local texture; spreading them over a grid does not make them two hundred observations, and the descriptor term is what stops them counting as such.
+- **an exact early-abort matcher** — the inner loop stops once a partial popcount passes both sides' second-best distances, which cannot change the outcome. Plus an **absolute margin** beside the Lowe ratio: `d1 = 2` against `d2 = 3` passes at 0.667 and means almost nothing.
+- **an allocation-free weighted Hough** — a fixed open-addressed integer table instead of a hash map, a stack array instead of a `Vec` per correspondence, soft scale binning instead of a hard bucket, and a peak chosen on `(mass, members, confidence)` rather than mass alone.
+- **diversity as evidence** — 512 matches in one corner of one artwork at one scale under one model are not 512 pieces of evidence. `D = 40 spatial + 25 scale + 20 model + 15 descriptor` passes through its own table and modulates the geometric axis.
+
+**Comparator 41 is frozen, not deleted.** `compare41` / `screen41` / `cal41()` still compute, so a verdict issued under 4.1 stays reproducible. Comparator 4 remains decodable and not computable, exactly as 4.1 left it.
+
+**Every decision constant in CAL-004 is CAL-003's.** That is the claim 4.2 makes: a larger budget changes how well a pair is measured, not what a copy is. `docs/SPEC-004.2-paph-v42.md` §16 records the two count-valued knobs that looked like they had to move, and the measurement that said otherwise.
 
 ---
 
@@ -61,13 +72,13 @@ No dependencies. Node 18+, or any browser with WebAssembly.
 Hash two works, then ask the comparator what they are:
 
 ```js
-import { hashChecked, compareV41, cal003 } from '@pixagram/paph-js';
+import { hash, compare, cal } from '@pixagram/paph-js';
 
-const profile = cal003();                            // CAL-003-PROPOSED, comparator 41
-const a = hashChecked(imageA, {}, profile.limits);   // { t1: 3952 B, t2: 32 + 40n B }
-const b = hashChecked(imageB, {}, profile.limits);
+const profile = cal();                        // CAL-004-PROPOSED, comparator 42
+const a = hash(imageA, {}, profile.limits);   // { t1: 3952 B, t2: 32 + 40n B }
+const b = hash(imageB, {}, profile.limits);
 
-const r = compareV41(a.t1, a.t2, b.t1, b.t2, {}, profile);
+const r = compare(a.t1, a.t2, b.t1, b.t2, {}, profile);
 
 r.verdict;          // 'Copy'
 r.class;            // 'geometric only — mirrored crop / collage class'
@@ -78,7 +89,7 @@ r.geoWeakInliers;   // 0      — non-zero means the weak signal carried it
 r.calibrationId;    // the profile identity this verdict was made under
 ```
 
-`hashChecked` accepts an `ImageData`, `{ px, w, h }`, `{ pixels, width, height }`, or `(bytes, width, height)`, and enforces the profile's declared size limits before doing any work.
+`hash` accepts an `ImageData`, `{ px, w, h }`, `{ pixels, width, height }`, or `(bytes, width, height)`, and enforces the profile's declared size limits before doing any work.
 
 If you only want the wire, the v3 engine is unchanged and still the fastest route:
 
@@ -91,24 +102,22 @@ const fp = new Paph().hash(imageA);
 Pin a layer if you would rather not branch:
 
 ```js
-import { Config, Paph } from '@pixagram/paph-js/wire';        // v3 engine, synchronous
-import { init, Paph }   from '@pixagram/paph-js/wasm';        // v3 engine, await init()
-import { compareV41 }   from '@pixagram/paph-js/comparator';  // comparator 41
+import { Config, Paph } from '@pixagram/paph-js/wire';        // fingerprints only
+import { init, Paph }   from '@pixagram/paph-js/wasm';        // the same, in WebAssembly
+import { compare }      from '@pixagram/paph-js/comparator';  // the comparator alone
 import calCore          from '@pixagram/paph-js/calibration'; // the tuning loop
 ```
-
-`./js` and `./v41` remain as aliases of `./wire` and `./comparator`; `./v4` pins the frozen comparator.
 
 ### Screen before you compare
 
 At index scale, most pairs are not worth a full comparison. The screen answers "could these possibly share geometry?" from the correspondence pools alone:
 
 ```js
-import { screenV41 } from '@pixagram/paph-js';
+import { screen, compare } from '@pixagram/paph-js';
 
-const s = screenV41(a.t1, a.t2, b.t1, b.t2, {}, profile);
+const s = screen(a.t1, a.t2, b.t1, b.t2, {}, profile);
 if (s.pass) {
-  const r = compareV41(a.t1, a.t2, b.t1, b.t2, {}, profile);
+  const r = compare(a.t1, a.t2, b.t1, b.t2, {}, profile);
 }
 // s.pass === false means UNSCREENED — not "unrelated", and not a verdict.
 ```
@@ -117,27 +126,31 @@ if (s.pass) {
 
 ## Try it without writing any code
 
-Open **`demo/paph41-playground.html`** by double-clicking it, and press **Load the worked example**.
+Open **`demo/paph-js-console.html`** by double-clicking it, and press **Load the worked example**.
 
 Eleven works are generated on the spot — an exact duplicate, a recolour, a 2× upscale, two crops, an element reused in a new scene, two unrelated works, and a pair that shares one pasted tile — every relationship already labelled. Nothing uploads, nothing is fetched, and no third-party art ships in this package.
 
-This is what it says out of the box, under `CAL-003-PROPOSED`:
+This is what it says out of the box, under `CAL-004-PROPOSED`:
 
-| pair | label | verdict | basis | structural | inliers |
-|---|---|---|---|---|---|
-| A1 original × A2 identical | A | Identical | bytes | 10000 | 165 |
-| A1 original × A3 recolour | B | Copy | structural+geometric | 4997 | 26 |
-| A1 original × A4 upscaled | B | Copy | structural+geometric | 7478 | 165 |
-| A1 original × B1 crop | C | Copy | geometric | 3703 | 17 |
-| A1 original × B2 mirror crop | C | Copy | geometric | 3382 | 21 |
-| A1 original × C1 composite | D | Copy | geometric | 2002 | 11 |
-| A1 original × E1 unrelated | E | Related | — | 1470 | 0 |
-| E1 unrelated × E2 unrelated | E | Unrelated | — | 956 | 0 |
-| G1 shared asset × G2 shared asset | G | **Suspected** | geometric | 1330 | 4 (weak) |
+| pair | label | verdict | basis | structural | inliers | D |
+|---|---|---|---|---|---|---|
+| A1 original × A2 identical | A | Identical | bytes | 10000 | 163 | 7944 |
+| A1 original × A3 recolour | B | Copy | structural+geometric | 4997 | 35 | 5916 |
+| A1 original × A4 upscaled | B | Copy | structural+geometric | 7478 | 163 | 7944 |
+| A1 original × B1 crop | C | Copy | geometric | 3703 | 16 | 4833 |
+| A1 original × B2 mirror crop | C | Copy | geometric | 3382 | 20 | 4500 |
+| A1 original × C1 composite | D | Copy | geometric | 2002 | 15 | 3583 |
+| A1 original × E1 unrelated | E | Related | — | 1470 | 0 | — |
+| E1 unrelated × E2 unrelated | E | Unrelated | — | 956 | 0 | — |
+| G1 shared asset × G2 shared asset | G | **Copy** | geometric | 1330 | 14 | 3583 |
 
-Zero false certifications; 5 of 5 near-duplicates certified; 11 of 15 partial copies certified and all 15 at review or better.
+5 of 5 near-duplicates certified; 12 of 15 partial copies certified and all 15 at review or better. **`D` is new in 4.2** — the §8 reading of how independent the geometry was, across space, scale, models and descriptors.
 
-Then take it apart. The console holds the nine calibration tables as **draggable curves**, with every pair's value on that channel ticked underneath — green for positives, orange for negatives — so a knee either sits where the two distributions separate or it does not. Drag one and the whole corpus re-decides instantly. Click any pair to see each channel's raw value, its value *after* that channel's table, and the weight it carried, plus the models, the inlier coverage grid and the stage-1 screen.
+And one certification that should not be there. Under 4.1 the shared-asset pair read *Suspected* on 4 scattered inliers; at 512 keypoints it reads *Copy* on 14 in a coherent region. Comparator 42 on 256-keypoint wires reproduces 4.1's answer exactly, so this is the **budget**, not the judgement: the tile really is shared, and the smaller budget was simply missing it. Nothing was tuned to hide it, and the console's invariant is now *containment* — nothing outside the known shared-asset class certifies — which is a stronger claim than counting zero.
+
+Note also what `D` does **not** do here. The shared asset reads 3583, and so does the composite — a genuine collage — to the digit. Diversity separates either of them from a near-duplicate and separates neither from the other, because both really are one coherent region reused at one scale. A table tight enough to demote the one demotes the other with it.
+
+Then take it apart. The console holds the ten calibration tables as **draggable curves**, with every pair's value on that channel ticked underneath — green for positives, orange for negatives — so a knee either sits where the two distributions separate or it does not. Drag one and the whole corpus re-decides instantly. Click any pair to see each channel's raw value, its value *after* that channel's table, and the weight it carried, plus the models, the inlier coverage grid and the stage-1 screen.
 
 Drop your own works in — or a `.zip` of them — and the same console tunes against your corpus instead.
 
@@ -149,7 +162,7 @@ Two things the page will not do. It counts **certified** and **at review or bett
 
 It is one file with no network at all — fonts, engines and all — so it travels: mail it to counsel, put it in an appeal, hand it to an artist who wants to know what the machine actually saw. It is generated rather than hand-maintained (`npm run build:bench` inlines the current `src/` engines), so it cannot quietly disagree with the package it ships beside.
 
-The v3 evidence bench is still there too: **`demo/paph3-playground.html`**, eleven attacks, every channel arguing its case.
+The other page is **`demo/paph-js-console.html`** — the calibration console, for the other question: not *why is this pair a copy* but *what should this corpus's thresholds and tables be*.
 
 ---
 
@@ -276,7 +289,7 @@ A profile is the entire judgement surface in one immutable 270-byte artefact: th
 ```js
 import { cal003, profileEncode, profileId } from '@pixagram/paph-js';
 
-const p = cal003();
+const p = cal();
 profileEncode(p).length;                    // 270
 Buffer.from(profileId(p)).toString('hex');
 // 75319777e4ff7fe6592365612cff9a85d653519166ff1308c8d3489d0247a422
@@ -284,7 +297,7 @@ Buffer.from(profileId(p)).toString('hex');
 
 That identity is checked in three places written independently — the Rust reference, the JavaScript port, and the tool that emitted the proposal — and the golden vectors pin it. One byte of drift anywhere and the suites say so.
 
-Container 2 carries nine tables in canonical order: `local, geometry, diversity, dct, shape, topology, runs, palette, silhouette`. Each maps a channel's raw agreement (0..10000) to calibrated evidence (0..10000), monotonically. That is where a corpus's knowledge actually lives — `runs` and `palette` agree strongly on almost any two pixel-art works, so under CAL-003 their tables squash the bottom of the range hard, while `geometry` lifts its low band because a handful of verified inliers is worth more than a high palette score.
+Container 3 carries ten tables in canonical order: `local, geometry, diversity, dct, shape, topology, runs, palette, silhouette, geoDiversity`. Each maps a channel's raw agreement (0..10000) to calibrated evidence (0..10000), monotonically. That is where a corpus's knowledge actually lives — `runs` and `palette` agree strongly on almost any two pixel-art works, so under CAL-003 their tables squash the bottom of the range hard, while `geometry` lifts its low band because a handful of verified inliers is worth more than a high palette score. The tenth table is 4.2's, and it is deliberately separate from `diversity`: that one modulates the *local* channel by its own repetition reading, so reusing it would have moved the structural axis while claiming to change only geometry.
 
 To tune your own: open the playground, load your corpus, drag the curves, download the `.pcal`, and ship that file next to your index. `profileDecode` validates it — magic, version pair, monotonicity, ranges — and refuses anything malformed rather than repairing it.
 
@@ -294,13 +307,16 @@ To tune your own: open the playground, load your corpus, drag the curves, downlo
 
 ### The comparator
 
+There is one on the entry. `compare` is comparator 42; `compare41` exists beside it only so verdicts issued under 4.1 can be recomputed as they were made.
+
 | | |
 |---|---|
-| `compareV41(aT1, aT2, bT1, bT2, opts, profile, hpA?, hpB?)` | comparator 41 — needs a container-2 profile |
-| `compareV4(aT1, aT2, bT1, bT2, opts, profile, hpA?, hpB?)` | comparator 4 — needs a container-1 profile |
-| `screenV41(aT1, aT2, bT1, bT2, opts, profile)` | `{ pass, poolDirect, poolMirror }` |
-| `hashChecked(image, opts, limits)` | hash with the profile's limits enforced first |
-| `cal003()` / `cal001()` | the shipped profiles |
+| `compare(aT1, aT2, bT1, bT2, opts, profile, hpA?, hpB?)` | the comparator — needs a container-3 profile |
+| `screen(aT1, aT2, bT1, bT2, opts, profile)` | `{ pass, poolDirect, poolMirror }` |
+| `hash(image, opts, limits)` | fingerprint with the profile's limits enforced first |
+| `cal()` | CAL-004-PROPOSED, the shipped calibration |
+| `compare41` / `screen41` / `cal41()` | comparator 41, frozen — for reproducing 4.1 verdicts |
+| `legacyCal001()` | a container-1 artefact, for READING old verdicts — never for computing |
 | `profileEncode` / `profileDecode` / `profileId` | the artefact and its identity |
 
 Pass `hpA`/`hpB` — the profile identities two parties recorded — and a mismatch returns `Indeterminate` with `PROFILE_MISMATCH` rather than a verdict neither party can reproduce.
@@ -317,7 +333,7 @@ Full types ship in `index.d.ts`.
 
 ### The tuning loop
 
-`@pixagram/paph-js/calibration` exposes what the playground runs on: `makeSnapshot41(report, profile, reportV4?)` stores everything the lattice consumes with the table outputs left out, and `relattice41(engine, snapshot, profile)` re-decides from it. `test/v4.cjs` asserts that loop equals `compareV41` field for field, which is the only reason instant tuning over a whole corpus is honest. `measurementKey(profile)` tells you when a snapshot has gone stale.
+`@pixagram/paph-js/calibration` exposes what the console runs on: `makeSnapshot(report, profile)` stores everything the lattice consumes with the table outputs left out, and `relattice(engine, snapshot, profile)` re-decides from it. `npm run test:comparator` asserts that loop equals `compare` field for field, which is the only reason instant tuning over a whole corpus is honest. `measurementKey(profile)` tells you when a snapshot has gone stale.
 
 ---
 
@@ -331,16 +347,16 @@ Integer arithmetic end to end, fixed iteration orders, no floating point in any 
 
 | | |
 |---|---|
-| `npm test` | 39 property assertions — determinism, wire integrity, symmetry, abstention, transform battery, timing |
-| `npm run test:v4` | 81 conformance assertions — golden vectors, comparator 4 and 41, profiles, the tuning loop |
-| `npm run test:playground` | 27 assertions driving the calibration console headlessly (needs `jsdom`; skips cleanly without it) |
-| `npm run test:bench` | 16 assertions driving the evidence bench headlessly, sweep included |
+| `npm test` | 39 property assertions on the wire — determinism, integrity, symmetry, abstention, transform battery, timing |
+| `npm run test:comparator` | 82 conformance assertions — golden vectors, the comparator, profiles, the tuning loop, the legacy-artefact audit path |
+| `npm run test:console` | 27 assertions driving the calibration console headlessly (needs `jsdom`; skips cleanly without it) |
+| `npm run test:bench` | 19 assertions driving the evidence bench headlessly, sweep included |
+| `npm run verify` | the four suites that need no build |
+| `npm run parity` | JavaScript vs WebAssembly, byte parity on the wire |
+| `npm run parity:comparator` | JavaScript vs the native Rust reference, field for field |
 | `npm run build:bench` | regenerate `demo/paph4x.html` from `demo/bench4x/` and the current engines |
-| `npm run parity` | JavaScript vs WebAssembly, byte and verdict parity on the v3 wire |
-| `npm run parity4` | JavaScript vs the native Rust reference, both comparators, field for field |
-| `npm run verify` | the three suites that need no build |
 | `npm run tables` | regenerate the frozen tables; assert no transcendental reaches the wire |
-| `npm run build:wasm` | rebuild `wasm/paph3.wasm` |
+| `npm run build:wasm` | rebuild `wasm/paph.wasm` |
 
 The Rust crate compiles clean and carries 47 tests of its own. The build is reproducible: rebuilding from the shipped `rust/` produces a binary with the same checksum as the one in `wasm/`.
 
@@ -350,11 +366,23 @@ Single thread, node 22.
 
 | | hash 512×384 | compare |
 |---|---|---|
-| JavaScript (v3 wire) | ~400 ms | ~5.8 ms |
-| WebAssembly (v3 wire) | ~139 ms | ~2 ms |
-| comparator 41, JavaScript | — | ~11 ms/pair |
+| JavaScript (v3 wire, 512 keypoints) | ~516 ms | ~6.2 ms |
+| WebAssembly (v3 wire, 512 keypoints) | ~152 ms | ~2 ms |
+| comparator 42, JavaScript | — | ~11 ms/pair |
 
-On the 496-pair development corpus, under `CAL-003-PROPOSED`, measured with the real engine:
+Native Rust reference at 512 keypoints, 512×384, split by stage (`paphcli` mode `B`) — because the interesting question is never *how long* but *whose code*:
+
+| | ms |
+|---|---|
+| hash, total | 91 (was 111) |
+| — local fingerprints / normalise / RAG+shapes+runs | 27 / 13 / 17 |
+| — the keypoint stage | 34, of which §3 selection is 8 |
+| compare, unrelated / mirrored / self | 7.7 / 8.9 / 11.5 (was 13.2 / 14.2 / 19.7) |
+| — the frozen v3 structural half of it | 5.0 |
+
+**Hashing is dominated by the wire, not by the budget.** Two output-identical implementation passes — licensed by the byte-for-byte golden assertion and the cross-engine parity suites — took a self-compare from 19.7 ms to 11.5 ms and the hash from 111 ms to 91 ms native (152 → 122 ms WebAssembly, now built with SIMD128). The write-ups are SPEC-004.2 §18; the honest headline in there is that the §4 early-abort matcher was *removed* for being slower than not aborting. Measure the multiplier on your own corpus rather than quoting one.
+
+On the 496-pair development corpus, under `CAL-003-PROPOSED` at 256 keypoints, measured with the real engine — **not yet re-derived on 4.2 wires**:
 
 | | |
 |---|---|
@@ -372,9 +400,11 @@ Read those two columns as two different claims. "At review or better" means a hu
 
 Stated here because a detector that hides them is worse than one that does not have them.
 
-**`CAL-003` is `-PROPOSED`, not blessed.** Its thresholds and all nine tables were derived from a 32-work development corpus whose labels were inferred by its author, not from moderation reports. It is a defensible starting point and it is not a validated one. Re-derive it against your own labelled pairs before automating anything on it.
+**`CAL-004` is `-PROPOSED`, not blessed — and the corpus behind it was hashed at 256 keypoints.** Its structural side is CAL-003's, derived on a 32-work development corpus whose labels were inferred by its author; its geometric side has not been re-derived on 4.2 wires at all. Re-hash before you re-calibrate, and note that a mixed 4.1/4.2 pair is flagged in `report.selection.mixed` precisely because recall measured across that boundary is not recall measured within either.
 
-**Shared assets are indistinguishable from partial copies, by construction.** Two unrelated works that both embed the same licensed tile produce real, verified geometry — the same signal a genuine crop produces. On constructed pairs, a shared asset covering 9% of a canvas was enough to certify `Copy` under `CAL-003`. Neither a coverage floor nor a topology-split inlier floor separates the two classes: the bands overlap. The difference is provenance, and provenance is not in the pixels. `docs/ANALYSIS-002-solo-arm-shared-assets.md` has the measurements and the two coherent policy positions; the playground's shared-asset lab shows what your own profile does with the case. Decide it deliberately before pointing this at a marketplace.
+**The 4.1 caveat, which still stands.** `CAL-003` is `-PROPOSED`, not blessed. Its thresholds and all nine tables were derived from a 32-work development corpus whose labels were inferred by its author, not from moderation reports. It is a defensible starting point and it is not a validated one. Re-derive it against your own labelled pairs before automating anything on it.
+
+**Shared assets are indistinguishable from partial copies, by construction — and 4.2 surfaces more of them.** Two unrelated works that both embed the same licensed tile produce real, verified geometry — the same signal a genuine crop produces. On constructed pairs, a shared asset covering 9% of a canvas was enough to certify `Copy` under `CAL-003`, and at 512 keypoints the worked example's shared-asset pair certifies too, because the larger budget finds the tile. The §8 diversity channel does not rescue this: the shared asset and a genuine collage read the same `D` on that corpus. Neither a coverage floor nor a topology-split inlier floor separates the two classes: the bands overlap. The difference is provenance, and provenance is not in the pixels. `docs/ANALYSIS-002-solo-arm-shared-assets.md` has the measurements and the two coherent policy positions; the playground's shared-asset lab shows what your own profile does with the case. Decide it deliberately before pointing this at a marketplace.
 
 **Geometric inversion invariance is not implemented.** Inverting a work complements every BRIEF bit *and* rotates the orientation by 180°, so the steered pattern samples the other side of the keypoint. Measured mean Hamming distance between a descriptor and the complement of its inverted twin, over 255 co-located keypoints: **129.9 of 256** — chance. A working version needs a centrally symmetric pattern, trading descriptor distinctiveness for the invariance. That is a measurable choice, not a free one, and it has not been made. Inversion is still carried by the DCT sign flip, the palette quantile reflection and the local complement fold, which do hold exactly.
 
@@ -383,29 +413,31 @@ Stated here because a detector that hides them is worse than one that does not h
 ## Repository layout
 
 ```
-src/paph3.cjs            the v3 WIRE engine (UMD — also drops into a <script> tag)
-src/paph4.cjs            the COMPARATOR: comparator 4 and comparator 41
+src/wire.cjs             the fingerprint engine (UMD — also drops into a <script> tag)
+src/paph-js.cjs          the comparator: 42 on the entry, 41 frozen beside it
 src/*.js                 ESM views of the same modules
-                         (the file names track the specification layer, not the
-                          package version — see "Two layers", above)
-wasm/paph3.wasm          318 kB, built from rust/
-rust/                    the Rust reference crate (`paph3` — the wire's name,
-                         kept so the shipped wasm keeps its filename and
-                         checksum) — zero dependencies, on purpose
+wasm/paph.wasm           326 kB, built from rust/
+rust/                    the Rust reference crate — zero dependencies, on purpose.
+                         It carries comparators 4, 41 and 42 side by side: the
+                         older two are what PROVE the newest, and 41 is also
+                         reachable from the package.  Crate name unchanged so
+                         the shipped wasm keeps its provenance.
   src/wire.rs              serialisation, CRC, hash entry point
   src/compare.rs           v3 channels, Hough vote, nulls, verdict
   src/local_v4.rs          the v4 local channel; the 4.1 sparse variant beside it
-  src/multimodel.rs        multi-model geometry, the control family, the weak signal
-  src/calibration.rs       PCAL artefacts, containers 1 and 2, CAL-001 / CAL-003
-  src/v4.rs, src/v41.rs    the two comparators
+  src/multimodel.rs        4.1 multi-model geometry, the control family, the weak signal
+  src/geom42.rs            4.2 geometry: early-abort matcher, fixed vote table,
+                           soft scale bins, median residuals, exclusion, diversity
+  src/kpselect via keypoints.rs   both selection rules, 4.1's kept reproducible
+  src/calibration.rs       PCAL artefacts, containers 1-3, CAL-001 / 003 / 004
+  src/v4.rs, v41.rs, v42.rs  the three comparators
   src/golden.rs            the golden vectors, emitted by the reference itself
   src/bin/paphcli.rs       the stdin/stdout harness the parity suites drive
 test/                    property, conformance, parity and playground suites
-demo/paph4x.html              the 4.1 evidence bench — one file, no network
+demo/paph4x.html              the evidence bench — one file, no network
 demo/bench4x/                 its sources: brand CSS, body, application
-demo/paph41-playground.html   the 4.1 calibration console, with the worked example
-demo/paph3-playground.html    the v3 evidence bench
-demo/cal-core.cjs             the tuning loop, shared by both benches and the suites
+demo/paph-js-console.html     the calibration console, with the worked example
+demo/cal-core.cjs             the tuning loop, shared by both pages and the suites
 tools/build-paph4x.mjs        assembles the bench, inlining the current engines
 docs/                    the specifications, the status ledger, the analyses
 ```
@@ -418,14 +450,15 @@ The WebAssembly is deliberately **not** built with wasm-bindgen or wasm-pack. Th
 
 | document | what it is |
 |---|---|
-| `docs/SPEC-004-paph-v4.md` | the comparator specification, with Amendment 4.1 as its last chapter |
+| `docs/SPEC-004.2-paph-v42.md` | the comparator specification this package implements |
+| `docs/SPEC-004-paph-v4.md` | the comparator specification 4.2 builds on, with Amendment 4.1 as its last chapter |
 | `docs/SPEC-004.1-proposal.md` | the proposal 4.1 was adopted from, with the corpus evidence |
 | `docs/IMPL-004-status.md` | what has landed, what is pending, and the gate M7 has to clear |
 | `docs/ANALYSIS-002-solo-arm-shared-assets.md` | the shared-asset finding and the decision it forces |
 | `docs/ANALYSIS-001-field-forensics.md` | per-field forensics behind the 4.1 channel work |
-| `docs/SPEC-003-paph-v3.md` | the wire specification |
+| `docs/SPEC-003-paph-v3.md` | the wire specification — unchanged, and still exactly what 4.1 hashes |
 | `docs/IMPL-003-implementation-notes.md` | errata against SPEC-003 and the determinism defects the Rust port exposed |
-| `docs/golden/GOLDEN-004.json` | golden vectors at milestone M6, emitted by the Rust reference |
+| `docs/golden/GOLDEN-004.json` | golden vectors at milestone M8, emitted by the Rust reference |
 | `docs/calibration/*.pcal` | the shipped profiles as bytes — decode them without running the engine |
 
 Where an implementation and a specification disagree, the notes say so and explain why.

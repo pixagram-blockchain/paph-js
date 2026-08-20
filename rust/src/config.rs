@@ -8,6 +8,18 @@
 /// Fixed-point scale for every channel reading: 0 ..= 10000.
 pub const SCALE: i64 = 10_000;
 
+/// SPEC-004.2 §2 — the Tier-2 keypoint budget.  The record count on the wire
+/// was ALREADY a `u16` and the records are a fixed 40 bytes, so raising the
+/// cap from 256 to 512 costs no format change: Tier 2 becomes at most
+/// `32 + 512 x 40 = 20512` bytes and a 256-keypoint wire still parses.
+pub const MAX_KP_COUNT: usize = 512;
+
+/// Keypoint selection rules (hash time).
+///   0 — 4.1: strongest-first, round-robin over an 8x8 grid
+///   1 — 4.2: the quality score of SPEC-004.2 §3
+pub const KP_SELECT_LEGACY: i32 = 0;
+pub const KP_SELECT_QUALITY: i32 = 1;
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Scoring {
     /// the weakest of evidence and corroboration — refuses to certify on one channel
@@ -44,6 +56,8 @@ pub struct Config {
     pub local_count: usize,
     pub kp_count: usize,
     pub sketch_count: usize,
+    /// SPEC-004.2 §3 — which keypoint-selection rule builds Tier 2.
+    pub kp_select: i32,
 
     // --- compare time: free to re-derive at any moment ---
     pub hamming_t: i32,
@@ -68,8 +82,9 @@ impl Default for Config {
             fold_invert: true,
             local_windows: [8, 16],
             local_count: 128,
-            kp_count: 256,
+            kp_count: MAX_KP_COUNT,
             sketch_count: 32,
+            kp_select: KP_SELECT_QUALITY,
 
             hamming_t: 8,
             evidence: Evidence::Lift,
@@ -102,8 +117,11 @@ impl Config {
         if !(4..=128).contains(&self.local_count) {
             return Err("localCount out of range (wire holds 128)");
         }
-        if self.kp_count > 256 {
-            return Err("kpCount out of range (tier 2 holds 256)");
+        if self.kp_count > MAX_KP_COUNT {
+            return Err("kpCount out of range (tier 2 holds 512)");
+        }
+        if !(KP_SELECT_LEGACY..=KP_SELECT_QUALITY).contains(&self.kp_select) {
+            return Err("kpSelect must be 0 (4.1) or 1 (4.2)");
         }
         if self.sketch_count > 32 {
             return Err("sketchCount out of range (tier 1 holds 32)");

@@ -1,10 +1,11 @@
 (function () {
 'use strict';
-/* PAPH 4.1 evidence bench — application layer.
+/* PAPH 4.2 evidence bench — application layer.
    The engines below this line are the shipped files, inlined so the bench stays
    one file you can hand to anyone: paph3 (the v3 wire), paph4 (comparator 4 and
-   41), calCore (the calibration loop).  Nothing here re-implements them. */
-var P = window.paph3, V = window.paph4, CC = window.calCore;
+   42), calCore (the calibration loop).  Nothing here re-implements them. */
+var W = window.paphWire, V = window.paphjs, CC = window.calCore;
+var P = W;   /* the wire layer, by its old short name inside this file */
 var $ = function (s) { return document.querySelector(s); };
 var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
 var SCALE = 10000;
@@ -22,14 +23,17 @@ var CHAN_NOTE = {
 var LUT_SLOTS = [
   ['lutLocal', 'local'], ['lutGeometry', 'geometry'], ['lutDiversity', 'diversity'],
   ['lutDct', 'dct'], ['lutShape', 'shape'], ['lutTopology', 'topology'],
-  ['lutRuns', 'runs'], ['lutPalette', 'palette'], ['lutSilhouette', 'silhouette']
+  ['lutRuns', 'runs'], ['lutPalette', 'palette'], ['lutSilhouette', 'silhouette'],
+  /* SPEC-004.2 §8 — the tenth table, and the one that is NOT `diversity`:
+     that one modulates the local channel by its own repetition reading. */
+  ['lutGeoDiversity', 'geo diversity']
 ];
 var THRESH_NAMES = ['STRUCT_IDENTICAL', 'STRUCT_STRONG', 'STRUCT_MODERATE', 'STRUCT_WEAK',
                     'STRUCT_SOLO', 'GEO_STRONG', 'GEO_WEAK', 'GEO_SOLO_INLIERS', 'DOMINANT_AT'];
 
-var profile = V.cal003();          /* the shipped comparator-41 calibration */
+var profile = V.cal();          /* the shipped comparator-42 calibration */
 var slots = { A: null, B: null };
-var last = null, lastV4 = null, lastScreen = null, attackRows = null;
+var last = null, lastScreen = null, attackRows = null;
 
 var CS = getComputedStyle(document.documentElement);
 function tok(n, fb) { var v = CS.getPropertyValue(n).trim(); return v || fb; }
@@ -265,7 +269,7 @@ function toCanvas(img, maxW, maxH) {
 }
 function setSlot(slot, img, name) {
   var t0 = performance.now(), wire = toWire(img), fp;
-  try { fp = V.hashChecked(wire, {}, profile.limits); }
+  try { fp = V.hash(wire, {}, profile.limits); }
   catch (e) { alert('That work did not hash: ' + e.message); return; }
   var kp = 0;
   try { kp = P.parseT2(fp.t2).list.length; } catch (e) {}
@@ -310,7 +314,7 @@ function paintScreen() {
   var A = slots.A, B2 = slots.B;
   if (!A || !B2) return;
   var t0 = performance.now();
-  var s = V.screenV41(A.hash.t1, A.hash.t2, B2.hash.t1, B2.hash.t2, {}, profile);
+  var s = V.screen(A.hash.t1, A.hash.t2, B2.hash.t1, B2.hash.t2, {}, profile);
   var ms = performance.now() - t0;
   lastScreen = s;
   $('#screenStats').innerHTML = [
@@ -351,14 +355,14 @@ function buildLattice() {
   var dot = document.createElement('span');
   dot.className = 'dot'; dot.id = 'latDot';
   dot.style.left = '0%'; dot.style.bottom = '0%';
-  g.parentNode.appendChild(dot);
+  g.appendChild(dot);   /* inside the grid, so its coordinates are the grid's */
 }
 function paintLattice(r) {
   var t = profile.thresholds;
   var sx = Math.max(0, Math.min(SCALE, r.structural)) / SCALE;
   var gy = Math.max(0, Math.min(SCALE, r.geometryEvidence)) / SCALE;
   var dot = $('#latDot');
-  if (dot) { dot.style.left = (6 + sx * 88) + '%'; dot.style.bottom = (6 + gy * 84) + '%'; }
+  if (dot) { dot.style.left = (3 + sx * 94) + '%'; dot.style.bottom = (3 + gy * 94) + '%'; }
   var col = r.structural >= t[1] ? 2 : r.structural >= t[2] ? 1 : 0;
   var row = r.geometryEvidence >= t[5] ? 0 : r.geometryEvidence >= t[6] ? 1 : 2;
   $$('#latGrid .cell').forEach(function (c) {
@@ -367,16 +371,30 @@ function paintLattice(r) {
   $('#latNote').textContent = 'thresholds: structural ' + t[2] + ' / ' + t[1] +
     ' · geometric ' + t[6] + ' / ' + t[5] + ' · geo-solo floor ' + t[7] + ' inliers';
 }
-function paintReadout(r, r4) {
+function armOf(r) {
+  var b = r.basis.join('+');
+  if (b.indexOf('bytes') >= 0) return 'the fingerprints are the same bytes — nothing else was consulted.';
+  if (b === 'structural+geometric') return 'both axes cleared their bars; neither had to carry it alone.';
+  if (b === 'geometric') return 'the geo-solo arm: geometry alone, past the raised floor of ' +
+    profile.thresholds[7] + ' inliers and a topology that is not scattered.';
+  if (b === 'structural') return 'the structural-solo arm: structure alone, past ' + profile.thresholds[4] +
+    ' with the coverage floor met.';
+  if (b.indexOf('R3') >= 0) return 'R3 fired: geometry agreed but scattered, so certification was capped.';
+  if (b.indexOf('R4') >= 0) return 'R4 fired: structure agreed without spatial support, so certification was capped.';
+  return b ? 'partial agreement — over a suspicion bar, under every certification arm.' :
+             'nothing cleared a bar.';
+}
+function paintReadout(r) {
   var pills = r.basis.map(function (b) {
     return '<span class="pill' + (b.indexOf('R') === 0 ? '' : ' on') + '">' + esc(b) + '</span>';
   }).join('');
   if (r.geoWeakInliers > 0) pills += '<span class="pill">weak signal ' + r.geoWeakInliers + '</span>';
   $('#readout').innerHTML =
-    '<p class="px-eyebrow">Comparator 41 · ' + esc(r.calibration) + '</p>' +
+    '<p class="px-eyebrow">Comparator ' + r.comparator + ' · ' + esc(r.calibration) + '</p>' +
     '<div class="verdict-big' + (r.verdict === 'Copy' || r.verdict === 'Identical' ? ' px-rainbow-text' : ' grey') + '">' +
       esc(r.verdict) + '</div>' +
     '<div class="verdict-class">' + esc(r.class) + '</div>' +
+    '<p class="cap" style="margin-top:8px">' + esc(armOf(r)) + '</p>' +
     '<div style="margin-top:12px">' + pills + '</div>';
   $('#reportCard').innerHTML =
     kv('structural', String(r.structural)) +
@@ -385,17 +403,16 @@ function paintReadout(r, r4) {
     kv('topology class', String(r.topology)) +
     kv('geo margin', r.geoMargin + '  raw ' + r.geoRaw + ' ctl ' + r.geoCtl) +
     kv('control member', r.geoCtlMember) +
-    kv('comparator 4 says', r4 ? r4.verdict : '—') +
     kv('calibration id', r.calibrationId);
 }
-function paintVerdictStats(r, r4) {
-  var moved = r4 && r4.verdict !== r.verdict;
+function paintVerdictStats(r) {
   $('#verdictStats').innerHTML = [
     stat('Verdict', r.verdict, r.certifiable ? 'certifiable evidence present' : 'not certifiable'),
     stat('Structural', String(r.structural), 'strong bar ' + profile.thresholds[1]),
     stat('Geometric', String(r.geometryEvidence), 'strong bar ' + profile.thresholds[5]),
-    stat('vs comparator 4', moved ? r4.verdict + ' → ' + r.verdict : 'unchanged',
-         moved ? 'the 4.1 amendments moved this pair' : 'both comparators agree', !moved)
+    stat('Weak signal', r.geoWeakInliers ? String(r.geoWeakInliers) + ' inliers' : 'not used',
+         r.geoWeakInliers ? '§A1 carried the margin here' : 'an accepted model carried the geometry',
+         !r.geoWeakInliers)
   ].join('');
 }
 
@@ -406,70 +423,110 @@ function paintGeometry(r) {
   var A = slots.A, B2 = slots.B;
   var cv = $('#corr');
   var pad = 14, maxH = 260;
-  var wA = A.img.width, hA = A.img.height, wB = B2.img.width, hB = B2.img.height;
-  var scale = Math.min(1, maxH / Math.max(hA, hB));
-  var W = (wA + wB) * scale + pad * 3, H = Math.max(hA, hB) * scale + pad * 2;
+
+  /* The comparator canonicalises the pair before it measures, so the bench has
+     to as well — otherwise the correspondences it draws are not the ones the
+     verdict was made from.  `swapped` says which side the comparator called A. */
+  var first = r.swapped ? B2 : A, second = r.swapped ? A : B2;
+  var wF = first.img.width, hF = first.img.height, wS = second.img.width, hS = second.img.height;
+  var scale = Math.min(1, maxH / Math.max(hF, hS));
+  var W = (wF + wS) * scale + pad * 3, H = Math.max(hF, hS) * scale + pad * 2;
   var d = dpr();
   cv.width = Math.round(W * d); cv.height = Math.round(H * d);
   cv.style.width = Math.round(W) + 'px'; cv.style.height = Math.round(H) + 'px';
   var g = cv.getContext('2d'); g.setTransform(d, 0, 0, d, 0, 0);
   g.imageSmoothingEnabled = false;
   g.fillStyle = tok('--bg-base', '#000'); g.fillRect(0, 0, W, H);
-  var ca = toCanvas(A.img, wA, hA), cb = toCanvas(B2.img, wB, hB);
-  g.drawImage(ca, pad, pad, wA * scale, hA * scale);
-  g.drawImage(cb, pad * 2 + wA * scale, pad, wB * scale, hB * scale);
+  g.drawImage(toCanvas(first.img, wF, hF), pad, pad, wF * scale, hF * scale);
+  g.drawImage(toCanvas(second.img, wS, hS), pad * 2 + wF * scale, pad, wS * scale, hS * scale);
 
-  var ka = P.parseT2(A.hash.t2).list, kb = P.parseT2(B2.hash.t2).list;
-  var dA = P.parseT1(A.hash.t1), dB = P.parseT1(B2.hash.t1);
-  /* keypoint coordinates are normalised by the long side; undo that per side */
+  var kA = P.parseT2(first.hash.t2).list, kB = P.parseT2(second.hash.t2).list;
+  var dA = P.parseT1(first.hash.t1), dB = P.parseT1(second.hash.t1);
   var unA = function (k) {
     return [pad + (k.x / 65535) * dA.maxDim * scale, pad + (k.y / 65535) * dA.maxDim * scale];
   };
   var unB = function (k) {
-    return [pad * 2 + wA * scale + (k.x / 65535) * dB.maxDim * scale, pad + (k.y / 65535) * dB.maxDim * scale];
+    return [pad * 2 + wF * scale + (k.x / 65535) * dB.maxDim * scale,
+            pad + (k.y / 65535) * dB.maxDim * scale];
   };
   g.globalAlpha = .5;
   g.fillStyle = tok('--grey-700', '#a3a3a3');
-  ka.forEach(function (k) { var p = unA(k); g.fillRect(p[0] - 1, p[1] - 1, 2, 2); });
-  kb.forEach(function (k) { var p = unB(k); g.fillRect(p[0] - 1, p[1] - 1, 2, 2); });
+  kA.forEach(function (k) { var p = unA(k); g.fillRect(p[0] - 1, p[1] - 1, 2, 2); });
+  kB.forEach(function (k) { var p = unB(k); g.fillRect(p[0] - 1, p[1] - 1, 2, 2); });
   g.globalAlpha = 1;
 
-  /* The report carries models, not membership, so the bench recomputes the
-     pools and re-runs the verifier — the same functions the comparator used —
-     and draws which correspondences the model kept. */
+  /* Replay the extraction the comparator ran: verify, consume the inliers by
+     their B index, repeat.  Same helper, same floors, same tie rule — so the
+     lines below are the model's own inliers, not a re-fit that resembles them.
+     The count is asserted against the report; a mismatch is stated, not hidden. */
   var o = { geoMinCorr: profile.geoMinCorr, geoEps: profile.geoEps,
             geoConfAt: profile.geoConfAt, mirrorHypothesis: true };
   var xmaxA = Math.max(0, Math.min(65535, Math.trunc((dA.width - 1) * 65535 / Math.max(1, dA.maxDim))));
-  var am = P._internal.mirrorSide(ka, xmaxA);
-  var pd = V.correspondW(ka, kb), pm = V.correspondW(am, kb);
-  var vd = pd.length >= o.geoMinCorr ? V._internal.houghVerifyW(ka, kb, pd, o, dA.maxDim, dB.maxDim) : null;
-  var vm = pm.length >= o.geoMinCorr ? V._internal.houghVerifyW(am, kb, pm, o, dA.maxDim, dB.maxDim) : null;
-  var useMirror = (vm ? vm.inliers : -1) > (vd ? vd.inliers : -1);
-  var pool = useMirror ? pm : pd, ver = useMirror ? vm : vd;
-  var srcK = useMirror ? am : ka;
-  var kept = 0;
-  if (pool && pool.length) {
-    var rg = rainbowGrad(g, pad, 0, W - pad, 0);
-    for (var ci = 0; ci < pool.length; ci++) {
-      var c0 = pool[ci];
-      var a0 = srcK[c0[0]], b0 = kb[c0[1]];
-      if (!a0 || !b0) continue;
-      var p1 = unA(a0), p2 = unB(b0);
-      var isIn = ver && ver.mask && ver.mask[ci];
-      g.strokeStyle = isIn ? rg : tok('--grey-400', '#3d3d3d');
-      g.globalAlpha = isIn ? 0.95 : 0.35;
-      g.lineWidth = isIn ? 1.2 : 0.7;
-      g.beginPath(); g.moveTo(p1[0], p1[1]); g.lineTo(p2[0], p2[1]); g.stroke();
-      if (isIn) kept++;
+  var am = P._internal.mirrorSide(kA, xmaxA);
+  var pd = V.correspondW(kA, kB).slice();
+  var pm = V.correspondW(am, kB).slice();
+  var poolD = pd.length, poolM = pm.length;
+  var verify = function (side, pool) {
+    return pool.length >= o.geoMinCorr
+      ? V._internal.houghVerifyW(side, kB, pool, o, dA.maxDim, dB.maxDim)
+      : { inliers: 0, mask: [], model: null };
+  };
+  var rounds = [], drawnTotal = 0;
+  for (var round = 0; round < profile.maxModels; round++) {
+    var floor = round === 0 ? o.geoMinCorr : profile.minModelInliers;
+    var vd = verify(kA, pd), vm = verify(am, pm);
+    var useMirror = vm.inliers > vd.inliers;          /* ties → direct, as the engine does */
+    var v = useMirror ? vm : vd, pool = useMirror ? pm : pd;
+    if (!v.model || v.inliers < floor) break;
+    var consumed = {}, keep = [];
+    for (var ci = 0; ci < pool.length; ci++) if (v.mask[ci]) {
+      consumed[pool[ci].j] = 1;
+      keep.push([pool[ci].i, pool[ci].j]);
     }
-    g.globalAlpha = 1;
+    rounds.push({ mirror: useMirror, pairs: keep, inliers: v.inliers });
+    drawnTotal += v.inliers;
+    var drop = function (c) { return !consumed[c.j]; };
+    pd = pd.filter(drop); pm = pm.filter(drop);
   }
+  /* draw: rejected correspondences first, then each model's inliers over them */
+  g.strokeStyle = tok('--grey-400', '#3d3d3d'); g.globalAlpha = .3; g.lineWidth = .7;
+  [[kA, V.correspondW(kA, kB)], [am, V.correspondW(am, kB)]].forEach(function (pair) {
+    var side = pair[0];
+    pair[1].forEach(function (c) {
+      var a0 = side[c.i], b0 = kB[c.j];
+      if (!a0 || !b0) return;
+      var p1 = unA(a0), p2 = unB(b0);
+      g.beginPath(); g.moveTo(p1[0], p1[1]); g.lineTo(p2[0], p2[1]); g.stroke();
+    });
+  });
+  g.globalAlpha = 1;
+  var rg = rainbowGrad(g, pad, 0, W - pad, 0);
+  rounds.forEach(function (m) {
+    var side = m.mirror ? am : kA;
+    g.strokeStyle = rg; g.lineWidth = 1.3;
+    m.pairs.forEach(function (pr) {
+      var a0 = side[pr[0]], b0 = kB[pr[1]];
+      if (!a0 || !b0) return;
+      var p1 = unA(a0), p2 = unB(b0);
+      g.beginPath(); g.moveTo(p1[0], p1[1]); g.lineTo(p2[0], p2[1]); g.stroke();
+      g.fillStyle = rg;
+      g.beginPath(); g.arc(p2[0], p2[1], 2, 0, Math.PI * 2); g.fill();
+    });
+  });
+
+  var agrees = drawnTotal === r.totalInliers || (r.geoWeakInliers > 0 && rounds.length === 0);
   $('#corrLegend').innerHTML =
-    '<span><i class="swatch-rainbow"></i>inlier — the recovered model kept it (' + kept + ')</span>' +
+    '<span><i class="swatch-rainbow"></i>inlier — an accepted model kept it (' + drawnTotal + ')</span>' +
+    (rounds.length === 0 && r.geoWeakInliers > 0
+      ? '<span><i style="background:var(--grey-900)"></i>none accepted — the reported ' + r.geoWeakInliers +
+        ' come from the §A1 weak signal, which no model owns</span>' : '') +
     '<span><i style="background:var(--grey-400)"></i>correspondence the fit rejected (' +
-      Math.max(0, (pool ? pool.length : 0) - kept) + ')</span>' +
+      Math.max(0, poolD + poolM - drawnTotal) + ')</span>' +
     '<span><i style="background:var(--grey-700)"></i>stored keypoint, unmatched</span>' +
-    '<span>pool: ' + (useMirror ? 'mirror' : 'direct') + ' · ' + (pool ? pool.length : 0) + ' correspondences</span>';
+    '<span>pools: ' + poolD + ' direct · ' + poolM + ' mirror' +
+      (r.swapped ? ' · drawn in the comparator’s canonical order' : '') + '</span>' +
+    (agrees ? '' : '<span style="color:var(--text-primary)">drawn ' + drawnTotal +
+      ' vs reported ' + r.totalInliers + ' — replay disagrees with the comparator</span>');
 
   var cov = r.coverage;
   var gsize = profile.gridG;
@@ -486,6 +543,10 @@ function paintGeometry(r) {
   }
   $('#covGrid').style.gridTemplateColumns = 'repeat(' + gsize + ',1fr)';
   $('#covGrid').innerHTML = cells;
+  $('#covNote').textContent = cov && cov.occupied
+    ? cov.occupied + ' of ' + (gsize * gsize) + ' cells hold an inlier · coverage ' + cov.coverage +
+      ' · bounding box ' + cov.bboxCells + ' cells · concentration ' + cov.concentration
+    : 'No accepted model, so no inlier landed anywhere — the grid is empty by construction, not by accident.';
   $('#geoStats').innerHTML = [
     stat('Models accepted', String(r.models.length), 'floor ' + profile.minModelInliers + ' inliers, max ' + profile.maxModels),
     stat('Inliers', String(r.totalInliers), r.geoWeakInliers ? 'from the §A1 weak signal' : 'from accepted models'),
@@ -521,7 +582,7 @@ function paintChannels(r) {
           '<i class="raw" style="width:' + (meas ? (raw / SCALE * 100) : 0) + '%"></i>' +
           '<i class="val" style="width:' + (meas ? (ev / SCALE * 100) : 0) + '%"></i>' +
         '</div>' +
-        '<div class="chan-val">' + (meas ? ev : 'abstains') + '</div>' +
+        '<div class="chan-val">' + (meas ? (raw === ev ? String(ev) : raw + ' → ' + ev) : 'abstains') + '</div>' +
         '<div class="chan-caret">›</div>' +
       '</div>' +
       '<div class="chan-body">' +
@@ -574,7 +635,9 @@ function paintProfile() {
     '</tbody></table>';
   $('#curves').innerHTML = LUT_SLOTS.map(function (s) {
     var pts = profile[s[0]];
-    var identity = pts.length === 2 && pts[0][1] === 0 && pts[1][1] === SCALE;
+    /* a MULTIPLIER table's no-op is a constant SCALE, not the identity line */
+    var identity = pts.length === 2 &&
+      ((pts[0][1] === 0 && pts[1][1] === SCALE) || (pts[0][1] === SCALE && pts[1][1] === SCALE));
     return '<div class="card tight' + (identity ? ' flat' : '') + '">' +
       '<p class="px-eyebrow">' + esc(s[1]) + (identity ? ' · identity' : '') + '</p>' +
       curveSvg(pts, !identity) +
@@ -584,32 +647,38 @@ function paintProfile() {
 }
 
 /* ================================================================ *
- * 07 — the attack sweep, both comparators
+ * 07 — the attack sweep
  * ================================================================ */
 function runAttackSweep() {
   if (!slots.A) return;
-  var keys = Object.keys(XF), i = 0, rows = [];
+  var keys = ['__identity'].concat(Object.keys(XF)), i = 0, rows = [];
   var busy = $('#busy'); busy.classList.add('on');
   $('#sweepStatus').textContent = 'running…';
-  var cal1 = V.cal001();
   function step() {
     if (i >= keys.length) {
       attackRows = rows;
       busy.classList.remove('on');
-      $('#sweepStatus').textContent = rows.length + ' transforms · comparator 4 and 41 side by side';
+      $('#sweepStatus').textContent = rows.length + ' transforms · comparator 42, with the stage-1 screen beside it';
       paintAttack();
       return;
     }
     var k = keys[i++];
-    var img = XF[k].fn(slots.A.img);
-    var wire = toWire(img), fp;
-    try { fp = V.hashChecked(wire, {}, profile.limits); } catch (e) { setTimeout(step, 0); return; }
-    var a = slots.A.hash;
-    var r41 = V.compareV41(a.t1, a.t2, fp.t1, fp.t2, {}, profile);
-    var r4 = V.compareV4(a.t1, a.t2, fp.t1, fp.t2, {}, cal1);
-    rows.push({ label: XF[k].label, v41: r41.verdict, v4: r4.verdict,
-                s: r41.structural, g: r41.geometryEvidence, inl: r41.totalInliers,
-                weak: r41.geoWeakInliers, basis: r41.basis.join('+') });
+    var a = slots.A.hash, fp, label;
+    if (k === '__identity') {
+      fp = a; label = 'the work itself';        /* the anchor row: this must read Identical */
+    } else {
+      label = XF[k].label;
+      try { fp = V.hash(toWire(XF[k].fn(slots.A.img)), {}, profile.limits); }
+      catch (e) { setTimeout(step, 0); return; }
+    }
+    var rep = V.compare(a.t1, a.t2, fp.t1, fp.t2, {}, profile);
+    var sc = V.screen(a.t1, a.t2, fp.t1, fp.t2, {}, profile);
+    rows.push({ label: label, v: rep.verdict, screen: sc.pass ? 'pass' : 'unscreened',
+                s: rep.structural, g: rep.geometryEvidence, inl: rep.totalInliers,
+                weak: rep.geoWeakInliers,
+                /* §8 — how independent the geometry that carried this row was */
+                d: rep.diversity ? rep.diversity.combined : null,
+                basis: rep.basis.join('+') });
     $('#sweepStatus').textContent = i + ' / ' + keys.length;
     setTimeout(step, 0);
   }
@@ -619,20 +688,24 @@ function paintAttack() {
   if (!attackRows) return;
   var rows = attackRows.slice().sort(function (a, b) { return b.s - a.s; });
   $('#attackTable').innerHTML =
-    '<table class="data"><thead><tr><th>transform</th><th>41</th><th>4</th>' +
-    '<th class="num">struct</th><th class="num">geo</th><th class="num">inliers</th></tr></thead><tbody>' +
+    '<table class="data"><thead><tr><th>transform</th><th>verdict</th><th>screen</th>' +
+    '<th class="num">struct</th><th class="num">geo</th><th class="num">inliers</th>' +
+    '<th class="num">D</th></tr></thead><tbody>' +
     rows.map(function (r) {
-      var cert = r.v41 === 'Copy' || r.v41 === 'Identical';
+      var cert = r.v === 'Copy' || r.v === 'Identical';
       return '<tr' + (cert ? ' class="hero"' : '') + '>' +
         '<td class="name">' + esc(r.label) + '</td>' +
-        '<td' + (cert ? ' class="verdict"' : '') + '>' + esc(r.v41) + '</td>' +
-        '<td>' + esc(r.v4) + '</td>' +
+        '<td' + (cert ? ' class="verdict"' : '') + '>' + esc(r.v) + '</td>' +
+        '<td>' + esc(r.screen) + '</td>' +
         '<td class="num">' + r.s + '</td>' +
         '<td class="num">' + r.g + '</td>' +
-        '<td class="num">' + r.inl + (r.weak ? '*' : '') + '</td></tr>';
+        '<td class="num">' + r.inl + (r.weak ? '*' : '') + '</td>' +
+        '<td class="num">' + (r.d === null ? '—' : r.d) + '</td></tr>';
     }).join('') + '</tbody></table>' +
     '<p class="cap" style="margin-top:10px">* the inlier count came from the §A1 weak signal — ' +
-    'evidence for the margin, never enough to certify alone.</p>';
+    'evidence for the margin, never enough to certify alone. <b>D</b> is the §8 diversity ' +
+    'reading: how independent the inliers actually were, across space, scale, models and ' +
+    'descriptors. A high inlier count beside a low D is a repeated texture, not a copy.</p>';
 
   var c = fit($('#chAttack'), 300), g = c.g;
   var pad = 34, x0 = pad, x1 = c.w - 12, y0 = 12, y1 = c.h - pad;
@@ -644,7 +717,7 @@ function paintAttack() {
     g.strokeStyle = tok('--grey-400', '#3d3d3d'); g.setLineDash([3, 4]);
     g.beginPath(); g.moveTo(x, y0); g.lineTo(x, y1); g.stroke(); g.setLineDash([]);
     g.fillStyle = tok('--text-tertiary', '#7a7a7a'); g.font = '10px ui-monospace, monospace';
-    g.fillText(m[1], x + 3, y0 + 10);
+    g.fillText(m[1], x + 3, y1 - 4);
   });
   [[t[5], 'geo strong'], [t[6], 'geo weak']].forEach(function (m) {
     var y = y1 - (m[0] / SCALE) * (y1 - y0);
@@ -655,10 +728,11 @@ function paintAttack() {
   });
   attackRows.forEach(function (r) {
     var x = x0 + (r.s / SCALE) * (x1 - x0), y = y1 - (r.g / SCALE) * (y1 - y0);
-    var cert = r.v41 === 'Copy' || r.v41 === 'Identical';
+    var cert = r.v === 'Copy' || r.v === 'Identical';
     g.beginPath(); g.arc(x, y, cert ? 5 : 3.5, 0, Math.PI * 2);
-    g.fillStyle = cert ? rainbowGrad(g, x0, 0, x1, 0) : tok('--grey-600', '#7a7a7a');
+    g.fillStyle = cert ? 'hsl(276 82% 62%)' : tok('--grey-600', '#7a7a7a');
     g.fill();
+    if (cert) { g.lineWidth = 1; g.strokeStyle = tok('--grey-1000', '#fff'); g.stroke(); }
   });
   g.fillStyle = tok('--text-tertiary', '#7a7a7a'); g.font = '10px ui-monospace, monospace';
   g.fillText('structural →', x1 - 74, y1 + 16);
@@ -715,17 +789,17 @@ function paintHex(sec) {
 function decide() {
   var A = slots.A, B2 = slots.B;
   if (!A || !B2) return;
-  var cal1 = V.cal001();
+  /* one warm-up, then time the second run — the first compare on a fresh
+     page pays for JIT and cache misses that a served index never would */
+  var r = V.compare(A.hash.t1, A.hash.t2, B2.hash.t1, B2.hash.t2, {}, profile);
   var t0 = performance.now();
-  var r = V.compareV41(A.hash.t1, A.hash.t2, B2.hash.t1, B2.hash.t2, {}, profile);
+  r = V.compare(A.hash.t1, A.hash.t2, B2.hash.t1, B2.hash.t2, {}, profile);
   var t1 = performance.now();
-  var r4 = V.compareV4(A.hash.t1, A.hash.t2, B2.hash.t1, B2.hash.t2, {}, cal1);
-  var t2 = performance.now();
-  last = r; lastV4 = r4;
+  last = r;
   paintScreen();
   paintLattice(r);
-  paintReadout(r, r4);
-  paintVerdictStats(r, r4);
+  paintReadout(r);
+  paintVerdictStats(r);
   paintGeometry(r);
   paintChannels(r);
   paintProfile();
@@ -733,8 +807,11 @@ function decide() {
   $('#costStats').innerHTML = [
     stat('Hash A', A.ms + ' ms', A.img.width + '×' + A.img.height + ' — budget 1600 ms'),
     stat('Hash B', B2.ms + ' ms', B2.img.width + '×' + B2.img.height),
-    stat('Compare 41', (t1 - t0).toFixed(1) + ' ms', 'budget 25 ms — from the wire only'),
-    stat('Compare 4', (t2 - t1).toFixed(1) + ' ms', 'the frozen comparator, same wires')
+    stat('Compare', (t1 - t0).toFixed(1) + ' ms',
+         ((t1 - t0) <= 25 ? 'inside' : 'OVER') + ' the §13 budget of 25 ms · ' +
+         A.kp + '+' + B2.kp + ' keypoints, warm'),
+    stat('Screen', lastScreen ? 'pools ' + lastScreen.poolDirect + '/' + lastScreen.poolMirror : '—',
+         'what an index pays before deciding whether to compare at all')
   ].join('');
 }
 function run() {
@@ -814,11 +891,10 @@ $('#xform').value = 'pastecrop';
 run();
 
 /* the console surface the headless harness drives */
-window.paph4x = {
+window.paphjsx = {   /* the bench's console surface */
   profile: function () { return profile; },
   slots: function () { return slots; },
   report: function () { return last; },
-  reportV4: function () { return lastV4; },
   screen: function () { return lastScreen; },
   samples: SAMPLES, transforms: XF,
   setSlot: setSlot, decide: decide, sweep: runAttackSweep,

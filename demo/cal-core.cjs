@@ -1,8 +1,8 @@
-/*! cal-core.js — PAPH v4 calibration core (SPEC-004 §19, milestone M5 tooling).
+/*! cal-core.js — PAPH calibration core (SPEC-004 §19, milestone M5 tooling).
  *
- *  The pure logic under demo/paph4-calibration.html, kept engine-adjacent and
+ *  The pure logic under demo/paph-js-console.html, kept engine-adjacent and
  *  requireable from node so test/v4.cjs can hold it to the one invariant the
- *  whole bench rests on: a pair's verdict recomputed from its SNAPSHOT under a
+ *  whole console rests on: a pair's verdict recomputed from its SNAPSHOT under a
  *  profile equals the verdict the full comparator produces under that profile.
  *
  *  A snapshot stores everything the §14 lattice consumes EXCEPT the outputs of
@@ -48,7 +48,15 @@ function measurementKey(P) {
 }
 
 /* Everything the lattice consumes, with LUT outputs left OUT and their raw
-   inputs kept IN. */
+   inputs kept IN.  The six non-local channels keep their RAW values and pass
+   through the profile's per-channel tables at relattice time (§A3); the
+   geometry measurement may be the weak signal (§A1), which the snapshot
+   records so a bench can show which pairs lean on it.
+
+   SPEC-004.2 adds one more re-derivable input: the §8 geometric-diversity
+   READING is a measurement and is stored, while the table it passes through is
+   a calibration and is not — same split as everywhere else here, so dragging
+   lutGeoDiversity retunes a whole corpus instantly. */
 function makeSnapshot(report, P) {
   var six = [];
   for (var i = 0; i < 7; i++) {
@@ -57,7 +65,7 @@ function makeSnapshot(report, P) {
     var ch = report.v3.channels[name];
     six.push([name, ch.value, ch.measurable]);
   }
-  return {
+  var s = {
     identical: report.v3.identical,
     six: six,
     localMeasurable: report.local.measurable,
@@ -70,70 +78,39 @@ function makeSnapshot(report, P) {
     totalInliers: report.totalInliers,
     topology: report.topology,
     anyMirror: report.models.some(function (m) { return m.mirror; }),
+    /* §8 — the combined diversity reading, or null under comparator 41 */
+    geoDiversity: report.diversity ? report.diversity.combined : null,
+    modelCount: report.models.length,
     geoMeas: report.geoMeasurable,
     v3Verdict: report.v3.verdict,
     v3Structural: report.v3.structural,
     measuredUnder: measurementKey(P)
   };
-}
-
-/* The instant loop: LUTs and lattice under a CANDIDATE profile, from a
-   snapshot.  Mirrors compareV4's tail exactly — test/v4.cjs proves it. */
-function relattice(v4, snap, P) {
-  var localEv = 0;
-  if (snap.localMeasurable)
-    localEv = Math.trunc(v4.lutEval(P.lutLocal, snap.localMargin) *
-                         v4.lutEval(P.lutDiversity, snap.diversity) / SCALE);
-  var geoEv = v4.lutEval(P.lutGeometry, snap.geoMargin);
-  var channels = [];
-  var k = 0;
-  for (var i = 0; i < 7; i++) {
-    var name = CHANNEL_ORDER[i];
-    if (name === 'local') channels.push(['local', localEv, snap.localMeasurable]);
-    else { channels.push(snap.six[k]); k++; }
-  }
-  var out = v4.latticeV4({
-    identical: snap.identical, channels: channels,
-    geoMeasurable: snap.geoMeas, geoEvidence: geoEv,
-    totalInliers: snap.totalInliers, topologyClass: snap.topology,
-    diversity: snap.diversity, coverageMin: snap.coverageMin,
-    anyMirrorModel: snap.anyMirror
-  }, P);
-  out.localEvidence = localEv;
-  out.geoEvidence = geoEv;
-  return out;
-}
-
-/* ------------------------------------------------------------ comparator 41
-   SPEC-004.1: same snapshot idea, two differences.  The six non-local
-   channels keep their RAW values in the snapshot and pass through the
-   profile's per-channel tables at relattice time (A3), and the geometry
-   measurement may be the weak signal (A1), which the snapshot records so the
-   bench can show which pairs lean on it.  `v4Verdict` is optional: pass a
-   comparator-4 report and the bench can show the demotion ledger. */
-function makeSnapshot41(report, P, reportV4) {
-  var s = makeSnapshot(report, P);
-  s.comparator = 41;
+  s.comparator = report.comparator;
   s.geoWeak = report.geoWeakInliers || 0;
-  s.v4Verdict = reportV4 ? reportV4.verdict : null;
-  s.v4Basis = reportV4 ? reportV4.basis.join('+') : null;
   return s;
 }
 
-function relattice41(v4, snap, P) {
+function relattice(engine, snap, P) {
   var localEv = 0;
   if (snap.localMeasurable)
-    localEv = Math.trunc(v4.lutEval(P.lutLocal, snap.localMargin) *
-                         v4.lutEval(P.lutDiversity, snap.diversity) / SCALE);
-  var geoEv = v4.lutEval(P.lutGeometry, snap.geoMargin);
+    localEv = Math.trunc(engine.lutEval(P.lutLocal, snap.localMargin) *
+                         engine.lutEval(P.lutDiversity, snap.diversity) / SCALE);
+  var geoEv = engine.lutEval(P.lutGeometry, snap.geoMargin);
+  /* §8 — the diversity multiplier, and ONLY where a model was accepted: the
+     weak-signal path reached the margin without producing one, and multiplying
+     it down here would punish the same absence twice.  A comparator-41 snapshot
+     carries no diversity reading and is left exactly as it was. */
+  if (snap.geoDiversity !== null && snap.geoDiversity !== undefined && snap.modelCount > 0)
+    geoEv = Math.trunc(geoEv * engine.lutEval(P.lutGeoDiversity, snap.geoDiversity) / SCALE);
   var channels = [], k = 0;
   for (var i = 0; i < 7; i++) {
     var name = CHANNEL_ORDER[i];
     if (name === 'local') { channels.push(['local', localEv, snap.localMeasurable]); continue; }
     var six = snap.six[k]; k++;
-    channels.push([six[0], v4.lutEval(v4.lutChannel(P, six[0]), six[1]), six[2]]);
+    channels.push([six[0], engine.lutEval(engine.lutChannel(P, six[0]), six[1]), six[2]]);
   }
-  var out = v4.latticeV4({
+  var out = engine.lattice({
     identical: snap.identical, channels: channels,
     geoMeasurable: snap.geoMeas, geoEvidence: geoEv,
     totalInliers: snap.totalInliers, topologyClass: snap.topology,
@@ -146,10 +123,10 @@ function relattice41(v4, snap, P) {
   return out;
 }
 
-/* The 4.1 scoreboard.  CERTIFIED and AT-REVIEW are reported separately and
+/* The scoreboard.  CERTIFIED and AT-REVIEW are reported separately and
    named separately — they are different questions, and reading one as the
    other is how a calibration gets mis-sold. */
-function metrics41(v4, pairs, P) {
+function metrics(engine, pairs, P) {
   var out = {
     n: pairs.length, stale: 0,
     falseCert: [], byCat: {}, arms: {},
@@ -162,7 +139,7 @@ function metrics41(v4, pairs, P) {
     out.byCat[c.key] = { n: 0, cert: 0, review: 0, below: 0 };
   });
   pairs.forEach(function (p, idx) {
-    var r = relattice41(v4, p.snap, P);
+    var r = relattice(engine, p.snap, P);
     p.live = r;
     var v = r.state, pos = isPositive(p.cat);
     if (p.snap.measuredUnder !== mkey) out.stale++;
@@ -191,59 +168,9 @@ function metrics41(v4, pairs, P) {
   return out;
 }
 
-/* §19.3 + §9.5 — the whole scoreboard, per category, plus the two hard gates
-   and the before/after recall table the aggregation flip owes. */
-function metrics(v4, pairs, P) {
-  var states = ['Identical', 'Copy', 'Suspected', 'Related', 'Unrelated', 'Indeterminate'];
-  var byCat = {};
-  CATEGORIES.forEach(function (c) {
-    byCat[c.key] = { n: 0, states: { Identical: 0, Copy: 0, Suspected: 0, Related: 0, Unrelated: 0, Indeterminate: 0 } };
-  });
-  var falseCertEFG = [], falseCertHI = [], losses95 = [], misses = [];
-  var reviewPos = 0, reviewNeg = 0;
-  var bV4 = { hit: 0, n: 0 }, bV3 = { hit: 0, n: 0 };
-  var cdV4 = { hit: 0, n: 0 }, cdV3 = { hit: 0, n: 0 };
-  var stale = 0;
-  var mkey = measurementKey(P);
-
-  pairs.forEach(function (p, idx) {
-    if (!byCat[p.cat]) return;
-    var r = relattice(v4, p.snap, P);
-    var v = r.state;
-    p.live = r; /* the bench reads this back for the ledger */
-    byCat[p.cat].n++;
-    byCat[p.cat].states[v]++;
-    if (p.snap.measuredUnder !== mkey) stale++;
-    var pos = isPositive(p.cat);
-    if (pos) {
-      if (certified(p.snap.v3Verdict) && !certified(v)) losses95.push(idx);
-      if (!atLeastSuspected(v)) misses.push(idx);
-      if (v === 'Suspected') reviewPos++;
-      if (p.cat === 'B') { bV4.n++; bV3.n++; if (atLeastSuspected(v)) bV4.hit++; if (atLeastSuspected(p.snap.v3Verdict)) bV3.hit++; }
-      if (p.cat === 'C' || p.cat === 'D') { cdV4.n++; cdV3.n++; if (atLeastSuspected(v)) cdV4.hit++; if (atLeastSuspected(p.snap.v3Verdict)) cdV3.hit++; }
-    } else {
-      if (certified(v)) {
-        if ('EFG'.indexOf(p.cat) >= 0) falseCertEFG.push(idx); else falseCertHI.push(idx);
-      }
-      if (v === 'Suspected') reviewNeg++;
-    }
-  });
-
-  return {
-    states: states, byCat: byCat,
-    falseCertEFG: falseCertEFG, falseCertHI: falseCertHI,
-    losses95: losses95, misses: misses,
-    reviewPos: reviewPos, reviewNeg: reviewNeg,
-    bRecallV4: bV4.n ? bV4.hit / bV4.n : null, bRecallV3: bV3.n ? bV3.hit / bV3.n : null,
-    cdRecallV4: cdV4.n ? cdV4.hit / cdV4.n : null, cdRecallV3: cdV3.n ? cdV3.hit / cdV3.n : null,
-    bN: bV4.n, cdN: cdV4.n, stale: stale, total: pairs.length
-  };
-}
-
 return { SCALE: SCALE, CHANNEL_ORDER: CHANNEL_ORDER, CATEGORIES: CATEGORIES,
          RANK: RANK, isPositive: isPositive, certified: certified,
          atLeastSuspected: atLeastSuspected,
          MEASUREMENT_FIELDS: MEASUREMENT_FIELDS, measurementKey: measurementKey,
-         makeSnapshot: makeSnapshot, relattice: relattice, metrics: metrics,
-         makeSnapshot41: makeSnapshot41, relattice41: relattice41, metrics41: metrics41 };
+         makeSnapshot: makeSnapshot, relattice: relattice, metrics: metrics };
 });
