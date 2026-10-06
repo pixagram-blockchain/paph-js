@@ -1,186 +1,79 @@
 # Changelog
 
-## 4.2.0 — 2026-08-19 — 512 keypoints, and evidence that knows how independent it is
+## 5.3.0 — 2026-08-28 — the speed release: same bytes, same reports, 4× the pace
 
-The wire format does not move. Tier 1 is still exactly 3952 bytes, Tier 2 is
-still `32 + 40n`, and a 4.1 wire still parses, still compares and still means
-what it meant. What moves is the Tier-2 **budget** — 256 keypoints to 512 —
-which the format always allowed, because the record count was already a `u16`.
+Wire 5, extraction PAPH5-E03, comparator 51, CAL-051 — all unchanged; every
+golden tier sha-256 and every report field is bit-identical to 5.1.0, verified
+after each optimization batch. What changed is time:
 
-**512, not 384.** 384 raises recall while still leaving larger works
-under-sampled, and it costs the same architectural work as 512. Tier 2 is now at
-most `32 + 512 × 40 = 20512` bytes. The descriptor stays at 256 bits: given a
-fixed byte budget, `256-bit × 512 keypoints` carries far more spatial evidence
-than `512-bit × 256`, and spatial multiplicity is what collage and partial-copy
-detection actually pay for.
+hash (settled p50, ±20% container jitter documented via percentiles):
+  736×352  345.6 → 83.7 ms   512×384  273.8 → 80.0 ms
+  249×287  156.3 → 48.7 ms   150×110   45.1 → 21.8 ms
+compare 736-pair: 49.3 → 36.8 ms p50.
 
-**512 observations are not 512 pieces of evidence.** A brick wall yields two
-hundred keypoints describing one local texture, and 4.1's round-robin over an
-8×8 grid spreads them out without making them two hundred observations.
-Selection is now a quality score — `40 strength + 25 spatial novelty +
-20 scale novelty + 15 descriptor novelty`, all integer, greedy, ties to the
-stronger candidate. The descriptor term is the one that matters: a
-near-duplicate of something already selected scores zero on it however strong it
-is.
+Extraction: full-image lum sorts became 256-bin counting passes; keypoint
+selection became a lazy-greedy max-heap (every score factor is provably
+non-increasing as the selection grows, so cached scores are valid bounds;
+the heap's (bound desc, index asc) order with an equality rule reproduces
+the original first-index argmax exactly); pyramid levels read two source
+integral images; topologySection runs on inlined palette LUTs; indexImage
+uses direct 65536-entry tables (the packed key is 16-bit by construction).
+GC share fell from 37% of runtime to 2%.
 
-**The matcher stops computing distances it has already lost.** `hamCut` aborts
-once the partial popcount passes `max(a_d2, b_d2)`. This is exact, not
-approximate — such a pair cannot become either side's first or second candidate,
-and every downstream test is a strict `<`. The Rust engine repacks `[u32; 8]`
-into `[u64; 4]` once while parsing Tier 2, so the hot loop issues four POPCNTs
-rather than eight; the wire stays 32 bytes. The acceptance test gains an
-**absolute margin** beside the Lowe ratio (`d2 − d1 ≥ 6`), two-sided like the
-ratio itself: `d1 = 2` against `d2 = 3` passes at 0.667 and means almost nothing.
+Comparator: the 004.2 Hungarian now solves on flat Float64/Int32 typed
+arrays with the matrix materialized once (all values ≤ 2^30 stay exact),
+identical strict-< tie-breaks; correspond() inlines the 128-bit descriptor
+distance over hoisted SoA locals. The remaining compare cost is the §8.2
+predicate legitimately running the exact assignment per D4/inversion
+hypothesis — an algorithmic floor the spec freezes on purpose.
 
-**The Hough vote stops allocating.** A `HashMap` per verification and a `Vec` per
-correspondence were affordable at 256 correspondences and are not at 512. The
-cell space is bounded, so the table is fixed open addressing with one
-multiplicative hash and linear probing, and the per-correspondence cell list is a
-stack array. Scale stops being a hard bucket: a `[24, 64, 24]/64` kernel hedges
-the quantisation that `level_dim` necessarily introduces.
 
-**The peak stops being a single number.** Vote weight is now
-`lowe_confidence × strength_compatibility` (floored at ½), and the peak is chosen
-lexicographically on `(mass, members, confidence, key)` — mass alone lets four
-overwhelming correspondences outrank a genuinely populated transformation, which
-is exactly the confusion 512 keypoints makes *more* likely. Each model reports a
-**median squared residual**, robust where a sum of squares is not, and the
-direct/mirror winner is decided on `(inliers, −median_err, conf_sum)`.
+## 5.1.0 — 2026-08-28 — comparator 51: three axes, one exact objective
 
-**One structure stays one model.** After a model is accepted, a soft exclusion
-neighbourhood scaled to the descriptor's patch footprint at its own pyramid level
-prevents a second model from rediscovering the first paste one keypoint over.
-Pools only; the underlying correspondence lists are untouched, so the measurement
-and its control still start from identical evidence.
+Version tracks the comparator; 5.0 was a paper release (the specification and
+its rulings) and 5.1 is the first shipped build of it, so the package version
+skips from 4.1.0 to **5.1.0**.  Spec: `docs/SPEC-005.1.md`.
 
-**Diversity is a first-class channel.** Doubling the budget doubles the matches a
-repeated texture can produce without adding one independent observation, and the
-inlier count cannot tell those apart. `D = 40 spatial + 25 scale + 20 model +
-15 descriptor` passes through its own calibration table and multiplies the
-geometric evidence. It gets a **tenth** table rather than reusing `lutDiversity`,
-which already modulates the local channel — reusing it would have moved the
-structural axis while claiming to change only geometry. The multiplier applies
-only where a model was accepted, so the weak-signal path is not punished twice.
+**Wire 5, extraction PAPH5-E03.**  Tier 1 grows to 2560 fixed bytes with an
+explicit section table, D4/inversion-invariant coarse folds, a 32-entry
+sketch, and 8x8 region codes; Tier 2 stays 32 + 32n with 128-bit two-plane
+descriptors (P structure, C color), n <= 512.  One D4 numbering everywhere.
 
-**What did not change, deliberately.** The lattice, rule for rule. The null
-family — the same five permutations, each running the identical measurement,
-aggregated by MAX. Proportion and Gate stay out of the decision path. A1, A2, A3
-and A4 carry over untouched. Tier 1, all eleven sections.
+**Comparator 51.**  The 5.0 three-axis architecture — structural channels,
+staged geometry, diversity — with the 004.2 fast-exact-compare contract kept
+verbatim in the LOCAL channel: maximum-cardinality minimum-Hamming assignment,
+sparse Hungarian with the dense solver as conformance oracle, lazy null
+transforms.  Geometry is SIMILARITY_D4 with all eight hypotheses always
+evaluated plus an eight-strong inverted family behind the invGate; independent
+evidence is direction-free (joint per-side caps), verdicts are
+swap-symmetric, and repetition demotes to Suspected under ruling R2/V-1.
 
-**And every decision constant is CAL-003's.** `geo_conf_at` and
-`GEO_SOLO_INLIERS` are absolute inlier counts, and doubling both with the budget
-looked obligatory: a control saturating at SCALE zeroes the margin by
-construction. That argument was measured rather than assumed, and it does not
-hold — on 512-keypoint works the GN control reaches ≈3125 of 10000, nowhere near
-saturation, while doubling `geo_conf_at` halves the reading on every work that
-never reaches the budget and doubling the solo floor turned a genuine crop from
-**Copy** into **Suspected** at 128×128. A floor only large works can clear is a
-size-dependent bias, and this family has paid for that defect class once already.
-Both keep CAL-003's values; §8 diversity is the guard, because it measures the
-problem directly rather than by proxy.
+**The §8.2 alignment predicate** (which D4 element and polarity the local bag
+agrees on) is new and earned its shape point by point: candidate filtering by
+the inversion-invariant C-plane gate, scoring by margin sums on the P-plane
+only, margins weighted down by 004.2 burst mass so median-plateau descriptors
+cannot vote, and a top-128 bag cap keyed on (s8, level) so both sides keep
+*corresponding* elements under any D4 element and under inversion.  Each of
+those four clauses is pinned by a fixture that failed without it.
 
-### What 512 keypoints found
-
-On the worked example the shared-asset pair — two unrelated works embedding one
-common tile, the `docs/ANALYSIS-002` case — moves from **Suspected** to **Copy**.
-Comparator 42 on 256-keypoint wires reproduces 4.1's *Suspected* exactly, so the
-cause is the budget and not the judgement: 4 scattered inliers become 14 in a
-coherent region because the tile really is shared and 256 keypoints were missing
-it. Nothing was tuned to hide it; the console's invariant is now containment —
-nothing outside the known shared-asset class may certify — which is a stronger
-claim than counting zero.
-
-§8 does not resolve it, and is not offered as if it did. The shared asset reads
-`D = 3583`; a genuine collage in the same corpus reads `D = 3583` too, to the
-digit. Diversity separates either from a near-duplicate and neither from the
-other, because both really are one coherent region reused at one scale. A table
-tight enough to demote the shared asset demotes the collage with it. The
-difference is provenance, and provenance is not in the pixels.
-
-Partial-copy recall on the same example went from 11 of 15 certified to 12, with
-all 15 at review or better in both.
-
-### Implementation, all output-identical
-
-The comparator got a performance pass whose only licence is the byte-for-byte
-golden assertion: the vote table is now grown once and cleared by an epoch
-counter rather than rebuilt per verification, `peak` walks the slots actually
-written instead of striding the whole table, one `Scratch` per comparison owns
-every buffer the geometry stage used to allocate ~40 times, §7 consumption is a
-marked byte per keypoint instead of a quadratic scan with `level_dim` inside it,
-`scale_bin` stops when the distance starts rising, and the §3 selector packs
-descriptors contiguously and replaces its two integer divides with a reciprocal
-table. WebAssembly now ships with SIMD128 enabled, used for the one loop shaped
-for it — a fixed query against a contiguous descriptor stream — and held to the
-scalar path bit for bit by a test.
-
-**And the §4 early abort was removed from the Rust matcher, because it was
-slower.** It is exact, so which abort strategy an engine uses is an
-implementation choice; measured, a branch per word in a loop this unpredictable
-costs more than three saved POPCNTs save. Dropping it took a full comparison
-from 13.2 ms to 8.0 ms with every output byte unchanged. That is the second
-mechanically sound argument in this release to lose to a measurement.
-
-Native reference at 512 keypoints, 512×384: self-compare 19.7 → 11.5 ms.
-
-A second pass then went after the wire's implementation without touching its
-bytes, because section timing showed hashing was never the keypoint budget:
-`index_image` swapped three per-pixel `HashMap`s for one flat 65536-entry array
-(the 5-5-5-guard key is 16 bits by construction), `canonical64` computes its
-threshold mask once and derives all eight D4 variants as bit permutations of
-one `u64` — held to the map-walking reference by a 2000-case equivalence
-test — `nms` probes an exact 3×3 grid neighbourhood instead of scanning the
-whole kept list (the one cost the 512 budget genuinely doubled), the local
-window median is a selection rather than a sort, and the per-gather transform
-hoisted to one pass per image. Hash 111 → 91 ms native, 152 → 122 ms
-WebAssembly, golden file byte-identical throughout.
-
-### Provenance, and mixed corpora
-
-A 4.2 fingerprint is not a 4.1 fingerprint of the same image — the Tier-1 sketch
-is drawn from a different keypoint set. Two reserved bits carry the difference
-without a version bump: Tier-1 flag `F_KPQ` (0x20) and Tier-2 header byte 16.
-Both sit outside the CRC-covered region, and both read back as `0` on every wire
-ever emitted before this release.
-
-A mixed comparison is **performed and flagged**, never refused —
-`report.selection.mixed`. Re-hash a corpus before re-deriving its thresholds. To
-reproduce a 4.1 wire exactly, hash with `{ kpCount: 256, kpSelect: 0 }`; the 4.1
-selector is kept in both engines for that purpose rather than approximated.
-
-### Surface
-
-`compare`, `screen` and `cal` bind to comparator 42 under container 3.
-**Comparator 41 is frozen, not deleted** — `compare41`, `screen41` and `cal41()`
-still compute, so a verdict issued under 4.1 stays reproducible. Comparator 4
-remains decodable and not computable, exactly as 4.1 left it. Each comparator
-refuses the others' profiles, in every direction.
-
-CAL-001 and CAL-003 encode to the same bytes and hash to the same ids as before:
-container 3 appends its eight scalars *after* the container-1/2 fixed block.
-
-New calibration: **CAL-004-PROPOSED**, 320 bytes, id `91b545f801f5a095…`.
-PROPOSED because the corpus has not been re-hashed at 512 yet.
-
-### Fixed
-
-- `test/parity-comparator.mjs` compared `v3Verdict` as `''` against a real
-  verdict on every case, because the Rust surface flattens that field and the
-  JavaScript one nests it. The harness was failing before this release.
-- `index.d.ts` declared `VERSION` twice — once for the wire, once for the
-  package — which no strict TypeScript build accepted. The wire's is now
-  `WIRE_VERSION`, exported at runtime too.
-- `rust/build.sh` still copied `paph3.wasm` to a path the 4.1 rename had moved.
-
-### Migration
-
-1. Re-hash. Mixed comparisons work and are flagged, but a calibration corpus
-   should be homogeneous.
-2. Tier-2 storage grows from at most 10272 bytes to at most 20512. Tier 1 is
-   unchanged.
-3. Container-2 artefacts will not compute under comparator 42, and vice versa.
-   Both still decode.
-4. Docs: `docs/SPEC-004.2-paph-v42.md`.
+**Packaging.**
+- `docs/golden/GOLDEN-051.json` — 13 golden cases (tier hashes plus the
+  entire compare report, field for field) as the port handoff; guarded by
+  `test/golden.test.cjs`.
+- `index.cjs` / `index.js` / `index.d.ts` — dual CJS/ESM entry with typings
+  checked against the runtime report shape.
+- `dist/paph51.browser.js` (`npm run bundle`) — dependency-free browser
+  bundle, byte-conformant with the source build.
+- `demo/playground.html` — in-browser playground: load or synthesize a pair,
+  derive B from A (D4, inversion, tone, upscale, crop-paste, noise), read the
+  full verdict.
+- `tools/png.cjs` — dependency-free PNG codec for tooling (all filters,
+  indexed + tRNS); `tools/calibrate.cjs` — corpus calibration harness with
+  the SPEC-005.1 §24.4 gates (>= 24 families, >= 60 images, >= 60 positive
+  pairs) and a provisional guard; ships `CAL-051-PROVISIONAL` until a real
+  corpus passes them.
+- WASM/Rust engine intentionally absent this release; the golden vectors are
+  the contract it will be held to.
 
 ## 4.1.0 — 2026-08-19 — `@pixagram/paph-js`: 4.1, and only 4.1
 

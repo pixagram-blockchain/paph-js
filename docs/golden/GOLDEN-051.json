@@ -1,0 +1,11407 @@
+{
+ "golden": "GOLDEN-051",
+ "wire": 5,
+ "comparator": 51,
+ "extractionProfileId": "PAPH5-E03:d697172ad64ac17c",
+ "pcal": "CAL-051-PROVISIONAL (provisional):139953a5641cdcf5",
+ "cases": [
+  {
+   "name": "identity-same-bytes",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": false,
+    "verdict": "Identical",
+    "evidenceClass": "IDENTICAL_BYTES",
+    "basis": [
+     "tier 1 and tier 2 byte-identical"
+    ],
+    "reasons": [],
+    "note": "byte-identical fingerprints",
+    "structural": {
+     "measurable": true,
+     "value": 10000,
+     "channelsMeasured": 0
+    },
+    "geometric": {
+     "measurable": false,
+     "note": "byte-identical fingerprints",
+     "value": 10000,
+     "raw": 0,
+     "control": 0,
+     "margin": 0,
+     "confidence": 0,
+     "correspondences": 0,
+     "totalInliers": 0,
+     "independentEvidence": 0,
+     "models": [],
+     "topology": {
+      "models": 0,
+      "primaryShare": 0,
+      "klass": "none"
+     },
+     "degraded": false,
+     "invGate": -1,
+     "invertedFamilyRan": false,
+     "ctlMember": "none"
+    },
+    "diversity": {
+     "measurable": false,
+     "value": 10000,
+     "components": null,
+     "repeat": 0,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     },
+     "local": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "alignedK": 0,
+      "alignedInverted": false,
+      "matches": 0,
+      "cmax": 0,
+      "w": 0,
+      "cap": 1,
+      "path": "none",
+      "ctlW": 0,
+      "ctlN": 0,
+      "ctlMember": "none",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0,
+      "diversity": 0,
+      "pairs": [],
+      "coverageA": {
+       "g": 4,
+       "occupied": 0,
+       "coverage": 0,
+       "bboxCells": 0,
+       "concentration": 0,
+       "counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 0,
+       "coverage": 0,
+       "bboxCells": 0,
+       "concentration": 0,
+       "counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     },
+     "topology": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     },
+     "texture": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     },
+     "palette": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     },
+     "spatial": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 0,
+      "coverage": 0,
+      "bboxCells": 0,
+      "concentration": 0,
+      "counts": {
+       "0": 0,
+       "1": 0,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 0,
+       "6": 0,
+       "7": 0,
+       "8": 0,
+       "9": 0,
+       "10": 0,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 0,
+      "coverage": 0,
+      "bboxCells": 0,
+      "concentration": 0,
+      "counts": {
+       "0": 0,
+       "1": 0,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 0,
+       "6": 0,
+       "7": 0,
+       "8": 0,
+       "9": 0,
+       "10": 0,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "none"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "byte-identical fingerprints"
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 36,
+     "regionPairs": 63,
+     "sketchAgree": 80,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "standard",
+     "kpA": 287,
+     "kpB": 287
+    },
+    "brightness": {
+     "shift": 0
+    },
+    "budgetUsed": 0,
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "e76da923d390b4e123ccdb37fd4e0677"
+    ]
+   }
+  },
+  {
+   "name": "identity-rehash",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": false,
+    "verdict": "Identical",
+    "evidenceClass": "IDENTICAL_BYTES",
+    "basis": [
+     "tier 1 and tier 2 byte-identical"
+    ],
+    "reasons": [],
+    "note": "byte-identical fingerprints",
+    "structural": {
+     "measurable": true,
+     "value": 10000,
+     "channelsMeasured": 0
+    },
+    "geometric": {
+     "measurable": false,
+     "note": "byte-identical fingerprints",
+     "value": 10000,
+     "raw": 0,
+     "control": 0,
+     "margin": 0,
+     "confidence": 0,
+     "correspondences": 0,
+     "totalInliers": 0,
+     "independentEvidence": 0,
+     "models": [],
+     "topology": {
+      "models": 0,
+      "primaryShare": 0,
+      "klass": "none"
+     },
+     "degraded": false,
+     "invGate": -1,
+     "invertedFamilyRan": false,
+     "ctlMember": "none"
+    },
+    "diversity": {
+     "measurable": false,
+     "value": 10000,
+     "components": null,
+     "repeat": 0,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     },
+     "local": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "alignedK": 0,
+      "alignedInverted": false,
+      "matches": 0,
+      "cmax": 0,
+      "w": 0,
+      "cap": 1,
+      "path": "none",
+      "ctlW": 0,
+      "ctlN": 0,
+      "ctlMember": "none",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0,
+      "diversity": 0,
+      "pairs": [],
+      "coverageA": {
+       "g": 4,
+       "occupied": 0,
+       "coverage": 0,
+       "bboxCells": 0,
+       "concentration": 0,
+       "counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 0,
+       "coverage": 0,
+       "bboxCells": 0,
+       "concentration": 0,
+       "counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     },
+     "topology": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     },
+     "texture": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     },
+     "palette": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     },
+     "spatial": {
+      "measurable": false,
+      "note": "byte-identical fingerprints",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 0,
+      "coverage": 0,
+      "bboxCells": 0,
+      "concentration": 0,
+      "counts": {
+       "0": 0,
+       "1": 0,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 0,
+       "6": 0,
+       "7": 0,
+       "8": 0,
+       "9": 0,
+       "10": 0,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 0,
+      "coverage": 0,
+      "bboxCells": 0,
+      "concentration": 0,
+      "counts": {
+       "0": 0,
+       "1": 0,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 0,
+       "6": 0,
+       "7": 0,
+       "8": 0,
+       "9": 0,
+       "10": 0,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "none"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "byte-identical fingerprints"
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 36,
+     "regionPairs": 63,
+     "sketchAgree": 80,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "standard",
+     "kpA": 287,
+     "kpB": 287
+    },
+    "brightness": {
+     "shift": 0
+    },
+    "budgetUsed": 0,
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "e76da923d390b4e123ccdb37fd4e0677"
+    ]
+   }
+  },
+  {
+   "name": "d4-rot90",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "c33bc95323b5bdc4a70f842825b73ac0ae7b971f8b6888713bef497e2def9412",
+    "t2": "3d5d5721f1aeff7432bb5ef8881d296f4a8861517bf911e494907ce95fe4d840"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": true,
+    "verdict": "Copy",
+    "evidenceClass": "STRUCT_GEO",
+    "basis": [
+     "S>=strong AND G>=certifying AND D>=floor",
+     "geometry-only (s22.4): 5 secondary conditions"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 6117,
+     "channelsMeasured": 7,
+     "secondaries": 7
+    },
+    "geometric": {
+     "measurable": true,
+     "note": "16 hypotheses (with inverted family), 234 correspondences, 2 model(s)",
+     "value": 10000,
+     "raw": 10000,
+     "control": 500,
+     "margin": 10000,
+     "ctlMember": "shift 1/3",
+     "confidence": 10000,
+     "correspondences": 234,
+     "totalInliers": 140,
+     "independentEvidence": 56,
+     "models": [
+      {
+       "m": 5,
+       "inverted": false,
+       "rotation": 90,
+       "mirrored": false,
+       "sQ16": 65559,
+       "scaleMilli": 1000,
+       "t": [
+        0,
+        -1
+       ],
+       "inliers": 122,
+       "indep": 39,
+       "resMedBucket": 0,
+       "mass": 104691,
+       "peakKey": 204864,
+       "pairs": [
+        [
+         12,
+         12
+        ],
+        [
+         8,
+         19
+        ],
+        [
+         72,
+         24
+        ],
+        [
+         109,
+         25
+        ],
+        [
+         230,
+         26
+        ],
+        [
+         251,
+         27
+        ],
+        [
+         255,
+         31
+        ],
+        [
+         98,
+         32
+        ],
+        [
+         61,
+         35
+        ],
+        [
+         106,
+         39
+        ],
+        [
+         68,
+         40
+        ],
+        [
+         268,
+         41
+        ],
+        [
+         35,
+         42
+        ],
+        [
+         167,
+         46
+        ],
+        [
+         193,
+         47
+        ],
+        [
+         70,
+         52
+        ],
+        [
+         102,
+         53
+        ],
+        [
+         223,
+         60
+        ],
+        [
+         188,
+         63
+        ],
+        [
+         64,
+         65
+        ],
+        [
+         73,
+         66
+        ],
+        [
+         105,
+         67
+        ],
+        [
+         185,
+         69
+        ],
+        [
+         218,
+         73
+        ],
+        [
+         18,
+         78
+        ],
+        [
+         24,
+         79
+        ],
+        [
+         263,
+         81
+        ],
+        [
+         279,
+         83
+        ],
+        [
+         206,
+         85
+        ],
+        [
+         192,
+         88
+        ],
+        [
+         174,
+         90
+        ],
+        [
+         28,
+         91
+        ],
+        [
+         150,
+         92
+        ],
+        [
+         108,
+         94
+        ],
+        [
+         65,
+         98
+        ],
+        [
+         92,
+         101
+        ],
+        [
+         214,
+         104
+        ],
+        [
+         235,
+         105
+        ],
+        [
+         198,
+         108
+        ],
+        [
+         101,
+         115
+        ],
+        [
+         104,
+         116
+        ],
+        [
+         217,
+         117
+        ],
+        [
+         210,
+         118
+        ],
+        [
+         260,
+         119
+        ],
+        [
+         144,
+         122
+        ],
+        [
+         254,
+         123
+        ],
+        [
+         248,
+         127
+        ],
+        [
+         39,
+         128
+        ],
+        [
+         155,
+         129
+        ],
+        [
+         147,
+         130
+        ],
+        [
+         20,
+         133
+        ],
+        [
+         205,
+         134
+        ],
+        [
+         25,
+         135
+        ],
+        [
+         40,
+         138
+        ],
+        [
+         31,
+         144
+        ],
+        [
+         259,
+         147
+        ],
+        [
+         15,
+         148
+        ],
+        [
+         266,
+         149
+        ],
+        [
+         86,
+         150
+        ],
+        [
+         46,
+         152
+        ],
+        [
+         177,
+         153
+        ],
+        [
+         252,
+         154
+        ],
+        [
+         17,
+         155
+        ],
+        [
+         264,
+         157
+        ],
+        [
+         58,
+         159
+        ],
+        [
+         82,
+         162
+        ],
+        [
+         44,
+         166
+        ],
+        [
+         228,
+         167
+        ],
+        [
+         55,
+         168
+        ],
+        [
+         54,
+         171
+        ],
+        [
+         151,
+         173
+        ],
+        [
+         272,
+         176
+        ],
+        [
+         47,
+         177
+        ],
+        [
+         52,
+         178
+        ],
+        [
+         246,
+         184
+        ],
+        [
+         56,
+         185
+        ],
+        [
+         66,
+         186
+        ],
+        [
+         48,
+         187
+        ],
+        [
+         53,
+         188
+        ],
+        [
+         77,
+         191
+        ],
+        [
+         131,
+         192
+        ],
+        [
+         57,
+         193
+        ],
+        [
+         178,
+         195
+        ],
+        [
+         63,
+         196
+        ],
+        [
+         276,
+         200
+        ],
+        [
+         81,
+         203
+        ],
+        [
+         168,
+         207
+        ],
+        [
+         280,
+         212
+        ],
+        [
+         159,
+         213
+        ],
+        [
+         138,
+         214
+        ],
+        [
+         123,
+         215
+        ],
+        [
+         232,
+         216
+        ],
+        [
+         275,
+         217
+        ],
+        [
+         143,
+         218
+        ],
+        [
+         196,
+         220
+        ],
+        [
+         85,
+         222
+        ],
+        [
+         160,
+         228
+        ],
+        [
+         186,
+         230
+        ],
+        [
+         161,
+         231
+        ],
+        [
+         282,
+         232
+        ],
+        [
+         284,
+         236
+        ],
+        [
+         164,
+         238
+        ],
+        [
+         200,
+         242
+        ],
+        [
+         145,
+         243
+        ],
+        [
+         285,
+         245
+        ],
+        [
+         286,
+         246
+        ],
+        [
+         203,
+         247
+        ],
+        [
+         233,
+         248
+        ],
+        [
+         121,
+         251
+        ],
+        [
+         163,
+         253
+        ],
+        [
+         234,
+         254
+        ],
+        [
+         127,
+         256
+        ],
+        [
+         129,
+         257
+        ],
+        [
+         162,
+         263
+        ],
+        [
+         242,
+         264
+        ],
+        [
+         117,
+         266
+        ],
+        [
+         133,
+         268
+        ],
+        [
+         202,
+         269
+        ],
+        [
+         154,
+         272
+        ],
+        [
+         115,
+         273
+        ],
+        [
+         119,
+         275
+        ],
+        [
+         213,
+         280
+        ]
+       ]
+      },
+      {
+       "m": 5,
+       "inverted": false,
+       "rotation": 90,
+       "mirrored": false,
+       "sQ16": 65429,
+       "scaleMilli": 998,
+       "t": [
+        2,
+        -57
+       ],
+       "inliers": 18,
+       "indep": 17,
+       "resMedBucket": 2,
+       "mass": 11164,
+       "peakKey": 204736,
+       "pairs": [
+        [
+         179,
+         76
+        ],
+        [
+         96,
+         100
+        ],
+        [
+         253,
+         102
+        ],
+        [
+         216,
+         141
+        ],
+        [
+         152,
+         146
+        ],
+        [
+         29,
+         158
+        ],
+        [
+         158,
+         174
+        ],
+        [
+         274,
+         181
+        ],
+        [
+         156,
+         189
+        ],
+        [
+         190,
+         194
+        ],
+        [
+         87,
+         199
+        ],
+        [
+         89,
+         202
+        ],
+        [
+         79,
+         208
+        ],
+        [
+         135,
+         233
+        ],
+        [
+         126,
+         252
+        ],
+        [
+         169,
+         258
+        ],
+        [
+         122,
+         261
+        ],
+        [
+         149,
+         265
+        ]
+       ]
+      }
+     ],
+     "topology": {
+      "models": 2,
+      "primaryShare": 6964,
+      "klass": "dominant"
+     },
+     "degraded": false,
+     "hypothesesFinished": 16,
+     "invGate": 27,
+     "invertedFamilyRan": true
+    },
+    "diversity": {
+     "measurable": true,
+     "value": 8484,
+     "total": 8484,
+     "components": {
+      "Dspace": 7187,
+      "Dscale": 10000,
+      "Dmodel": 8000,
+      "Ddesc": 9215,
+      "Dregion": 10000,
+      "Dunique": 9857
+     },
+     "repeat": 857,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 396/1024 at k=6 (null 994)",
+      "ham": 396,
+      "matchedK": 5,
+      "raw": 6133,
+      "nullVal": 293,
+      "margin": 6016,
+      "evidence": 6016
+     },
+     "local": {
+      "measurable": true,
+      "note": "121 of 128 assigned (dense) at k=6, 97 expected under rot16",
+      "alignedK": 5,
+      "alignedInverted": false,
+      "matches": 121,
+      "cmax": 128,
+      "w": 171649,
+      "cap": 275013,
+      "path": "dense",
+      "ctlW": 54297,
+      "ctlN": 97,
+      "ctlMember": "rot16",
+      "raw": 7274,
+      "nullVal": 4578,
+      "margin": 4972,
+      "evidence": 4972,
+      "diversity": 2148,
+      "pairs": [
+       [
+        2,
+        0
+       ],
+       [
+        121,
+        1
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        1,
+        3
+       ],
+       [
+        7,
+        4
+       ],
+       [
+        8,
+        5
+       ],
+       [
+        67,
+        6
+       ],
+       [
+        28,
+        7
+       ],
+       [
+        6,
+        8
+       ],
+       [
+        0,
+        9
+       ],
+       [
+        10,
+        10
+       ],
+       [
+        13,
+        11
+       ],
+       [
+        14,
+        12
+       ],
+       [
+        89,
+        13
+       ],
+       [
+        16,
+        14
+       ],
+       [
+        18,
+        15
+       ],
+       [
+        84,
+        16
+       ],
+       [
+        19,
+        17
+       ],
+       [
+        21,
+        18
+       ],
+       [
+        20,
+        19
+       ],
+       [
+        113,
+        20
+       ],
+       [
+        11,
+        21
+       ],
+       [
+        22,
+        22
+       ],
+       [
+        94,
+        23
+       ],
+       [
+        76,
+        24
+       ],
+       [
+        54,
+        25
+       ],
+       [
+        57,
+        26
+       ],
+       [
+        24,
+        27
+       ],
+       [
+        34,
+        28
+       ],
+       [
+        35,
+        29
+       ],
+       [
+        36,
+        30
+       ],
+       [
+        31,
+        31
+       ],
+       [
+        102,
+        32
+       ],
+       [
+        80,
+        33
+       ],
+       [
+        59,
+        34
+       ],
+       [
+        40,
+        35
+       ],
+       [
+        38,
+        36
+       ],
+       [
+        29,
+        37
+       ],
+       [
+        44,
+        38
+       ],
+       [
+        42,
+        39
+       ],
+       [
+        25,
+        40
+       ],
+       [
+        51,
+        41
+       ],
+       [
+        49,
+        42
+       ],
+       [
+        52,
+        43
+       ],
+       [
+        56,
+        44
+       ],
+       [
+        37,
+        45
+       ],
+       [
+        26,
+        46
+       ],
+       [
+        45,
+        47
+       ],
+       [
+        15,
+        48
+       ],
+       [
+        41,
+        49
+       ],
+       [
+        65,
+        50
+       ],
+       [
+        17,
+        51
+       ],
+       [
+        46,
+        52
+       ],
+       [
+        30,
+        53
+       ],
+       [
+        39,
+        54
+       ],
+       [
+        87,
+        55
+       ],
+       [
+        60,
+        56
+       ],
+       [
+        58,
+        57
+       ],
+       [
+        12,
+        58
+       ],
+       [
+        9,
+        59
+       ],
+       [
+        70,
+        60
+       ],
+       [
+        72,
+        61
+       ],
+       [
+        68,
+        62
+       ],
+       [
+        69,
+        63
+       ],
+       [
+        71,
+        64
+       ],
+       [
+        32,
+        65
+       ],
+       [
+        48,
+        66
+       ],
+       [
+        47,
+        67
+       ],
+       [
+        74,
+        68
+       ],
+       [
+        75,
+        69
+       ],
+       [
+        85,
+        70
+       ],
+       [
+        55,
+        71
+       ],
+       [
+        79,
+        72
+       ],
+       [
+        50,
+        73
+       ],
+       [
+        73,
+        74
+       ],
+       [
+        81,
+        75
+       ],
+       [
+        82,
+        76
+       ],
+       [
+        83,
+        77
+       ],
+       [
+        86,
+        78
+       ],
+       [
+        33,
+        79
+       ],
+       [
+        61,
+        80
+       ],
+       [
+        78,
+        81
+       ],
+       [
+        77,
+        82
+       ],
+       [
+        92,
+        83
+       ],
+       [
+        90,
+        84
+       ],
+       [
+        91,
+        85
+       ],
+       [
+        112,
+        86
+       ],
+       [
+        93,
+        87
+       ],
+       [
+        97,
+        88
+       ],
+       [
+        96,
+        90
+       ],
+       [
+        108,
+        91
+       ],
+       [
+        4,
+        92
+       ],
+       [
+        106,
+        93
+       ],
+       [
+        122,
+        94
+       ],
+       [
+        98,
+        95
+       ],
+       [
+        99,
+        96
+       ],
+       [
+        100,
+        97
+       ],
+       [
+        62,
+        98
+       ],
+       [
+        63,
+        99
+       ],
+       [
+        107,
+        100
+       ],
+       [
+        116,
+        101
+       ],
+       [
+        88,
+        102
+       ],
+       [
+        111,
+        103
+       ],
+       [
+        119,
+        104
+       ],
+       [
+        23,
+        105
+       ],
+       [
+        114,
+        106
+       ],
+       [
+        115,
+        107
+       ],
+       [
+        118,
+        108
+       ],
+       [
+        117,
+        109
+       ],
+       [
+        105,
+        111
+       ],
+       [
+        125,
+        112
+       ],
+       [
+        126,
+        113
+       ],
+       [
+        27,
+        114
+       ],
+       [
+        120,
+        115
+       ],
+       [
+        109,
+        116
+       ],
+       [
+        95,
+        118
+       ],
+       [
+        127,
+        119
+       ],
+       [
+        5,
+        122
+       ],
+       [
+        101,
+        125
+       ],
+       [
+        64,
+        126
+       ],
+       [
+        53,
+        127
+       ]
+      ],
+      "coverageA": {
+       "g": 4,
+       "occupied": 12,
+       "coverage": 7500,
+       "bboxCells": 12,
+       "concentration": 10000,
+       "counts": {
+        "0": 15,
+        "1": 15,
+        "2": 18,
+        "3": 2,
+        "4": 2,
+        "5": 13,
+        "6": 12,
+        "7": 15,
+        "8": 5,
+        "9": 9,
+        "10": 6,
+        "11": 9,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 12,
+       "coverage": 7500,
+       "bboxCells": 12,
+       "concentration": 10000,
+       "counts": {
+        "0": 2,
+        "1": 15,
+        "2": 9,
+        "3": 0,
+        "4": 17,
+        "5": 15,
+        "6": 7,
+        "7": 0,
+        "8": 18,
+        "9": 9,
+        "10": 8,
+        "11": 0,
+        "12": 13,
+        "13": 2,
+        "14": 6,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": true,
+      "note": "26 mutual region pairs, positional best k=6",
+      "matchedK": 5,
+      "pairs": 26,
+      "positional": 3650,
+      "mutual": 8387,
+      "raw": 5229,
+      "nullVal": 2145,
+      "margin": 3926,
+      "evidence": 3926
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 10000,
+      "nullVal": 0,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 828 at k=6 (null 1018)",
+      "matchedK": 5,
+      "raw": 7979,
+      "nullVal": 7515,
+      "margin": 1867,
+      "evidence": 1867
+     },
+     "palette": {
+      "measurable": true,
+      "note": "11/11 colours, tone shift 0",
+      "toneShift": 0,
+      "curveSim": 10000,
+      "occSim": 10000,
+      "raw": 10000,
+      "nullVal": 4192,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "spatial": {
+      "measurable": true,
+      "note": "best k=6",
+      "matchedK": 5,
+      "raw": 9543,
+      "nullVal": 3672,
+      "margin": 9277,
+      "evidence": 9277
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 12,
+      "coverage": 7500,
+      "bboxCells": 12,
+      "concentration": 10000,
+      "counts": {
+       "0": 12,
+       "1": 15,
+       "2": 18,
+       "3": 1,
+       "4": 11,
+       "5": 20,
+       "6": 11,
+       "7": 7,
+       "8": 11,
+       "9": 5,
+       "10": 4,
+       "11": 7,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 12,
+      "coverage": 7500,
+      "bboxCells": 12,
+      "concentration": 10000,
+      "counts": {
+       "0": 1,
+       "1": 7,
+       "2": 7,
+       "3": 0,
+       "4": 18,
+       "5": 12,
+       "6": 4,
+       "7": 0,
+       "8": 15,
+       "9": 19,
+       "10": 5,
+       "11": 0,
+       "12": 12,
+       "13": 11,
+       "14": 11,
+       "15": 0
+      }
+     },
+     "source": "geometry"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "support spans 12 cells",
+     "bboxCells": 12
+    },
+    "brightness": {
+     "shift": 0
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 36,
+     "regionPairs": 63,
+     "sketchAgree": 60,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "standard",
+     "kpA": 287,
+     "kpB": 281
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "4e6cd170455dcf6b54c1c4704db80f06"
+    ],
+    "budgetUsed": 2325424
+   }
+  },
+  {
+   "name": "d4-transpose",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "0a22427d4535192746fd7dbdc5928caa604ffb3521a1f9df9bc507d42e1a8a23",
+    "t2": "d2e49a4978b27532a998f8649921fff39718f46eb9910d72bff0798822a9995b"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": true,
+    "verdict": "Copy",
+    "evidenceClass": "STRUCT_GEO",
+    "basis": [
+     "S>=strong AND G>=certifying AND D>=floor",
+     "geometry-only (s22.4): 5 secondary conditions"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 6015,
+     "channelsMeasured": 7,
+     "secondaries": 7
+    },
+    "geometric": {
+     "measurable": true,
+     "note": "16 hypotheses (with inverted family), 182 correspondences, 3 model(s)",
+     "value": 10000,
+     "raw": 10000,
+     "control": 500,
+     "margin": 10000,
+     "ctlMember": "shift 1/2",
+     "confidence": 10000,
+     "correspondences": 182,
+     "totalInliers": 116,
+     "independentEvidence": 46,
+     "models": [
+      {
+       "m": 3,
+       "inverted": false,
+       "rotation": 180,
+       "mirrored": false,
+       "sQ16": 65568,
+       "scaleMilli": 1000,
+       "t": [
+        -3,
+        -2
+       ],
+       "inliers": 103,
+       "indep": 33,
+       "resMedBucket": 0,
+       "mass": 73705,
+       "peakKey": 204864,
+       "pairs": [
+        [
+         282,
+         13
+        ],
+        [
+         129,
+         14
+        ],
+        [
+         64,
+         18
+        ],
+        [
+         285,
+         20
+        ],
+        [
+         286,
+         21
+        ],
+        [
+         280,
+         22
+        ],
+        [
+         162,
+         23
+        ],
+        [
+         60,
+         29
+        ],
+        [
+         106,
+         30
+        ],
+        [
+         230,
+         31
+        ],
+        [
+         193,
+         33
+        ],
+        [
+         109,
+         34
+        ],
+        [
+         127,
+         40
+        ],
+        [
+         275,
+         43
+        ],
+        [
+         281,
+         47
+        ],
+        [
+         121,
+         49
+        ],
+        [
+         117,
+         50
+        ],
+        [
+         202,
+         53
+        ],
+        [
+         23,
+         61
+        ],
+        [
+         48,
+         63
+        ],
+        [
+         133,
+         65
+        ],
+        [
+         276,
+         66
+        ],
+        [
+         234,
+         67
+        ],
+        [
+         223,
+         68
+        ],
+        [
+         185,
+         72
+        ],
+        [
+         177,
+         81
+        ],
+        [
+         266,
+         83
+        ],
+        [
+         31,
+         87
+        ],
+        [
+         192,
+         89
+        ],
+        [
+         239,
+         97
+        ],
+        [
+         160,
+         101
+        ],
+        [
+         143,
+         103
+        ],
+        [
+         54,
+         108
+        ],
+        [
+         166,
+         110
+        ],
+        [
+         28,
+         112
+        ],
+        [
+         174,
+         113
+        ],
+        [
+         119,
+         114
+        ],
+        [
+         263,
+         115
+        ],
+        [
+         252,
+         122
+        ],
+        [
+         151,
+         123
+        ],
+        [
+         216,
+         138
+        ],
+        [
+         68,
+         140
+        ],
+        [
+         73,
+         143
+        ],
+        [
+         35,
+         145
+        ],
+        [
+         108,
+         147
+        ],
+        [
+         66,
+         148
+        ],
+        [
+         268,
+         150
+        ],
+        [
+         15,
+         156
+        ],
+        [
+         198,
+         157
+        ],
+        [
+         88,
+         159
+        ],
+        [
+         161,
+         160
+        ],
+        [
+         128,
+         161
+        ],
+        [
+         12,
+         165
+        ],
+        [
+         85,
+         166
+        ],
+        [
+         228,
+         167
+        ],
+        [
+         255,
+         168
+        ],
+        [
+         118,
+         172
+        ],
+        [
+         46,
+         181
+        ],
+        [
+         251,
+         183
+        ],
+        [
+         167,
+         185
+        ],
+        [
+         53,
+         191
+        ],
+        [
+         25,
+         193
+        ],
+        [
+         279,
+         194
+        ],
+        [
+         200,
+         197
+        ],
+        [
+         81,
+         199
+        ],
+        [
+         145,
+         202
+        ],
+        [
+         186,
+         204
+        ],
+        [
+         77,
+         208
+        ],
+        [
+         188,
+         210
+        ],
+        [
+         235,
+         211
+        ],
+        [
+         56,
+         215
+        ],
+        [
+         236,
+         216
+        ],
+        [
+         254,
+         219
+        ],
+        [
+         222,
+         220
+        ],
+        [
+         82,
+         221
+        ],
+        [
+         124,
+         222
+        ],
+        [
+         24,
+         223
+        ],
+        [
+         206,
+         224
+        ],
+        [
+         57,
+         226
+        ],
+        [
+         110,
+         227
+        ],
+        [
+         210,
+         235
+        ],
+        [
+         248,
+         239
+        ],
+        [
+         44,
+         240
+        ],
+        [
+         51,
+         241
+        ],
+        [
+         104,
+         242
+        ],
+        [
+         63,
+         243
+        ],
+        [
+         213,
+         244
+        ],
+        [
+         164,
+         245
+        ],
+        [
+         101,
+         247
+        ],
+        [
+         217,
+         249
+        ],
+        [
+         131,
+         250
+        ],
+        [
+         138,
+         251
+        ],
+        [
+         163,
+         252
+        ],
+        [
+         39,
+         257
+        ],
+        [
+         272,
+         260
+        ],
+        [
+         191,
+         265
+        ],
+        [
+         147,
+         267
+        ],
+        [
+         52,
+         268
+        ],
+        [
+         243,
+         269
+        ],
+        [
+         40,
+         271
+        ],
+        [
+         123,
+         272
+        ],
+        [
+         19,
+         273
+        ],
+        [
+         155,
+         274
+        ]
+       ]
+      },
+      {
+       "m": 3,
+       "inverted": false,
+       "rotation": 180,
+       "mirrored": false,
+       "sQ16": 65550,
+       "scaleMilli": 1000,
+       "t": [
+        -58,
+        -10
+       ],
+       "inliers": 9,
+       "indep": 9,
+       "resMedBucket": 2,
+       "mass": 5068,
+       "peakKey": 204735,
+       "pairs": [
+        [
+         89,
+         64
+        ],
+        [
+         96,
+         107
+        ],
+        [
+         158,
+         119
+        ],
+        [
+         179,
+         127
+        ],
+        [
+         156,
+         131
+        ],
+        [
+         253,
+         132
+        ],
+        [
+         274,
+         173
+        ],
+        [
+         126,
+         188
+        ],
+        [
+         29,
+         203
+        ]
+       ]
+      },
+      {
+       "m": 3,
+       "inverted": false,
+       "rotation": 180,
+       "mirrored": false,
+       "sQ16": 65958,
+       "scaleMilli": 1006,
+       "t": [
+        -105,
+        -107
+       ],
+       "inliers": 4,
+       "indep": 4,
+       "resMedBucket": 4,
+       "mass": 1987,
+       "peakKey": 204735,
+       "pairs": [
+        [
+         220,
+         60
+        ],
+        [
+         241,
+         137
+        ],
+        [
+         148,
+         177
+        ],
+        [
+         122,
+         206
+        ]
+       ]
+      }
+     ],
+     "topology": {
+      "models": 3,
+      "primaryShare": 7173,
+      "klass": "dominant"
+     },
+     "degraded": false,
+     "hypothesesFinished": 16,
+     "invGate": 27,
+     "invertedFamilyRan": true
+    },
+    "diversity": {
+     "measurable": true,
+     "value": 8360,
+     "total": 8360,
+     "components": {
+      "Dspace": 6718,
+      "Dscale": 10000,
+      "Dmodel": 10000,
+      "Ddesc": 8794,
+      "Dregion": 10000,
+      "Dunique": 9396
+     },
+     "repeat": 1034,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 471/1024 at k=3 (null 1013)",
+      "ham": 471,
+      "matchedK": 3,
+      "raw": 5401,
+      "nullVal": 108,
+      "margin": 5350,
+      "evidence": 5350
+     },
+     "local": {
+      "measurable": true,
+      "note": "121 of 128 assigned (dense) at k=3, 96 expected under rot48",
+      "alignedK": 3,
+      "alignedInverted": false,
+      "matches": 121,
+      "cmax": 128,
+      "w": 183575,
+      "cap": 275053,
+      "path": "dense",
+      "ctlW": 52904,
+      "ctlN": 96,
+      "ctlMember": "rot48",
+      "raw": 7447,
+      "nullVal": 4568,
+      "margin": 5300,
+      "evidence": 5300,
+      "diversity": 2148,
+      "pairs": [
+       [
+        2,
+        0
+       ],
+       [
+        4,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        74,
+        3
+       ],
+       [
+        10,
+        4
+       ],
+       [
+        6,
+        5
+       ],
+       [
+        18,
+        6
+       ],
+       [
+        9,
+        7
+       ],
+       [
+        8,
+        9
+       ],
+       [
+        67,
+        10
+       ],
+       [
+        11,
+        11
+       ],
+       [
+        20,
+        12
+       ],
+       [
+        103,
+        13
+       ],
+       [
+        19,
+        14
+       ],
+       [
+        31,
+        15
+       ],
+       [
+        75,
+        16
+       ],
+       [
+        15,
+        17
+       ],
+       [
+        22,
+        18
+       ],
+       [
+        23,
+        19
+       ],
+       [
+        41,
+        20
+       ],
+       [
+        89,
+        21
+       ],
+       [
+        16,
+        22
+       ],
+       [
+        27,
+        23
+       ],
+       [
+        86,
+        24
+       ],
+       [
+        34,
+        25
+       ],
+       [
+        37,
+        26
+       ],
+       [
+        32,
+        27
+       ],
+       [
+        58,
+        28
+       ],
+       [
+        40,
+        29
+       ],
+       [
+        38,
+        30
+       ],
+       [
+        44,
+        31
+       ],
+       [
+        39,
+        32
+       ],
+       [
+        43,
+        33
+       ],
+       [
+        56,
+        34
+       ],
+       [
+        42,
+        35
+       ],
+       [
+        64,
+        36
+       ],
+       [
+        7,
+        37
+       ],
+       [
+        48,
+        38
+       ],
+       [
+        47,
+        39
+       ],
+       [
+        12,
+        40
+       ],
+       [
+        5,
+        41
+       ],
+       [
+        51,
+        42
+       ],
+       [
+        50,
+        43
+       ],
+       [
+        26,
+        44
+       ],
+       [
+        52,
+        45
+       ],
+       [
+        73,
+        46
+       ],
+       [
+        13,
+        47
+       ],
+       [
+        46,
+        48
+       ],
+       [
+        57,
+        49
+       ],
+       [
+        21,
+        50
+       ],
+       [
+        91,
+        51
+       ],
+       [
+        36,
+        52
+       ],
+       [
+        61,
+        53
+       ],
+       [
+        54,
+        54
+       ],
+       [
+        49,
+        55
+       ],
+       [
+        66,
+        56
+       ],
+       [
+        102,
+        57
+       ],
+       [
+        105,
+        59
+       ],
+       [
+        0,
+        61
+       ],
+       [
+        68,
+        62
+       ],
+       [
+        82,
+        63
+       ],
+       [
+        63,
+        64
+       ],
+       [
+        84,
+        65
+       ],
+       [
+        70,
+        66
+       ],
+       [
+        71,
+        67
+       ],
+       [
+        69,
+        68
+       ],
+       [
+        3,
+        69
+       ],
+       [
+        65,
+        70
+       ],
+       [
+        30,
+        71
+       ],
+       [
+        77,
+        72
+       ],
+       [
+        60,
+        73
+       ],
+       [
+        95,
+        74
+       ],
+       [
+        78,
+        75
+       ],
+       [
+        83,
+        76
+       ],
+       [
+        81,
+        77
+       ],
+       [
+        45,
+        78
+       ],
+       [
+        25,
+        79
+       ],
+       [
+        76,
+        80
+       ],
+       [
+        93,
+        81
+       ],
+       [
+        87,
+        82
+       ],
+       [
+        112,
+        83
+       ],
+       [
+        90,
+        84
+       ],
+       [
+        80,
+        85
+       ],
+       [
+        98,
+        86
+       ],
+       [
+        94,
+        87
+       ],
+       [
+        53,
+        88
+       ],
+       [
+        72,
+        89
+       ],
+       [
+        14,
+        90
+       ],
+       [
+        62,
+        91
+       ],
+       [
+        96,
+        92
+       ],
+       [
+        97,
+        93
+       ],
+       [
+        122,
+        94
+       ],
+       [
+        101,
+        95
+       ],
+       [
+        17,
+        96
+       ],
+       [
+        85,
+        97
+       ],
+       [
+        99,
+        98
+       ],
+       [
+        100,
+        99
+       ],
+       [
+        108,
+        100
+       ],
+       [
+        107,
+        101
+       ],
+       [
+        117,
+        102
+       ],
+       [
+        116,
+        103
+       ],
+       [
+        55,
+        104
+       ],
+       [
+        109,
+        105
+       ],
+       [
+        113,
+        106
+       ],
+       [
+        114,
+        107
+       ],
+       [
+        88,
+        108
+       ],
+       [
+        115,
+        109
+       ],
+       [
+        118,
+        110
+       ],
+       [
+        106,
+        111
+       ],
+       [
+        123,
+        112
+       ],
+       [
+        33,
+        113
+       ],
+       [
+        92,
+        115
+       ],
+       [
+        127,
+        116
+       ],
+       [
+        29,
+        118
+       ],
+       [
+        111,
+        119
+       ],
+       [
+        59,
+        122
+       ],
+       [
+        119,
+        123
+       ],
+       [
+        120,
+        124
+       ],
+       [
+        126,
+        125
+       ],
+       [
+        24,
+        126
+       ],
+       [
+        28,
+        127
+       ]
+      ],
+      "coverageA": {
+       "g": 4,
+       "occupied": 12,
+       "coverage": 7500,
+       "bboxCells": 12,
+       "concentration": 10000,
+       "counts": {
+        "0": 15,
+        "1": 15,
+        "2": 18,
+        "3": 2,
+        "4": 2,
+        "5": 14,
+        "6": 12,
+        "7": 15,
+        "8": 6,
+        "9": 9,
+        "10": 6,
+        "11": 7,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 12,
+       "coverage": 7500,
+       "bboxCells": 12,
+       "concentration": 10000,
+       "counts": {
+        "0": 16,
+        "1": 7,
+        "2": 10,
+        "3": 6,
+        "4": 9,
+        "5": 20,
+        "6": 10,
+        "7": 1,
+        "8": 2,
+        "9": 13,
+        "10": 14,
+        "11": 13,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": true,
+      "note": "26 mutual region pairs, positional best k=3",
+      "matchedK": 3,
+      "pairs": 26,
+      "positional": 2857,
+      "mutual": 8387,
+      "raw": 4700,
+      "nullVal": 2673,
+      "margin": 2766,
+      "evidence": 2766
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 10000,
+      "nullVal": 0,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 9 at k=3 (null 203)",
+      "matchedK": 3,
+      "raw": 9979,
+      "nullVal": 9505,
+      "margin": 9575,
+      "evidence": 9575
+     },
+     "palette": {
+      "measurable": true,
+      "note": "11/11 colours, tone shift 0",
+      "toneShift": 0,
+      "curveSim": 10000,
+      "occSim": 10000,
+      "raw": 10000,
+      "nullVal": 4192,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "spatial": {
+      "measurable": true,
+      "note": "best k=1",
+      "matchedK": 1,
+      "raw": 6063,
+      "nullVal": 3298,
+      "margin": 4125,
+      "evidence": 4125
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 12,
+      "coverage": 7500,
+      "bboxCells": 12,
+      "concentration": 10000,
+      "counts": {
+       "0": 9,
+       "1": 11,
+       "2": 16,
+       "3": 1,
+       "4": 8,
+       "5": 15,
+       "6": 12,
+       "7": 5,
+       "8": 13,
+       "9": 1,
+       "10": 4,
+       "11": 8,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 12,
+      "coverage": 7500,
+      "bboxCells": 12,
+      "concentration": 10000,
+      "counts": {
+       "0": 10,
+       "1": 4,
+       "2": 3,
+       "3": 13,
+       "4": 3,
+       "5": 16,
+       "6": 13,
+       "7": 9,
+       "8": 1,
+       "9": 13,
+       "10": 10,
+       "11": 8,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "geometry"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "support spans 12 cells",
+     "bboxCells": 12
+    },
+    "brightness": {
+     "shift": 0
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 35,
+     "regionPairs": 59,
+     "sketchAgree": 52,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "standard",
+     "kpA": 287,
+     "kpB": 275
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "0b0b970d8a781075f46d8142604940e8"
+    ],
+    "budgetUsed": 2276868
+   }
+  },
+  {
+   "name": "inversion",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "b1b16d71fd83ff1674705698902d95fb07cd07b2dca11a9e9fa368d4fbbe481d",
+    "t2": "29c5a57fcf74bd582669da937238be608a53968a4e27cc47925cc9222acba7c2"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": false,
+    "verdict": "Copy",
+    "evidenceClass": "GEO_ONLY",
+    "basis": [
+     "geometry-only (s22.4): 5 secondary conditions"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 3490,
+     "channelsMeasured": 7,
+     "secondaries": 4
+    },
+    "geometric": {
+     "measurable": true,
+     "note": "16 hypotheses (with inverted family), 136 correspondences, 1 model(s)",
+     "value": 9298,
+     "raw": 7500,
+     "control": 500,
+     "margin": 7368,
+     "ctlMember": "shift 1/2",
+     "confidence": 10000,
+     "correspondences": 136,
+     "totalInliers": 73,
+     "independentEvidence": 30,
+     "models": [
+      {
+       "m": 0,
+       "inverted": true,
+       "rotation": 0,
+       "mirrored": false,
+       "sQ16": 65536,
+       "scaleMilli": 1000,
+       "t": [
+        0,
+        0
+       ],
+       "inliers": 73,
+       "indep": 30,
+       "resMedBucket": 0,
+       "mass": 46488,
+       "peakKey": 204864,
+       "pairs": [
+        [
+         19,
+         277
+        ],
+        [
+         24,
+         265
+        ],
+        [
+         52,
+         288
+        ],
+        [
+         55,
+         222
+        ],
+        [
+         77,
+         285
+        ],
+        [
+         81,
+         273
+        ],
+        [
+         82,
+         278
+        ],
+        [
+         88,
+         280
+        ],
+        [
+         92,
+         284
+        ],
+        [
+         94,
+         264
+        ],
+        [
+         95,
+         283
+        ],
+        [
+         107,
+         268
+        ],
+        [
+         110,
+         239
+        ],
+        [
+         124,
+         279
+        ],
+        [
+         126,
+         276
+        ],
+        [
+         131,
+         247
+        ],
+        [
+         132,
+         271
+        ],
+        [
+         135,
+         275
+        ],
+        [
+         138,
+         60
+        ],
+        [
+         147,
+         256
+        ],
+        [
+         148,
+         272
+        ],
+        [
+         150,
+         253
+        ],
+        [
+         153,
+         269
+        ],
+        [
+         154,
+         235
+        ],
+        [
+         155,
+         267
+        ],
+        [
+         157,
+         234
+        ],
+        [
+         158,
+         228
+        ],
+        [
+         163,
+         266
+        ],
+        [
+         165,
+         262
+        ],
+        [
+         167,
+         260
+        ],
+        [
+         168,
+         258
+        ],
+        [
+         171,
+         257
+        ],
+        [
+         180,
+         254
+        ],
+        [
+         190,
+         251
+        ],
+        [
+         191,
+         249
+        ],
+        [
+         194,
+         212
+        ],
+        [
+         195,
+         200
+        ],
+        [
+         196,
+         202
+        ],
+        [
+         199,
+         246
+        ],
+        [
+         200,
+         245
+        ],
+        [
+         201,
+         244
+        ],
+        [
+         204,
+         243
+        ],
+        [
+         208,
+         240
+        ],
+        [
+         210,
+         237
+        ],
+        [
+         211,
+         241
+        ],
+        [
+         213,
+         238
+        ],
+        [
+         217,
+         236
+        ],
+        [
+         222,
+         233
+        ],
+        [
+         235,
+         231
+        ],
+        [
+         236,
+         229
+        ],
+        [
+         237,
+         232
+        ],
+        [
+         239,
+         214
+        ],
+        [
+         240,
+         213
+        ],
+        [
+         243,
+         226
+        ],
+        [
+         246,
+         225
+        ],
+        [
+         249,
+         224
+        ],
+        [
+         252,
+         221
+        ],
+        [
+         253,
+         219
+        ],
+        [
+         256,
+         220
+        ],
+        [
+         259,
+         218
+        ],
+        [
+         260,
+         216
+        ],
+        [
+         261,
+         215
+        ],
+        [
+         262,
+         208
+        ],
+        [
+         264,
+         203
+        ],
+        [
+         269,
+         207
+        ],
+        [
+         270,
+         206
+        ],
+        [
+         273,
+         199
+        ],
+        [
+         278,
+         201
+        ],
+        [
+         279,
+         198
+        ],
+        [
+         281,
+         196
+        ],
+        [
+         282,
+         178
+        ],
+        [
+         283,
+         188
+        ],
+        [
+         286,
+         180
+        ]
+       ]
+      }
+     ],
+     "topology": {
+      "models": 1,
+      "primaryShare": 10000,
+      "klass": "single"
+     },
+     "degraded": false,
+     "hypothesesFinished": 16,
+     "invGate": 0,
+     "invertedFamilyRan": true
+    },
+    "diversity": {
+     "measurable": true,
+     "value": 7932,
+     "total": 7932,
+     "components": {
+      "Dspace": 4687,
+      "Dscale": 10000,
+      "Dmodel": 6000,
+      "Ddesc": 9727,
+      "Dregion": 10000,
+      "Dunique": 9178
+     },
+     "repeat": 0,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 848/1024 at k=3 (null 984)",
+      "ham": 848,
+      "matchedK": 3,
+      "raw": 1719,
+      "nullVal": 391,
+      "margin": 1382,
+      "evidence": 1382
+     },
+     "local": {
+      "measurable": true,
+      "note": "16 of 128 assigned (sparse) at k=0 inverted, 1 expected under rot48",
+      "alignedK": 0,
+      "alignedInverted": true,
+      "matches": 16,
+      "cmax": 128,
+      "w": 103332,
+      "cap": 179900,
+      "path": "sparse",
+      "ctlW": 5000,
+      "ctlN": 1,
+      "ctlMember": "rot48",
+      "raw": 2910,
+      "nullVal": 52,
+      "margin": 2872,
+      "evidence": 2872,
+      "diversity": 1405,
+      "pairs": [
+       [
+        1,
+        32
+       ],
+       [
+        15,
+        38
+       ],
+       [
+        35,
+        28
+       ],
+       [
+        41,
+        43
+       ],
+       [
+        43,
+        40
+       ],
+       [
+        45,
+        42
+       ],
+       [
+        62,
+        85
+       ],
+       [
+        66,
+        74
+       ],
+       [
+        82,
+        77
+       ],
+       [
+        85,
+        81
+       ],
+       [
+        95,
+        96
+       ],
+       [
+        106,
+        103
+       ],
+       [
+        107,
+        104
+       ],
+       [
+        120,
+        120
+       ],
+       [
+        123,
+        119
+       ],
+       [
+        126,
+        123
+       ]
+      ],
+      "coverageA": {
+       "g": 4,
+       "occupied": 5,
+       "coverage": 3125,
+       "bboxCells": 9,
+       "concentration": 8000,
+       "counts": {
+        "0": 0,
+        "1": 1,
+        "2": 11,
+        "3": 0,
+        "4": 0,
+        "5": 2,
+        "6": 1,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 1,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 5,
+       "coverage": 3125,
+       "bboxCells": 9,
+       "concentration": 8000,
+       "counts": {
+        "0": 0,
+        "1": 1,
+        "2": 11,
+        "3": 0,
+        "4": 0,
+        "5": 2,
+        "6": 1,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 1,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": true,
+      "note": "16 mutual region pairs, positional best k=6",
+      "matchedK": 6,
+      "pairs": 16,
+      "positional": 2698,
+      "mutual": 5161,
+      "raw": 3519,
+      "nullVal": 2667,
+      "margin": 1161,
+      "evidence": 1161
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 247,
+      "nullVal": 0,
+      "margin": 247,
+      "evidence": 247
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 11 at k=0 (null 208)",
+      "matchedK": 0,
+      "raw": 9974,
+      "nullVal": 9493,
+      "margin": 9487,
+      "evidence": 9487
+     },
+     "palette": {
+      "measurable": true,
+      "note": "11/11 colours, tone shift -13",
+      "toneShift": -13,
+      "curveSim": 8230,
+      "occSim": 6184,
+      "raw": 7548,
+      "nullVal": 5517,
+      "margin": 4530,
+      "evidence": 4530
+     },
+     "spatial": {
+      "measurable": true,
+      "note": "best k=0",
+      "matchedK": 0,
+      "raw": 9935,
+      "nullVal": 3798,
+      "margin": 9895,
+      "evidence": 9895
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 8,
+      "coverage": 5000,
+      "bboxCells": 12,
+      "concentration": 8750,
+      "counts": {
+       "0": 3,
+       "1": 5,
+       "2": 19,
+       "3": 0,
+       "4": 15,
+       "5": 14,
+       "6": 6,
+       "7": 0,
+       "8": 8,
+       "9": 0,
+       "10": 0,
+       "11": 3,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 8,
+      "coverage": 5000,
+      "bboxCells": 12,
+      "concentration": 8750,
+      "counts": {
+       "0": 3,
+       "1": 5,
+       "2": 19,
+       "3": 0,
+       "4": 15,
+       "5": 14,
+       "6": 6,
+       "7": 0,
+       "8": 8,
+       "9": 0,
+       "10": 0,
+       "11": 3,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "geometry"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "support spans 12 cells",
+     "bboxCells": 12
+    },
+    "brightness": {
+     "shift": -194
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 36,
+     "regionPairs": 60,
+     "sketchAgree": 70,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "standard",
+     "kpA": 287,
+     "kpB": 289
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "2760dc45d13b3e8e65a38a4286469f1b"
+    ],
+    "budgetUsed": 2448236
+   }
+  },
+  {
+   "name": "d4-plus-inversion",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "18269966dbb7a49b9dd7356f248342738636fbf3ad69e0b1d7638b815553a0a3",
+    "t2": "e72316d797a57de93c8bd4f3f32b39ce86ce0b404ca9f1d14f39c4552355594a"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": true,
+    "verdict": "Copy",
+    "evidenceClass": "GEO_ONLY",
+    "basis": [
+     "geometry-only (s22.4): 4 secondary conditions"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 2822,
+     "channelsMeasured": 7,
+     "secondaries": 5
+    },
+    "geometric": {
+     "measurable": true,
+     "note": "16 hypotheses (with inverted family), 106 correspondences, 1 model(s)",
+     "value": 8366,
+     "raw": 5750,
+     "control": 0,
+     "margin": 5750,
+     "ctlMember": "none",
+     "confidence": 5468,
+     "correspondences": 106,
+     "totalInliers": 35,
+     "independentEvidence": 23,
+     "models": [
+      {
+       "m": 3,
+       "inverted": true,
+       "rotation": 180,
+       "mirrored": false,
+       "sQ16": 65309,
+       "scaleMilli": 996,
+       "t": [
+        -5,
+        5
+       ],
+       "inliers": 35,
+       "indep": 23,
+       "resMedBucket": 3,
+       "mass": 13002,
+       "peakKey": 204864,
+       "pairs": [
+        [
+         138,
+         161
+        ],
+        [
+         155,
+         186
+        ],
+        [
+         213,
+         188
+        ],
+        [
+         19,
+         190
+        ],
+        [
+         137,
+         193
+        ],
+        [
+         147,
+         198
+        ],
+        [
+         191,
+         200
+        ],
+        [
+         163,
+         206
+        ],
+        [
+         131,
+         210
+        ],
+        [
+         217,
+         211
+        ],
+        [
+         286,
+         215
+        ],
+        [
+         248,
+         217
+        ],
+        [
+         210,
+         218
+        ],
+        [
+         110,
+         221
+        ],
+        [
+         199,
+         222
+        ],
+        [
+         88,
+         223
+        ],
+        [
+         82,
+         230
+        ],
+        [
+         195,
+         232
+        ],
+        [
+         55,
+         239
+        ],
+        [
+         235,
+         240
+        ],
+        [
+         279,
+         241
+        ],
+        [
+         77,
+         243
+        ],
+        [
+         216,
+         245
+        ],
+        [
+         200,
+         246
+        ],
+        [
+         239,
+         247
+        ],
+        [
+         253,
+         248
+        ],
+        [
+         167,
+         252
+        ],
+        [
+         126,
+         254
+        ],
+        [
+         282,
+         255
+        ],
+        [
+         92,
+         265
+        ],
+        [
+         156,
+         267
+        ],
+        [
+         190,
+         269
+        ],
+        [
+         252,
+         270
+        ],
+        [
+         96,
+         271
+        ],
+        [
+         281,
+         277
+        ]
+       ]
+      }
+     ],
+     "topology": {
+      "models": 1,
+      "primaryShare": 10000,
+      "klass": "single"
+     },
+     "degraded": false,
+     "hypothesesFinished": 16,
+     "invGate": 0,
+     "invertedFamilyRan": true
+    },
+    "diversity": {
+     "measurable": true,
+     "value": 7944,
+     "total": 7944,
+     "components": {
+      "Dspace": 7714,
+      "Dscale": 10000,
+      "Dmodel": 6000,
+      "Ddesc": 9715,
+      "Dregion": 8125,
+      "Dunique": 7142
+     },
+     "repeat": 0,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 884/1024 at k=0 (null 1036)",
+      "ham": 884,
+      "matchedK": 0,
+      "raw": 1368,
+      "nullVal": 0,
+      "margin": 1368,
+      "evidence": 1368
+     },
+     "local": {
+      "measurable": true,
+      "note": "12 of 128 assigned (sparse) at k=3 inverted, 1 expected under rot32",
+      "alignedK": 3,
+      "alignedInverted": true,
+      "matches": 12,
+      "cmax": 128,
+      "w": 74166,
+      "cap": 209983,
+      "path": "sparse",
+      "ctlW": 3333,
+      "ctlN": 1,
+      "ctlMember": "rot32",
+      "raw": 2119,
+      "nullVal": 41,
+      "margin": 2086,
+      "evidence": 2086,
+      "diversity": 1640,
+      "pairs": [
+       [
+        18,
+        6
+       ],
+       [
+        15,
+        26
+       ],
+       [
+        41,
+        28
+       ],
+       [
+        35,
+        37
+       ],
+       [
+        47,
+        43
+       ],
+       [
+        45,
+        61
+       ],
+       [
+        82,
+        80
+       ],
+       [
+        95,
+        83
+       ],
+       [
+        105,
+        94
+       ],
+       [
+        85,
+        98
+       ],
+       [
+        107,
+        104
+       ],
+       [
+        106,
+        114
+       ]
+      ],
+      "coverageA": {
+       "g": 4,
+       "occupied": 5,
+       "coverage": 3125,
+       "bboxCells": 6,
+       "concentration": 10000,
+       "counts": {
+        "0": 0,
+        "1": 1,
+        "2": 7,
+        "3": 0,
+        "4": 0,
+        "5": 1,
+        "6": 2,
+        "7": 0,
+        "8": 0,
+        "9": 1,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 4,
+       "coverage": 2500,
+       "bboxCells": 6,
+       "concentration": 10000,
+       "counts": {
+        "0": 0,
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 0,
+        "5": 3,
+        "6": 2,
+        "7": 0,
+        "8": 0,
+        "9": 6,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": true,
+      "note": "17 mutual region pairs, positional best k=1",
+      "matchedK": 1,
+      "pairs": 17,
+      "positional": 2539,
+      "mutual": 5483,
+      "raw": 3520,
+      "nullVal": 2242,
+      "margin": 1647,
+      "evidence": 1647
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 247,
+      "nullVal": 0,
+      "margin": 247,
+      "evidence": 247
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 20 at k=3 (null 205)",
+      "matchedK": 3,
+      "raw": 9952,
+      "nullVal": 9500,
+      "margin": 9040,
+      "evidence": 9040
+     },
+     "palette": {
+      "measurable": true,
+      "note": "11/11 colours, tone shift 13",
+      "toneShift": -13,
+      "curveSim": 8230,
+      "occSim": 6184,
+      "raw": 7548,
+      "nullVal": 4630,
+      "margin": 5433,
+      "evidence": 5433
+     },
+     "spatial": {
+      "measurable": true,
+      "note": "best k=1",
+      "matchedK": 1,
+      "raw": 6115,
+      "nullVal": 3332,
+      "margin": 4173,
+      "evidence": 4173
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 8,
+      "coverage": 5000,
+      "bboxCells": 12,
+      "concentration": 8750,
+      "counts": {
+       "0": 2,
+       "1": 4,
+       "2": 11,
+       "3": 0,
+       "4": 5,
+       "5": 4,
+       "6": 4,
+       "7": 0,
+       "8": 4,
+       "9": 0,
+       "10": 0,
+       "11": 1,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 8,
+      "coverage": 5000,
+      "bboxCells": 12,
+      "concentration": 8750,
+      "counts": {
+       "0": 1,
+       "1": 0,
+       "2": 0,
+       "3": 5,
+       "4": 0,
+       "5": 6,
+       "6": 7,
+       "7": 4,
+       "8": 0,
+       "9": 9,
+       "10": 2,
+       "11": 1,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "geometry"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "support spans 12 cells",
+     "bboxCells": 12
+    },
+    "brightness": {
+     "shift": -194
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 63,
+     "regionPairs": 62,
+     "sketchAgree": 70,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "standard",
+     "kpA": 287,
+     "kpB": 278
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "7fe1407e396135cc2e591872d4fe8042"
+    ],
+    "budgetUsed": 2358688
+   }
+  },
+  {
+   "name": "tone-shift-40",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "f104838131652fe83851a3cac2565388fa5135efb8693eff10d6c703a675083c",
+    "t2": "8b421bd9926d302ef594bbd36a214747ca9700eb90f6a5cd565cd0d8e341f21b"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": true,
+    "verdict": "Copy",
+    "evidenceClass": "STRUCT_GEO",
+    "basis": [
+     "S>=strong AND G>=certifying AND D>=floor",
+     "S>=solo with 7 secondary channels",
+     "geometry-only (s22.4): 5 secondary conditions"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 8478,
+     "channelsMeasured": 7,
+     "secondaries": 7
+    },
+    "geometric": {
+     "measurable": true,
+     "note": "16 hypotheses (with inverted family), 363 correspondences, 1 model(s)",
+     "value": 10000,
+     "raw": 10000,
+     "control": 1000,
+     "margin": 10000,
+     "ctlMember": "shift 1/3",
+     "confidence": 10000,
+     "correspondences": 363,
+     "totalInliers": 255,
+     "independentEvidence": 41,
+     "models": [
+      {
+       "m": 0,
+       "inverted": false,
+       "rotation": 0,
+       "mirrored": false,
+       "sQ16": 65536,
+       "scaleMilli": 1000,
+       "t": [
+        0,
+        0
+       ],
+       "inliers": 255,
+       "indep": 41,
+       "resMedBucket": 0,
+       "mass": 242708,
+       "peakKey": 204864,
+       "pairs": [
+        [
+         4,
+         4
+        ],
+        [
+         6,
+         6
+        ],
+        [
+         8,
+         8
+        ],
+        [
+         9,
+         9
+        ],
+        [
+         10,
+         10
+        ],
+        [
+         11,
+         11
+        ],
+        [
+         12,
+         12
+        ],
+        [
+         13,
+         13
+        ],
+        [
+         14,
+         14
+        ],
+        [
+         15,
+         15
+        ],
+        [
+         16,
+         16
+        ],
+        [
+         17,
+         17
+        ],
+        [
+         18,
+         18
+        ],
+        [
+         19,
+         19
+        ],
+        [
+         20,
+         20
+        ],
+        [
+         21,
+         21
+        ],
+        [
+         22,
+         22
+        ],
+        [
+         23,
+         23
+        ],
+        [
+         24,
+         24
+        ],
+        [
+         25,
+         25
+        ],
+        [
+         26,
+         26
+        ],
+        [
+         27,
+         27
+        ],
+        [
+         28,
+         28
+        ],
+        [
+         29,
+         29
+        ],
+        [
+         30,
+         30
+        ],
+        [
+         31,
+         31
+        ],
+        [
+         32,
+         32
+        ],
+        [
+         33,
+         33
+        ],
+        [
+         35,
+         35
+        ],
+        [
+         38,
+         38
+        ],
+        [
+         39,
+         39
+        ],
+        [
+         40,
+         40
+        ],
+        [
+         41,
+         41
+        ],
+        [
+         42,
+         42
+        ],
+        [
+         43,
+         43
+        ],
+        [
+         45,
+         44
+        ],
+        [
+         46,
+         45
+        ],
+        [
+         47,
+         46
+        ],
+        [
+         48,
+         47
+        ],
+        [
+         49,
+         48
+        ],
+        [
+         50,
+         49
+        ],
+        [
+         51,
+         50
+        ],
+        [
+         53,
+         51
+        ],
+        [
+         54,
+         52
+        ],
+        [
+         55,
+         53
+        ],
+        [
+         56,
+         54
+        ],
+        [
+         57,
+         55
+        ],
+        [
+         58,
+         56
+        ],
+        [
+         59,
+         57
+        ],
+        [
+         60,
+         58
+        ],
+        [
+         61,
+         59
+        ],
+        [
+         62,
+         60
+        ],
+        [
+         63,
+         61
+        ],
+        [
+         64,
+         62
+        ],
+        [
+         65,
+         63
+        ],
+        [
+         66,
+         64
+        ],
+        [
+         67,
+         65
+        ],
+        [
+         68,
+         67
+        ],
+        [
+         69,
+         68
+        ],
+        [
+         70,
+         69
+        ],
+        [
+         71,
+         70
+        ],
+        [
+         72,
+         71
+        ],
+        [
+         73,
+         72
+        ],
+        [
+         74,
+         73
+        ],
+        [
+         75,
+         74
+        ],
+        [
+         76,
+         75
+        ],
+        [
+         77,
+         76
+        ],
+        [
+         78,
+         77
+        ],
+        [
+         79,
+         78
+        ],
+        [
+         80,
+         79
+        ],
+        [
+         81,
+         80
+        ],
+        [
+         82,
+         81
+        ],
+        [
+         83,
+         82
+        ],
+        [
+         84,
+         83
+        ],
+        [
+         85,
+         84
+        ],
+        [
+         86,
+         85
+        ],
+        [
+         87,
+         86
+        ],
+        [
+         90,
+         87
+        ],
+        [
+         91,
+         88
+        ],
+        [
+         93,
+         89
+        ],
+        [
+         95,
+         90
+        ],
+        [
+         96,
+         91
+        ],
+        [
+         97,
+         92
+        ],
+        [
+         98,
+         93
+        ],
+        [
+         101,
+         96
+        ],
+        [
+         102,
+         97
+        ],
+        [
+         104,
+         98
+        ],
+        [
+         105,
+         99
+        ],
+        [
+         106,
+         100
+        ],
+        [
+         107,
+         101
+        ],
+        [
+         108,
+         102
+        ],
+        [
+         109,
+         103
+        ],
+        [
+         110,
+         104
+        ],
+        [
+         111,
+         105
+        ],
+        [
+         113,
+         107
+        ],
+        [
+         114,
+         108
+        ],
+        [
+         115,
+         109
+        ],
+        [
+         116,
+         110
+        ],
+        [
+         117,
+         111
+        ],
+        [
+         118,
+         112
+        ],
+        [
+         119,
+         113
+        ],
+        [
+         120,
+         114
+        ],
+        [
+         121,
+         115
+        ],
+        [
+         122,
+         117
+        ],
+        [
+         123,
+         118
+        ],
+        [
+         125,
+         119
+        ],
+        [
+         126,
+         120
+        ],
+        [
+         127,
+         122
+        ],
+        [
+         128,
+         123
+        ],
+        [
+         129,
+         124
+        ],
+        [
+         130,
+         125
+        ],
+        [
+         132,
+         127
+        ],
+        [
+         133,
+         129
+        ],
+        [
+         134,
+         130
+        ],
+        [
+         135,
+         131
+        ],
+        [
+         136,
+         132
+        ],
+        [
+         137,
+         133
+        ],
+        [
+         138,
+         134
+        ],
+        [
+         139,
+         135
+        ],
+        [
+         141,
+         137
+        ],
+        [
+         142,
+         138
+        ],
+        [
+         143,
+         140
+        ],
+        [
+         144,
+         141
+        ],
+        [
+         145,
+         142
+        ],
+        [
+         146,
+         144
+        ],
+        [
+         147,
+         145
+        ],
+        [
+         148,
+         146
+        ],
+        [
+         149,
+         148
+        ],
+        [
+         150,
+         149
+        ],
+        [
+         151,
+         150
+        ],
+        [
+         153,
+         152
+        ],
+        [
+         154,
+         153
+        ],
+        [
+         155,
+         154
+        ],
+        [
+         156,
+         155
+        ],
+        [
+         157,
+         156
+        ],
+        [
+         158,
+         157
+        ],
+        [
+         159,
+         158
+        ],
+        [
+         160,
+         159
+        ],
+        [
+         161,
+         160
+        ],
+        [
+         162,
+         161
+        ],
+        [
+         163,
+         162
+        ],
+        [
+         164,
+         163
+        ],
+        [
+         165,
+         164
+        ],
+        [
+         166,
+         166
+        ],
+        [
+         167,
+         168
+        ],
+        [
+         168,
+         169
+        ],
+        [
+         170,
+         170
+        ],
+        [
+         171,
+         171
+        ],
+        [
+         173,
+         172
+        ],
+        [
+         174,
+         173
+        ],
+        [
+         175,
+         175
+        ],
+        [
+         177,
+         176
+        ],
+        [
+         178,
+         177
+        ],
+        [
+         179,
+         178
+        ],
+        [
+         180,
+         179
+        ],
+        [
+         181,
+         180
+        ],
+        [
+         182,
+         181
+        ],
+        [
+         183,
+         182
+        ],
+        [
+         184,
+         183
+        ],
+        [
+         185,
+         184
+        ],
+        [
+         186,
+         185
+        ],
+        [
+         187,
+         186
+        ],
+        [
+         188,
+         187
+        ],
+        [
+         189,
+         188
+        ],
+        [
+         190,
+         189
+        ],
+        [
+         191,
+         190
+        ],
+        [
+         192,
+         191
+        ],
+        [
+         193,
+         192
+        ],
+        [
+         194,
+         193
+        ],
+        [
+         195,
+         194
+        ],
+        [
+         196,
+         195
+        ],
+        [
+         197,
+         196
+        ],
+        [
+         198,
+         197
+        ],
+        [
+         199,
+         198
+        ],
+        [
+         200,
+         199
+        ],
+        [
+         201,
+         200
+        ],
+        [
+         202,
+         201
+        ],
+        [
+         203,
+         202
+        ],
+        [
+         204,
+         203
+        ],
+        [
+         205,
+         204
+        ],
+        [
+         206,
+         205
+        ],
+        [
+         207,
+         206
+        ],
+        [
+         208,
+         207
+        ],
+        [
+         209,
+         208
+        ],
+        [
+         210,
+         209
+        ],
+        [
+         211,
+         210
+        ],
+        [
+         212,
+         211
+        ],
+        [
+         213,
+         212
+        ],
+        [
+         214,
+         213
+        ],
+        [
+         215,
+         214
+        ],
+        [
+         217,
+         216
+        ],
+        [
+         218,
+         217
+        ],
+        [
+         219,
+         218
+        ],
+        [
+         220,
+         221
+        ],
+        [
+         221,
+         222
+        ],
+        [
+         222,
+         223
+        ],
+        [
+         223,
+         224
+        ],
+        [
+         224,
+         225
+        ],
+        [
+         225,
+         226
+        ],
+        [
+         226,
+         227
+        ],
+        [
+         227,
+         228
+        ],
+        [
+         228,
+         229
+        ],
+        [
+         230,
+         230
+        ],
+        [
+         231,
+         231
+        ],
+        [
+         232,
+         233
+        ],
+        [
+         233,
+         234
+        ],
+        [
+         234,
+         235
+        ],
+        [
+         235,
+         236
+        ],
+        [
+         236,
+         237
+        ],
+        [
+         237,
+         238
+        ],
+        [
+         239,
+         239
+        ],
+        [
+         240,
+         240
+        ],
+        [
+         241,
+         241
+        ],
+        [
+         242,
+         242
+        ],
+        [
+         243,
+         243
+        ],
+        [
+         244,
+         244
+        ],
+        [
+         245,
+         245
+        ],
+        [
+         246,
+         246
+        ],
+        [
+         247,
+         247
+        ],
+        [
+         248,
+         248
+        ],
+        [
+         249,
+         249
+        ],
+        [
+         250,
+         250
+        ],
+        [
+         251,
+         251
+        ],
+        [
+         252,
+         252
+        ],
+        [
+         253,
+         253
+        ],
+        [
+         254,
+         254
+        ],
+        [
+         255,
+         255
+        ],
+        [
+         256,
+         256
+        ],
+        [
+         258,
+         257
+        ],
+        [
+         259,
+         258
+        ],
+        [
+         260,
+         259
+        ],
+        [
+         261,
+         260
+        ],
+        [
+         262,
+         261
+        ],
+        [
+         264,
+         262
+        ],
+        [
+         265,
+         263
+        ],
+        [
+         266,
+         264
+        ],
+        [
+         267,
+         266
+        ],
+        [
+         268,
+         267
+        ],
+        [
+         269,
+         268
+        ],
+        [
+         270,
+         269
+        ],
+        [
+         271,
+         270
+        ],
+        [
+         272,
+         271
+        ],
+        [
+         273,
+         272
+        ],
+        [
+         275,
+         273
+        ],
+        [
+         276,
+         274
+        ],
+        [
+         277,
+         275
+        ],
+        [
+         278,
+         276
+        ],
+        [
+         279,
+         277
+        ],
+        [
+         280,
+         278
+        ],
+        [
+         281,
+         279
+        ],
+        [
+         282,
+         280
+        ],
+        [
+         283,
+         281
+        ],
+        [
+         284,
+         282
+        ],
+        [
+         285,
+         283
+        ],
+        [
+         286,
+         284
+        ]
+       ]
+      }
+     ],
+     "topology": {
+      "models": 1,
+      "primaryShare": 10000,
+      "klass": "single"
+     },
+     "degraded": false,
+     "hypothesesFinished": 16,
+     "invGate": 28,
+     "invertedFamilyRan": true
+    },
+    "diversity": {
+     "measurable": true,
+     "value": 7998,
+     "total": 7998,
+     "components": {
+      "Dspace": 7500,
+      "Dscale": 10000,
+      "Dmodel": 6000,
+      "Ddesc": 8785,
+      "Dregion": 10000,
+      "Dunique": 10000
+     },
+     "repeat": 1450,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 48/1024 at k=0 (null 1016)",
+      "ham": 48,
+      "matchedK": 0,
+      "raw": 9532,
+      "nullVal": 79,
+      "margin": 9528,
+      "evidence": 9528
+     },
+     "local": {
+      "measurable": true,
+      "note": "124 of 128 assigned (dense) at k=0, 111 expected under bitrev",
+      "alignedK": 0,
+      "alignedInverted": false,
+      "matches": 124,
+      "cmax": 128,
+      "w": 228144,
+      "cap": 264048,
+      "path": "dense",
+      "ctlW": 68016,
+      "ctlN": 111,
+      "ctlMember": "bitrev",
+      "raw": 7451,
+      "nullVal": 4657,
+      "margin": 5229,
+      "evidence": 5229,
+      "diversity": 2062,
+      "pairs": [
+       [
+        0,
+        0
+       ],
+       [
+        18,
+        1
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        5,
+        3
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        11,
+        6
+       ],
+       [
+        7,
+        7
+       ],
+       [
+        10,
+        8
+       ],
+       [
+        6,
+        9
+       ],
+       [
+        12,
+        10
+       ],
+       [
+        9,
+        11
+       ],
+       [
+        8,
+        12
+       ],
+       [
+        25,
+        13
+       ],
+       [
+        29,
+        14
+       ],
+       [
+        28,
+        15
+       ],
+       [
+        31,
+        16
+       ],
+       [
+        1,
+        17
+       ],
+       [
+        33,
+        18
+       ],
+       [
+        37,
+        19
+       ],
+       [
+        13,
+        20
+       ],
+       [
+        19,
+        21
+       ],
+       [
+        20,
+        22
+       ],
+       [
+        21,
+        23
+       ],
+       [
+        14,
+        24
+       ],
+       [
+        36,
+        25
+       ],
+       [
+        17,
+        26
+       ],
+       [
+        30,
+        27
+       ],
+       [
+        35,
+        28
+       ],
+       [
+        48,
+        29
+       ],
+       [
+        22,
+        30
+       ],
+       [
+        43,
+        31
+       ],
+       [
+        46,
+        32
+       ],
+       [
+        34,
+        33
+       ],
+       [
+        16,
+        34
+       ],
+       [
+        103,
+        35
+       ],
+       [
+        24,
+        36
+       ],
+       [
+        41,
+        37
+       ],
+       [
+        15,
+        38
+       ],
+       [
+        49,
+        39
+       ],
+       [
+        50,
+        40
+       ],
+       [
+        23,
+        41
+       ],
+       [
+        54,
+        42
+       ],
+       [
+        58,
+        43
+       ],
+       [
+        26,
+        44
+       ],
+       [
+        42,
+        45
+       ],
+       [
+        32,
+        46
+       ],
+       [
+        60,
+        47
+       ],
+       [
+        61,
+        48
+       ],
+       [
+        66,
+        49
+       ],
+       [
+        67,
+        50
+       ],
+       [
+        38,
+        51
+       ],
+       [
+        40,
+        52
+       ],
+       [
+        71,
+        53
+       ],
+       [
+        68,
+        54
+       ],
+       [
+        70,
+        55
+       ],
+       [
+        51,
+        56
+       ],
+       [
+        52,
+        57
+       ],
+       [
+        45,
+        58
+       ],
+       [
+        62,
+        59
+       ],
+       [
+        39,
+        60
+       ],
+       [
+        77,
+        61
+       ],
+       [
+        56,
+        62
+       ],
+       [
+        78,
+        63
+       ],
+       [
+        47,
+        64
+       ],
+       [
+        83,
+        65
+       ],
+       [
+        64,
+        66
+       ],
+       [
+        73,
+        67
+       ],
+       [
+        65,
+        68
+       ],
+       [
+        44,
+        69
+       ],
+       [
+        53,
+        70
+       ],
+       [
+        55,
+        71
+       ],
+       [
+        59,
+        72
+       ],
+       [
+        92,
+        73
+       ],
+       [
+        84,
+        74
+       ],
+       [
+        80,
+        75
+       ],
+       [
+        76,
+        76
+       ],
+       [
+        57,
+        77
+       ],
+       [
+        96,
+        78
+       ],
+       [
+        86,
+        79
+       ],
+       [
+        106,
+        80
+       ],
+       [
+        88,
+        81
+       ],
+       [
+        69,
+        82
+       ],
+       [
+        89,
+        83
+       ],
+       [
+        90,
+        84
+       ],
+       [
+        91,
+        85
+       ],
+       [
+        72,
+        86
+       ],
+       [
+        94,
+        87
+       ],
+       [
+        85,
+        88
+       ],
+       [
+        98,
+        89
+       ],
+       [
+        99,
+        90
+       ],
+       [
+        100,
+        91
+       ],
+       [
+        87,
+        92
+       ],
+       [
+        110,
+        93
+       ],
+       [
+        82,
+        94
+       ],
+       [
+        93,
+        95
+       ],
+       [
+        63,
+        96
+       ],
+       [
+        74,
+        97
+       ],
+       [
+        112,
+        98
+       ],
+       [
+        121,
+        99
+       ],
+       [
+        117,
+        100
+       ],
+       [
+        118,
+        101
+       ],
+       [
+        75,
+        102
+       ],
+       [
+        107,
+        103
+       ],
+       [
+        101,
+        104
+       ],
+       [
+        97,
+        105
+       ],
+       [
+        102,
+        106
+       ],
+       [
+        111,
+        107
+       ],
+       [
+        79,
+        108
+       ],
+       [
+        119,
+        109
+       ],
+       [
+        108,
+        110
+       ],
+       [
+        113,
+        111
+       ],
+       [
+        115,
+        112
+       ],
+       [
+        120,
+        113
+       ],
+       [
+        109,
+        114
+       ],
+       [
+        95,
+        115
+       ],
+       [
+        127,
+        116
+       ],
+       [
+        122,
+        118
+       ],
+       [
+        123,
+        119
+       ],
+       [
+        116,
+        120
+       ],
+       [
+        124,
+        121
+       ],
+       [
+        27,
+        122
+       ],
+       [
+        81,
+        123
+       ],
+       [
+        125,
+        124
+       ]
+      ],
+      "coverageA": {
+       "g": 4,
+       "occupied": 12,
+       "coverage": 7500,
+       "bboxCells": 12,
+       "concentration": 10000,
+       "counts": {
+        "0": 14,
+        "1": 16,
+        "2": 19,
+        "3": 2,
+        "4": 3,
+        "5": 14,
+        "6": 12,
+        "7": 15,
+        "8": 6,
+        "9": 8,
+        "10": 6,
+        "11": 9,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 12,
+       "coverage": 7500,
+       "bboxCells": 12,
+       "concentration": 10000,
+       "counts": {
+        "0": 14,
+        "1": 16,
+        "2": 19,
+        "3": 2,
+        "4": 3,
+        "5": 14,
+        "6": 13,
+        "7": 15,
+        "8": 5,
+        "9": 8,
+        "10": 7,
+        "11": 8,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": true,
+      "note": "62 mutual region pairs, positional best k=0",
+      "matchedK": 0,
+      "pairs": 62,
+      "positional": 10000,
+      "mutual": 10000,
+      "raw": 10000,
+      "nullVal": 3949,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 10000,
+      "nullVal": 0,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 0 at k=0 (null 206)",
+      "matchedK": 0,
+      "raw": 10000,
+      "nullVal": 9498,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "palette": {
+      "measurable": true,
+      "note": "11/11 colours, tone shift 40",
+      "toneShift": -40,
+      "curveSim": 9792,
+      "occSim": 10000,
+      "raw": 9861,
+      "nullVal": 4330,
+      "margin": 9754,
+      "evidence": 9754
+     },
+     "spatial": {
+      "measurable": true,
+      "note": "best k=0",
+      "matchedK": 0,
+      "raw": 10000,
+      "nullVal": 3688,
+      "margin": 10000,
+      "evidence": 10000
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 12,
+      "coverage": 7500,
+      "bboxCells": 12,
+      "concentration": 10000,
+      "counts": {
+       "0": 20,
+       "1": 32,
+       "2": 36,
+       "3": 7,
+       "4": 24,
+       "5": 41,
+       "6": 28,
+       "7": 19,
+       "8": 18,
+       "9": 8,
+       "10": 8,
+       "11": 14,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 12,
+      "coverage": 7500,
+      "bboxCells": 12,
+      "concentration": 10000,
+      "counts": {
+       "0": 20,
+       "1": 32,
+       "2": 36,
+       "3": 7,
+       "4": 24,
+       "5": 41,
+       "6": 28,
+       "7": 19,
+       "8": 18,
+       "9": 8,
+       "10": 8,
+       "11": 14,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "geometry"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "support spans 12 cells",
+     "bboxCells": 12
+    },
+    "brightness": {
+     "shift": -40
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 33,
+     "regionPairs": 63,
+     "sketchAgree": 77,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "standard",
+     "kpA": 287,
+     "kpB": 285
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "11db2b5c64339e1122d4b23ee0a653a0"
+    ],
+    "budgetUsed": 2343820
+   }
+  },
+  {
+   "name": "upscale-2x",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "bfb62bc406e1ccefd34ef27126eb34a7021a6696096b15d424202c183ebb1566",
+    "t2": "f62a6006be047032b5d751c6145cb348e08ad74e49d6e62c0d4f3c0af5e41df5"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": false,
+    "verdict": "Copy",
+    "evidenceClass": "STRUCT_GEO",
+    "basis": [
+     "S>=strong AND G>=certifying AND D>=floor",
+     "S>=solo with 7 secondary channels",
+     "geometry-only (s22.4): 5 secondary conditions"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 8856,
+     "channelsMeasured": 7,
+     "secondaries": 7
+    },
+    "geometric": {
+     "measurable": true,
+     "note": "16 hypotheses (with inverted family), 382 correspondences, 1 model(s)",
+     "value": 10000,
+     "raw": 10000,
+     "control": 750,
+     "margin": 10000,
+     "ctlMember": "shift 1/3",
+     "confidence": 10000,
+     "correspondences": 382,
+     "totalInliers": 274,
+     "independentEvidence": 41,
+     "models": [
+      {
+       "m": 0,
+       "inverted": false,
+       "rotation": 0,
+       "mirrored": false,
+       "sQ16": 65536,
+       "scaleMilli": 1000,
+       "t": [
+        0,
+        0
+       ],
+       "inliers": 274,
+       "indep": 41,
+       "resMedBucket": 0,
+       "mass": 280576,
+       "peakKey": 204864,
+       "pairs": [
+        [
+         4,
+         4
+        ],
+        [
+         6,
+         6
+        ],
+        [
+         8,
+         8
+        ],
+        [
+         9,
+         9
+        ],
+        [
+         10,
+         10
+        ],
+        [
+         11,
+         11
+        ],
+        [
+         12,
+         12
+        ],
+        [
+         13,
+         13
+        ],
+        [
+         14,
+         14
+        ],
+        [
+         15,
+         15
+        ],
+        [
+         16,
+         16
+        ],
+        [
+         17,
+         17
+        ],
+        [
+         18,
+         18
+        ],
+        [
+         19,
+         19
+        ],
+        [
+         20,
+         20
+        ],
+        [
+         21,
+         21
+        ],
+        [
+         22,
+         22
+        ],
+        [
+         23,
+         23
+        ],
+        [
+         24,
+         24
+        ],
+        [
+         25,
+         25
+        ],
+        [
+         26,
+         26
+        ],
+        [
+         27,
+         27
+        ],
+        [
+         28,
+         28
+        ],
+        [
+         29,
+         29
+        ],
+        [
+         30,
+         30
+        ],
+        [
+         31,
+         31
+        ],
+        [
+         32,
+         32
+        ],
+        [
+         33,
+         33
+        ],
+        [
+         35,
+         35
+        ],
+        [
+         38,
+         38
+        ],
+        [
+         39,
+         39
+        ],
+        [
+         40,
+         40
+        ],
+        [
+         41,
+         41
+        ],
+        [
+         42,
+         42
+        ],
+        [
+         43,
+         43
+        ],
+        [
+         44,
+         44
+        ],
+        [
+         45,
+         45
+        ],
+        [
+         46,
+         46
+        ],
+        [
+         47,
+         47
+        ],
+        [
+         48,
+         48
+        ],
+        [
+         49,
+         49
+        ],
+        [
+         50,
+         50
+        ],
+        [
+         51,
+         51
+        ],
+        [
+         52,
+         52
+        ],
+        [
+         53,
+         53
+        ],
+        [
+         54,
+         54
+        ],
+        [
+         55,
+         55
+        ],
+        [
+         56,
+         56
+        ],
+        [
+         57,
+         57
+        ],
+        [
+         58,
+         58
+        ],
+        [
+         59,
+         59
+        ],
+        [
+         60,
+         60
+        ],
+        [
+         61,
+         61
+        ],
+        [
+         62,
+         62
+        ],
+        [
+         63,
+         63
+        ],
+        [
+         64,
+         64
+        ],
+        [
+         65,
+         65
+        ],
+        [
+         66,
+         66
+        ],
+        [
+         67,
+         67
+        ],
+        [
+         68,
+         68
+        ],
+        [
+         69,
+         69
+        ],
+        [
+         70,
+         70
+        ],
+        [
+         71,
+         71
+        ],
+        [
+         72,
+         72
+        ],
+        [
+         73,
+         73
+        ],
+        [
+         74,
+         74
+        ],
+        [
+         75,
+         75
+        ],
+        [
+         76,
+         76
+        ],
+        [
+         77,
+         77
+        ],
+        [
+         78,
+         78
+        ],
+        [
+         79,
+         79
+        ],
+        [
+         80,
+         80
+        ],
+        [
+         81,
+         81
+        ],
+        [
+         82,
+         82
+        ],
+        [
+         83,
+         83
+        ],
+        [
+         84,
+         84
+        ],
+        [
+         85,
+         85
+        ],
+        [
+         86,
+         86
+        ],
+        [
+         87,
+         87
+        ],
+        [
+         88,
+         88
+        ],
+        [
+         89,
+         89
+        ],
+        [
+         90,
+         90
+        ],
+        [
+         91,
+         91
+        ],
+        [
+         92,
+         92
+        ],
+        [
+         93,
+         93
+        ],
+        [
+         94,
+         94
+        ],
+        [
+         95,
+         95
+        ],
+        [
+         96,
+         96
+        ],
+        [
+         97,
+         97
+        ],
+        [
+         98,
+         98
+        ],
+        [
+         101,
+         101
+        ],
+        [
+         102,
+         102
+        ],
+        [
+         103,
+         103
+        ],
+        [
+         104,
+         104
+        ],
+        [
+         105,
+         105
+        ],
+        [
+         106,
+         106
+        ],
+        [
+         107,
+         107
+        ],
+        [
+         108,
+         108
+        ],
+        [
+         109,
+         109
+        ],
+        [
+         110,
+         110
+        ],
+        [
+         111,
+         111
+        ],
+        [
+         113,
+         113
+        ],
+        [
+         114,
+         114
+        ],
+        [
+         115,
+         115
+        ],
+        [
+         116,
+         116
+        ],
+        [
+         117,
+         117
+        ],
+        [
+         118,
+         118
+        ],
+        [
+         119,
+         119
+        ],
+        [
+         120,
+         120
+        ],
+        [
+         121,
+         121
+        ],
+        [
+         122,
+         122
+        ],
+        [
+         123,
+         123
+        ],
+        [
+         124,
+         124
+        ],
+        [
+         125,
+         125
+        ],
+        [
+         126,
+         126
+        ],
+        [
+         127,
+         127
+        ],
+        [
+         128,
+         128
+        ],
+        [
+         129,
+         129
+        ],
+        [
+         130,
+         130
+        ],
+        [
+         131,
+         131
+        ],
+        [
+         132,
+         132
+        ],
+        [
+         133,
+         133
+        ],
+        [
+         134,
+         134
+        ],
+        [
+         135,
+         135
+        ],
+        [
+         136,
+         136
+        ],
+        [
+         137,
+         137
+        ],
+        [
+         138,
+         138
+        ],
+        [
+         139,
+         139
+        ],
+        [
+         141,
+         141
+        ],
+        [
+         142,
+         142
+        ],
+        [
+         143,
+         143
+        ],
+        [
+         144,
+         144
+        ],
+        [
+         145,
+         145
+        ],
+        [
+         146,
+         146
+        ],
+        [
+         147,
+         147
+        ],
+        [
+         148,
+         148
+        ],
+        [
+         149,
+         149
+        ],
+        [
+         150,
+         150
+        ],
+        [
+         151,
+         151
+        ],
+        [
+         152,
+         152
+        ],
+        [
+         153,
+         153
+        ],
+        [
+         154,
+         154
+        ],
+        [
+         155,
+         155
+        ],
+        [
+         156,
+         156
+        ],
+        [
+         157,
+         157
+        ],
+        [
+         158,
+         158
+        ],
+        [
+         159,
+         159
+        ],
+        [
+         160,
+         160
+        ],
+        [
+         161,
+         161
+        ],
+        [
+         162,
+         162
+        ],
+        [
+         163,
+         163
+        ],
+        [
+         164,
+         164
+        ],
+        [
+         165,
+         165
+        ],
+        [
+         166,
+         166
+        ],
+        [
+         167,
+         167
+        ],
+        [
+         168,
+         168
+        ],
+        [
+         169,
+         169
+        ],
+        [
+         170,
+         170
+        ],
+        [
+         171,
+         171
+        ],
+        [
+         172,
+         172
+        ],
+        [
+         173,
+         173
+        ],
+        [
+         174,
+         174
+        ],
+        [
+         175,
+         175
+        ],
+        [
+         176,
+         176
+        ],
+        [
+         177,
+         177
+        ],
+        [
+         178,
+         178
+        ],
+        [
+         179,
+         179
+        ],
+        [
+         180,
+         180
+        ],
+        [
+         181,
+         181
+        ],
+        [
+         182,
+         182
+        ],
+        [
+         183,
+         183
+        ],
+        [
+         184,
+         184
+        ],
+        [
+         185,
+         185
+        ],
+        [
+         186,
+         186
+        ],
+        [
+         187,
+         187
+        ],
+        [
+         188,
+         188
+        ],
+        [
+         189,
+         189
+        ],
+        [
+         190,
+         190
+        ],
+        [
+         191,
+         191
+        ],
+        [
+         192,
+         192
+        ],
+        [
+         193,
+         193
+        ],
+        [
+         194,
+         194
+        ],
+        [
+         195,
+         195
+        ],
+        [
+         196,
+         196
+        ],
+        [
+         197,
+         197
+        ],
+        [
+         198,
+         198
+        ],
+        [
+         199,
+         199
+        ],
+        [
+         200,
+         200
+        ],
+        [
+         201,
+         201
+        ],
+        [
+         202,
+         202
+        ],
+        [
+         203,
+         203
+        ],
+        [
+         204,
+         204
+        ],
+        [
+         205,
+         205
+        ],
+        [
+         206,
+         206
+        ],
+        [
+         207,
+         207
+        ],
+        [
+         208,
+         208
+        ],
+        [
+         209,
+         209
+        ],
+        [
+         210,
+         210
+        ],
+        [
+         211,
+         211
+        ],
+        [
+         212,
+         212
+        ],
+        [
+         213,
+         213
+        ],
+        [
+         214,
+         214
+        ],
+        [
+         215,
+         215
+        ],
+        [
+         216,
+         216
+        ],
+        [
+         217,
+         217
+        ],
+        [
+         218,
+         218
+        ],
+        [
+         219,
+         219
+        ],
+        [
+         220,
+         220
+        ],
+        [
+         221,
+         221
+        ],
+        [
+         222,
+         222
+        ],
+        [
+         223,
+         223
+        ],
+        [
+         224,
+         224
+        ],
+        [
+         225,
+         225
+        ],
+        [
+         226,
+         226
+        ],
+        [
+         227,
+         227
+        ],
+        [
+         228,
+         228
+        ],
+        [
+         229,
+         229
+        ],
+        [
+         230,
+         230
+        ],
+        [
+         231,
+         231
+        ],
+        [
+         232,
+         232
+        ],
+        [
+         233,
+         233
+        ],
+        [
+         234,
+         234
+        ],
+        [
+         235,
+         235
+        ],
+        [
+         236,
+         236
+        ],
+        [
+         237,
+         237
+        ],
+        [
+         238,
+         238
+        ],
+        [
+         239,
+         239
+        ],
+        [
+         240,
+         240
+        ],
+        [
+         241,
+         241
+        ],
+        [
+         242,
+         242
+        ],
+        [
+         243,
+         243
+        ],
+        [
+         244,
+         244
+        ],
+        [
+         245,
+         245
+        ],
+        [
+         246,
+         246
+        ],
+        [
+         247,
+         247
+        ],
+        [
+         248,
+         248
+        ],
+        [
+         249,
+         249
+        ],
+        [
+         250,
+         250
+        ],
+        [
+         251,
+         251
+        ],
+        [
+         252,
+         252
+        ],
+        [
+         253,
+         253
+        ],
+        [
+         254,
+         254
+        ],
+        [
+         255,
+         255
+        ],
+        [
+         256,
+         256
+        ],
+        [
+         257,
+         257
+        ],
+        [
+         258,
+         258
+        ],
+        [
+         259,
+         259
+        ],
+        [
+         260,
+         260
+        ],
+        [
+         261,
+         261
+        ],
+        [
+         262,
+         262
+        ],
+        [
+         263,
+         263
+        ],
+        [
+         264,
+         264
+        ],
+        [
+         265,
+         265
+        ],
+        [
+         266,
+         266
+        ],
+        [
+         267,
+         267
+        ],
+        [
+         268,
+         268
+        ],
+        [
+         269,
+         269
+        ],
+        [
+         270,
+         270
+        ],
+        [
+         271,
+         271
+        ],
+        [
+         272,
+         272
+        ],
+        [
+         273,
+         273
+        ],
+        [
+         274,
+         274
+        ],
+        [
+         275,
+         275
+        ],
+        [
+         276,
+         276
+        ],
+        [
+         277,
+         277
+        ],
+        [
+         278,
+         278
+        ],
+        [
+         279,
+         279
+        ],
+        [
+         280,
+         280
+        ],
+        [
+         281,
+         281
+        ],
+        [
+         282,
+         282
+        ],
+        [
+         283,
+         283
+        ],
+        [
+         284,
+         284
+        ],
+        [
+         285,
+         285
+        ],
+        [
+         286,
+         286
+        ]
+       ]
+      }
+     ],
+     "topology": {
+      "models": 1,
+      "primaryShare": 10000,
+      "klass": "single"
+     },
+     "degraded": false,
+     "hypothesesFinished": 16,
+     "invGate": 27,
+     "invertedFamilyRan": true
+    },
+    "diversity": {
+     "measurable": true,
+     "value": 8058,
+     "total": 8058,
+     "components": {
+      "Dspace": 7500,
+      "Dscale": 10000,
+      "Dmodel": 6000,
+      "Ddesc": 8869,
+      "Dregion": 10000,
+      "Dunique": 10000
+     },
+     "repeat": 1350,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 0/1024 at k=0 (null 1016)",
+      "ham": 0,
+      "matchedK": 0,
+      "raw": 10000,
+      "nullVal": 79,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "local": {
+      "measurable": true,
+      "note": "128 of 128 assigned (dense) at k=0, 99 expected under rot32",
+      "alignedK": 0,
+      "alignedInverted": false,
+      "matches": 128,
+      "cmax": 128,
+      "w": 275053,
+      "cap": 275053,
+      "path": "dense",
+      "ctlW": 60929,
+      "ctlN": 99,
+      "ctlMember": "rot32",
+      "raw": 7949,
+      "nullVal": 4620,
+      "margin": 6187,
+      "evidence": 6187,
+      "diversity": 2148,
+      "pairs": [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        1
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        3
+       ],
+       [
+        4,
+        4
+       ],
+       [
+        5,
+        5
+       ],
+       [
+        6,
+        6
+       ],
+       [
+        7,
+        7
+       ],
+       [
+        8,
+        8
+       ],
+       [
+        9,
+        9
+       ],
+       [
+        10,
+        10
+       ],
+       [
+        11,
+        11
+       ],
+       [
+        12,
+        12
+       ],
+       [
+        13,
+        13
+       ],
+       [
+        14,
+        14
+       ],
+       [
+        15,
+        15
+       ],
+       [
+        16,
+        16
+       ],
+       [
+        17,
+        17
+       ],
+       [
+        18,
+        18
+       ],
+       [
+        19,
+        19
+       ],
+       [
+        20,
+        20
+       ],
+       [
+        21,
+        21
+       ],
+       [
+        22,
+        22
+       ],
+       [
+        23,
+        23
+       ],
+       [
+        24,
+        24
+       ],
+       [
+        25,
+        25
+       ],
+       [
+        26,
+        26
+       ],
+       [
+        27,
+        27
+       ],
+       [
+        28,
+        28
+       ],
+       [
+        29,
+        29
+       ],
+       [
+        30,
+        30
+       ],
+       [
+        31,
+        31
+       ],
+       [
+        32,
+        32
+       ],
+       [
+        33,
+        33
+       ],
+       [
+        34,
+        34
+       ],
+       [
+        35,
+        35
+       ],
+       [
+        36,
+        36
+       ],
+       [
+        37,
+        37
+       ],
+       [
+        38,
+        38
+       ],
+       [
+        39,
+        39
+       ],
+       [
+        40,
+        40
+       ],
+       [
+        41,
+        41
+       ],
+       [
+        42,
+        42
+       ],
+       [
+        43,
+        43
+       ],
+       [
+        44,
+        44
+       ],
+       [
+        45,
+        45
+       ],
+       [
+        46,
+        46
+       ],
+       [
+        47,
+        47
+       ],
+       [
+        48,
+        48
+       ],
+       [
+        49,
+        49
+       ],
+       [
+        50,
+        50
+       ],
+       [
+        51,
+        51
+       ],
+       [
+        52,
+        52
+       ],
+       [
+        53,
+        53
+       ],
+       [
+        54,
+        54
+       ],
+       [
+        55,
+        55
+       ],
+       [
+        56,
+        56
+       ],
+       [
+        57,
+        57
+       ],
+       [
+        58,
+        58
+       ],
+       [
+        59,
+        59
+       ],
+       [
+        60,
+        60
+       ],
+       [
+        61,
+        61
+       ],
+       [
+        62,
+        62
+       ],
+       [
+        63,
+        63
+       ],
+       [
+        64,
+        64
+       ],
+       [
+        65,
+        65
+       ],
+       [
+        66,
+        66
+       ],
+       [
+        67,
+        67
+       ],
+       [
+        68,
+        68
+       ],
+       [
+        69,
+        69
+       ],
+       [
+        70,
+        70
+       ],
+       [
+        71,
+        71
+       ],
+       [
+        72,
+        72
+       ],
+       [
+        73,
+        73
+       ],
+       [
+        74,
+        74
+       ],
+       [
+        75,
+        75
+       ],
+       [
+        76,
+        76
+       ],
+       [
+        77,
+        77
+       ],
+       [
+        78,
+        78
+       ],
+       [
+        79,
+        79
+       ],
+       [
+        80,
+        80
+       ],
+       [
+        81,
+        81
+       ],
+       [
+        82,
+        82
+       ],
+       [
+        83,
+        83
+       ],
+       [
+        84,
+        84
+       ],
+       [
+        85,
+        85
+       ],
+       [
+        86,
+        86
+       ],
+       [
+        87,
+        87
+       ],
+       [
+        88,
+        88
+       ],
+       [
+        89,
+        89
+       ],
+       [
+        90,
+        90
+       ],
+       [
+        91,
+        91
+       ],
+       [
+        92,
+        92
+       ],
+       [
+        93,
+        93
+       ],
+       [
+        94,
+        94
+       ],
+       [
+        95,
+        95
+       ],
+       [
+        96,
+        96
+       ],
+       [
+        97,
+        97
+       ],
+       [
+        98,
+        98
+       ],
+       [
+        99,
+        99
+       ],
+       [
+        100,
+        100
+       ],
+       [
+        101,
+        101
+       ],
+       [
+        102,
+        102
+       ],
+       [
+        103,
+        103
+       ],
+       [
+        104,
+        104
+       ],
+       [
+        105,
+        105
+       ],
+       [
+        106,
+        106
+       ],
+       [
+        107,
+        107
+       ],
+       [
+        108,
+        108
+       ],
+       [
+        109,
+        109
+       ],
+       [
+        110,
+        110
+       ],
+       [
+        111,
+        111
+       ],
+       [
+        112,
+        112
+       ],
+       [
+        113,
+        113
+       ],
+       [
+        114,
+        114
+       ],
+       [
+        115,
+        115
+       ],
+       [
+        116,
+        116
+       ],
+       [
+        117,
+        117
+       ],
+       [
+        118,
+        118
+       ],
+       [
+        119,
+        119
+       ],
+       [
+        120,
+        120
+       ],
+       [
+        121,
+        121
+       ],
+       [
+        122,
+        122
+       ],
+       [
+        123,
+        123
+       ],
+       [
+        124,
+        124
+       ],
+       [
+        125,
+        125
+       ],
+       [
+        126,
+        126
+       ],
+       [
+        127,
+        127
+       ]
+      ],
+      "coverageA": {
+       "g": 4,
+       "occupied": 12,
+       "coverage": 7500,
+       "bboxCells": 12,
+       "concentration": 10000,
+       "counts": {
+        "0": 15,
+        "1": 16,
+        "2": 20,
+        "3": 2,
+        "4": 4,
+        "5": 14,
+        "6": 12,
+        "7": 15,
+        "8": 6,
+        "9": 9,
+        "10": 6,
+        "11": 9,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 12,
+       "coverage": 7500,
+       "bboxCells": 12,
+       "concentration": 10000,
+       "counts": {
+        "0": 15,
+        "1": 16,
+        "2": 20,
+        "3": 2,
+        "4": 4,
+        "5": 14,
+        "6": 12,
+        "7": 15,
+        "8": 6,
+        "9": 9,
+        "10": 6,
+        "11": 9,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": true,
+      "note": "62 mutual region pairs, positional best k=0",
+      "matchedK": 0,
+      "pairs": 62,
+      "positional": 10000,
+      "mutual": 10000,
+      "raw": 10000,
+      "nullVal": 3949,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 10000,
+      "nullVal": 0,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 0 at k=0 (null 206)",
+      "matchedK": 0,
+      "raw": 10000,
+      "nullVal": 9498,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "palette": {
+      "measurable": true,
+      "note": "11/11 colours, tone shift 0",
+      "toneShift": 0,
+      "curveSim": 10000,
+      "occSim": 10000,
+      "raw": 10000,
+      "nullVal": 4192,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "spatial": {
+      "measurable": true,
+      "note": "best k=0",
+      "matchedK": 0,
+      "raw": 10000,
+      "nullVal": 3729,
+      "margin": 10000,
+      "evidence": 10000
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 12,
+      "coverage": 7500,
+      "bboxCells": 12,
+      "concentration": 10000,
+      "counts": {
+       "0": 20,
+       "1": 34,
+       "2": 39,
+       "3": 7,
+       "4": 26,
+       "5": 47,
+       "6": 29,
+       "7": 19,
+       "8": 22,
+       "9": 8,
+       "10": 8,
+       "11": 15,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 12,
+      "coverage": 7500,
+      "bboxCells": 12,
+      "concentration": 10000,
+      "counts": {
+       "0": 20,
+       "1": 34,
+       "2": 39,
+       "3": 7,
+       "4": 26,
+       "5": 47,
+       "6": 29,
+       "7": 19,
+       "8": 22,
+       "9": 8,
+       "10": 8,
+       "11": 15,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "geometry"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "support spans 12 cells",
+     "bboxCells": 12
+    },
+    "brightness": {
+     "shift": 0
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 36,
+     "regionPairs": 63,
+     "sketchAgree": 80,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "standard",
+     "kpA": 287,
+     "kpB": 287
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "e76da923d390b4e123ccdb37fd4e0677"
+    ],
+    "budgetUsed": 2361068
+   }
+  },
+  {
+   "name": "paste-small-crop",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "86679baedb258e20760fb909ee5c1b00d82592877d1cd368cbce397a55c45353",
+    "t2": "2e5cd43877c4494748f9bbd201f0c967748251f91f4a26755f67548c5ee710ee"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": false,
+    "verdict": "Related",
+    "evidenceClass": "GEO_WEAK",
+    "basis": [
+     "G>=weak with inliers"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 1124,
+     "channelsMeasured": 7,
+     "secondaries": 2
+    },
+    "geometric": {
+     "measurable": true,
+     "note": "16 hypotheses (with inverted family), 68 correspondences, 1 model(s)",
+     "value": 2391,
+     "raw": 2000,
+     "control": 500,
+     "margin": 1578,
+     "ctlMember": "reverse",
+     "confidence": 3750,
+     "correspondences": 68,
+     "totalInliers": 24,
+     "independentEvidence": 8,
+     "models": [
+      {
+       "m": 0,
+       "inverted": false,
+       "rotation": 0,
+       "mirrored": false,
+       "sQ16": 48256,
+       "scaleMilli": 736,
+       "t": [
+        1323,
+        914
+       ],
+       "inliers": 24,
+       "indep": 8,
+       "resMedBucket": 2,
+       "mass": 12481,
+       "peakKey": 222535,
+       "pairs": [
+        [
+         17,
+         1
+        ],
+        [
+         24,
+         3
+        ],
+        [
+         47,
+         4
+        ],
+        [
+         54,
+         6
+        ],
+        [
+         56,
+         7
+        ],
+        [
+         80,
+         10
+        ],
+        [
+         92,
+         14
+        ],
+        [
+         110,
+         21
+        ],
+        [
+         137,
+         26
+        ],
+        [
+         150,
+         33
+        ],
+        [
+         162,
+         27
+        ],
+        [
+         167,
+         30
+        ],
+        [
+         168,
+         32
+        ],
+        [
+         204,
+         34
+        ],
+        [
+         213,
+         37
+        ],
+        [
+         237,
+         43
+        ],
+        [
+         250,
+         45
+        ],
+        [
+         251,
+         17
+        ],
+        [
+         268,
+         46
+        ],
+        [
+         273,
+         47
+        ],
+        [
+         278,
+         48
+        ],
+        [
+         279,
+         49
+        ],
+        [
+         284,
+         51
+        ],
+        [
+         286,
+         52
+        ]
+       ]
+      }
+     ],
+     "topology": {
+      "models": 1,
+      "primaryShare": 10000,
+      "klass": "single"
+     },
+     "degraded": false,
+     "hypothesesFinished": 16,
+     "invGate": 26,
+     "invertedFamilyRan": true
+    },
+    "diversity": {
+     "measurable": true,
+     "value": 6713,
+     "total": 6713,
+     "components": {
+      "Dspace": 3333,
+      "Dscale": 10000,
+      "Dmodel": 6000,
+      "Ddesc": 9584,
+      "Dregion": 3125,
+      "Dunique": 9166
+     },
+     "repeat": 0,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 871/1024 at k=0 (null 985)",
+      "ham": 871,
+      "matchedK": 0,
+      "raw": 1495,
+      "nullVal": 381,
+      "margin": 1158,
+      "evidence": 1158
+     },
+     "local": {
+      "measurable": true,
+      "note": "36 of 53 assigned (sparse) at k=5, 38 expected under bitrev",
+      "alignedK": 5,
+      "alignedInverted": false,
+      "matches": 36,
+      "cmax": 53,
+      "w": 27821,
+      "cap": 203487,
+      "path": "sparse",
+      "ctlW": 50580,
+      "ctlN": 38,
+      "ctlMember": "bitrev",
+      "raw": 2360,
+      "nullVal": 3601,
+      "margin": 0,
+      "evidence": 0,
+      "diversity": 2148,
+      "pairs": [
+       [
+        8,
+        5
+       ],
+       [
+        9,
+        6
+       ],
+       [
+        10,
+        45
+       ],
+       [
+        18,
+        39
+       ],
+       [
+        19,
+        44
+       ],
+       [
+        20,
+        10
+       ],
+       [
+        22,
+        18
+       ],
+       [
+        26,
+        12
+       ],
+       [
+        27,
+        11
+       ],
+       [
+        33,
+        48
+       ],
+       [
+        35,
+        21
+       ],
+       [
+        42,
+        40
+       ],
+       [
+        43,
+        33
+       ],
+       [
+        49,
+        15
+       ],
+       [
+        50,
+        13
+       ],
+       [
+        54,
+        1
+       ],
+       [
+        59,
+        24
+       ],
+       [
+        67,
+        23
+       ],
+       [
+        71,
+        14
+       ],
+       [
+        74,
+        2
+       ],
+       [
+        75,
+        37
+       ],
+       [
+        76,
+        50
+       ],
+       [
+        78,
+        16
+       ],
+       [
+        80,
+        4
+       ],
+       [
+        84,
+        32
+       ],
+       [
+        92,
+        9
+       ],
+       [
+        94,
+        0
+       ],
+       [
+        95,
+        34
+       ],
+       [
+        97,
+        46
+       ],
+       [
+        98,
+        42
+       ],
+       [
+        99,
+        7
+       ],
+       [
+        101,
+        47
+       ],
+       [
+        111,
+        38
+       ],
+       [
+        112,
+        41
+       ],
+       [
+        116,
+        17
+       ],
+       [
+        125,
+        31
+       ]
+      ],
+      "coverageA": {
+       "g": 4,
+       "occupied": 12,
+       "coverage": 7500,
+       "bboxCells": 12,
+       "concentration": 10000,
+       "counts": {
+        "0": 1,
+        "1": 5,
+        "2": 7,
+        "3": 1,
+        "4": 2,
+        "5": 5,
+        "6": 5,
+        "7": 2,
+        "8": 1,
+        "9": 4,
+        "10": 2,
+        "11": 1,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 3,
+       "coverage": 1875,
+       "bboxCells": 4,
+       "concentration": 10000,
+       "counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 11,
+        "6": 24,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 1,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": true,
+      "note": "3 mutual region pairs, positional best k=1",
+      "matchedK": 1,
+      "pairs": 3,
+      "positional": 1250,
+      "mutual": 5000,
+      "raw": 2500,
+      "nullVal": 555,
+      "margin": 2059,
+      "evidence": 2059
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 287,
+      "nullVal": 0,
+      "margin": 287,
+      "evidence": 287
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 2549 at k=3 (null 2544)",
+      "matchedK": 3,
+      "raw": 3777,
+      "nullVal": 3790,
+      "margin": 0,
+      "evidence": 0
+     },
+     "palette": {
+      "measurable": true,
+      "note": "11/255 colours, tone shift 20",
+      "toneShift": 20,
+      "curveSim": 7188,
+      "occSim": 7689,
+      "raw": 7355,
+      "nullVal": 3943,
+      "margin": 5633,
+      "evidence": 5633
+     },
+     "spatial": {
+      "measurable": true,
+      "note": "best k=1",
+      "matchedK": 1,
+      "raw": 1686,
+      "nullVal": 2607,
+      "margin": 0,
+      "evidence": 0
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 4,
+      "coverage": 2500,
+      "bboxCells": 4,
+      "concentration": 10000,
+      "counts": {
+       "0": 2,
+       "1": 7,
+       "2": 0,
+       "3": 0,
+       "4": 5,
+       "5": 10,
+       "6": 0,
+       "7": 0,
+       "8": 0,
+       "9": 0,
+       "10": 0,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 2,
+      "coverage": 1250,
+      "bboxCells": 2,
+      "concentration": 10000,
+      "counts": {
+       "0": 0,
+       "1": 0,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 7,
+       "6": 17,
+       "7": 0,
+       "8": 0,
+       "9": 0,
+       "10": 0,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "geometry"
+    },
+    "assetRisk": {
+     "level": "HIGH",
+     "note": "evidence confined to 2 cells, repeat 0",
+     "bboxCells": 2
+    },
+    "brightness": {
+     "shift": -1
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 36,
+     "regionPairs": 22,
+     "sketchAgree": 99,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "light",
+     "kpA": 287,
+     "kpB": 53
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "684c3f59eb0c46c8bc3398f72d0e3847"
+    ],
+    "budgetUsed": 513720
+   }
+  },
+  {
+   "name": "paste-large-crop",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "21487b4c074eaafc8cee0d786c00c74d07fdd28944c7efb35cd7a5d59ef34147",
+    "t2": "9006bc0817c47bb8e530a08247ba2e67f382af647ed6071e2ea43c34869669a1"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": false,
+    "verdict": "Copy",
+    "evidenceClass": "GEO_ONLY",
+    "basis": [
+     "geometry-only (s22.4): 5 secondary conditions"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 2716,
+     "channelsMeasured": 7,
+     "secondaries": 4
+    },
+    "geometric": {
+     "measurable": true,
+     "note": "16 hypotheses (with inverted family), 164 correspondences, 1 model(s)",
+     "value": 8743,
+     "raw": 6500,
+     "control": 500,
+     "margin": 6315,
+     "ctlMember": "shift 1/2",
+     "confidence": 10000,
+     "correspondences": 164,
+     "totalInliers": 109,
+     "independentEvidence": 26,
+     "models": [
+      {
+       "m": 0,
+       "inverted": false,
+       "rotation": 0,
+       "mirrored": false,
+       "sQ16": 49182,
+       "scaleMilli": 750,
+       "t": [
+        409,
+        369
+       ],
+       "inliers": 109,
+       "indep": 26,
+       "resMedBucket": 0,
+       "mass": 86302,
+       "peakKey": 221634,
+       "pairs": [
+        [
+         12,
+         15
+        ],
+        [
+         17,
+         20
+        ],
+        [
+         21,
+         24
+        ],
+        [
+         23,
+         27
+        ],
+        [
+         24,
+         49
+        ],
+        [
+         25,
+         28
+        ],
+        [
+         28,
+         34
+        ],
+        [
+         35,
+         40
+        ],
+        [
+         39,
+         43
+        ],
+        [
+         40,
+         44
+        ],
+        [
+         46,
+         58
+        ],
+        [
+         47,
+         59
+        ],
+        [
+         52,
+         48
+        ],
+        [
+         53,
+         65
+        ],
+        [
+         54,
+         67
+        ],
+        [
+         55,
+         68
+        ],
+        [
+         56,
+         70
+        ],
+        [
+         57,
+         75
+        ],
+        [
+         62,
+         71
+        ],
+        [
+         63,
+         77
+        ],
+        [
+         64,
+         74
+        ],
+        [
+         66,
+         76
+        ],
+        [
+         72,
+         80
+        ],
+        [
+         73,
+         81
+        ],
+        [
+         77,
+         85
+        ],
+        [
+         81,
+         62
+        ],
+        [
+         89,
+         95
+        ],
+        [
+         93,
+         98
+        ],
+        [
+         94,
+         99
+        ],
+        [
+         101,
+         109
+        ],
+        [
+         102,
+         110
+        ],
+        [
+         106,
+         112
+        ],
+        [
+         109,
+         114
+        ],
+        [
+         115,
+         119
+        ],
+        [
+         117,
+         122
+        ],
+        [
+         119,
+         124
+        ],
+        [
+         122,
+         125
+        ],
+        [
+         127,
+         129
+        ],
+        [
+         131,
+         134
+        ],
+        [
+         133,
+         137
+        ],
+        [
+         138,
+         140
+        ],
+        [
+         142,
+         143
+        ],
+        [
+         143,
+         141
+        ],
+        [
+         145,
+         144
+        ],
+        [
+         148,
+         146
+        ],
+        [
+         149,
+         131
+        ],
+        [
+         151,
+         148
+        ],
+        [
+         152,
+         151
+        ],
+        [
+         155,
+         149
+        ],
+        [
+         156,
+         153
+        ],
+        [
+         158,
+         157
+        ],
+        [
+         161,
+         156
+        ],
+        [
+         162,
+         158
+        ],
+        [
+         164,
+         160
+        ],
+        [
+         166,
+         163
+        ],
+        [
+         167,
+         166
+        ],
+        [
+         168,
+         168
+        ],
+        [
+         171,
+         169
+        ],
+        [
+         174,
+         171
+        ],
+        [
+         175,
+         198
+        ],
+        [
+         177,
+         174
+        ],
+        [
+         180,
+         180
+        ],
+        [
+         184,
+         187
+        ],
+        [
+         185,
+         188
+        ],
+        [
+         186,
+         189
+        ],
+        [
+         190,
+         194
+        ],
+        [
+         191,
+         199
+        ],
+        [
+         193,
+         200
+        ],
+        [
+         195,
+         263
+        ],
+        [
+         196,
+         205
+        ],
+        [
+         200,
+         208
+        ],
+        [
+         202,
+         209
+        ],
+        [
+         205,
+         211
+        ],
+        [
+         206,
+         215
+        ],
+        [
+         210,
+         217
+        ],
+        [
+         213,
+         221
+        ],
+        [
+         216,
+         223
+        ],
+        [
+         217,
+         225
+        ],
+        [
+         222,
+         228
+        ],
+        [
+         228,
+         231
+        ],
+        [
+         229,
+         235
+        ],
+        [
+         230,
+         234
+        ],
+        [
+         232,
+         236
+        ],
+        [
+         234,
+         237
+        ],
+        [
+         235,
+         238
+        ],
+        [
+         236,
+         242
+        ],
+        [
+         238,
+         241
+        ],
+        [
+         239,
+         243
+        ],
+        [
+         242,
+         244
+        ],
+        [
+         243,
+         245
+        ],
+        [
+         245,
+         229
+        ],
+        [
+         246,
+         248
+        ],
+        [
+         247,
+         246
+        ],
+        [
+         248,
+         250
+        ],
+        [
+         252,
+         252
+        ],
+        [
+         254,
+         254
+        ],
+        [
+         263,
+         258
+        ],
+        [
+         266,
+         262
+        ],
+        [
+         273,
+         267
+        ],
+        [
+         275,
+         269
+        ],
+        [
+         277,
+         182
+        ],
+        [
+         278,
+         271
+        ],
+        [
+         279,
+         272
+        ],
+        [
+         280,
+         274
+        ],
+        [
+         281,
+         276
+        ],
+        [
+         282,
+         277
+        ],
+        [
+         284,
+         278
+        ],
+        [
+         285,
+         279
+        ],
+        [
+         286,
+         280
+        ]
+       ]
+      }
+     ],
+     "topology": {
+      "models": 1,
+      "primaryShare": 10000,
+      "klass": "single"
+     },
+     "degraded": false,
+     "hypothesesFinished": 16,
+     "invGate": 27,
+     "invertedFamilyRan": true
+    },
+    "diversity": {
+     "measurable": true,
+     "value": 7661,
+     "total": 7661,
+     "components": {
+      "Dspace": 5625,
+      "Dscale": 10000,
+      "Dmodel": 6000,
+      "Ddesc": 9175,
+      "Dregion": 10000,
+      "Dunique": 9082
+     },
+     "repeat": 825,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 912/1024 at k=0 (null 974)",
+      "ham": 912,
+      "matchedK": 0,
+      "raw": 1094,
+      "nullVal": 489,
+      "margin": 636,
+      "evidence": 636
+     },
+     "local": {
+      "measurable": true,
+      "note": "114 of 128 assigned (dense) at k=0, 104 expected under bitrev",
+      "alignedK": 0,
+      "alignedInverted": false,
+      "matches": 114,
+      "cmax": 128,
+      "w": 151565,
+      "cap": 275053,
+      "path": "dense",
+      "ctlW": 70304,
+      "ctlN": 104,
+      "ctlMember": "bitrev",
+      "raw": 6536,
+      "nullVal": 4668,
+      "margin": 3503,
+      "evidence": 3503,
+      "diversity": 2148,
+      "pairs": [
+       [
+        0,
+        73
+       ],
+       [
+        1,
+        13
+       ],
+       [
+        2,
+        32
+       ],
+       [
+        3,
+        1
+       ],
+       [
+        4,
+        2
+       ],
+       [
+        5,
+        9
+       ],
+       [
+        6,
+        4
+       ],
+       [
+        7,
+        28
+       ],
+       [
+        8,
+        10
+       ],
+       [
+        9,
+        30
+       ],
+       [
+        10,
+        11
+       ],
+       [
+        11,
+        22
+       ],
+       [
+        12,
+        58
+       ],
+       [
+        13,
+        14
+       ],
+       [
+        14,
+        6
+       ],
+       [
+        15,
+        51
+       ],
+       [
+        16,
+        119
+       ],
+       [
+        17,
+        35
+       ],
+       [
+        18,
+        23
+       ],
+       [
+        19,
+        16
+       ],
+       [
+        20,
+        17
+       ],
+       [
+        21,
+        18
+       ],
+       [
+        22,
+        41
+       ],
+       [
+        23,
+        95
+       ],
+       [
+        24,
+        109
+       ],
+       [
+        25,
+        83
+       ],
+       [
+        26,
+        81
+       ],
+       [
+        27,
+        0
+       ],
+       [
+        28,
+        21
+       ],
+       [
+        29,
+        39
+       ],
+       [
+        30,
+        75
+       ],
+       [
+        32,
+        107
+       ],
+       [
+        33,
+        42
+       ],
+       [
+        34,
+        27
+       ],
+       [
+        35,
+        12
+       ],
+       [
+        36,
+        20
+       ],
+       [
+        37,
+        57
+       ],
+       [
+        38,
+        94
+       ],
+       [
+        39,
+        25
+       ],
+       [
+        40,
+        33
+       ],
+       [
+        42,
+        36
+       ],
+       [
+        43,
+        37
+       ],
+       [
+        44,
+        78
+       ],
+       [
+        45,
+        34
+       ],
+       [
+        47,
+        64
+       ],
+       [
+        48,
+        71
+       ],
+       [
+        49,
+        24
+       ],
+       [
+        50,
+        43
+       ],
+       [
+        51,
+        44
+       ],
+       [
+        52,
+        45
+       ],
+       [
+        54,
+        102
+       ],
+       [
+        55,
+        49
+       ],
+       [
+        57,
+        65
+       ],
+       [
+        58,
+        121
+       ],
+       [
+        59,
+        38
+       ],
+       [
+        60,
+        84
+       ],
+       [
+        61,
+        127
+       ],
+       [
+        62,
+        70
+       ],
+       [
+        63,
+        85
+       ],
+       [
+        64,
+        56
+       ],
+       [
+        65,
+        19
+       ],
+       [
+        66,
+        74
+       ],
+       [
+        67,
+        59
+       ],
+       [
+        68,
+        54
+       ],
+       [
+        69,
+        76
+       ],
+       [
+        70,
+        55
+       ],
+       [
+        71,
+        26
+       ],
+       [
+        72,
+        62
+       ],
+       [
+        73,
+        48
+       ],
+       [
+        74,
+        60
+       ],
+       [
+        75,
+        79
+       ],
+       [
+        76,
+        46
+       ],
+       [
+        77,
+        29
+       ],
+       [
+        78,
+        104
+       ],
+       [
+        80,
+        3
+       ],
+       [
+        83,
+        67
+       ],
+       [
+        84,
+        87
+       ],
+       [
+        85,
+        52
+       ],
+       [
+        86,
+        110
+       ],
+       [
+        87,
+        8
+       ],
+       [
+        88,
+        103
+       ],
+       [
+        89,
+        118
+       ],
+       [
+        91,
+        72
+       ],
+       [
+        92,
+        66
+       ],
+       [
+        93,
+        31
+       ],
+       [
+        94,
+        117
+       ],
+       [
+        95,
+        112
+       ],
+       [
+        96,
+        77
+       ],
+       [
+        97,
+        100
+       ],
+       [
+        98,
+        88
+       ],
+       [
+        99,
+        89
+       ],
+       [
+        100,
+        63
+       ],
+       [
+        101,
+        124
+       ],
+       [
+        103,
+        61
+       ],
+       [
+        104,
+        116
+       ],
+       [
+        105,
+        5
+       ],
+       [
+        107,
+        99
+       ],
+       [
+        108,
+        120
+       ],
+       [
+        109,
+        69
+       ],
+       [
+        111,
+        53
+       ],
+       [
+        112,
+        47
+       ],
+       [
+        113,
+        68
+       ],
+       [
+        114,
+        96
+       ],
+       [
+        115,
+        50
+       ],
+       [
+        116,
+        97
+       ],
+       [
+        117,
+        93
+       ],
+       [
+        118,
+        98
+       ],
+       [
+        119,
+        106
+       ],
+       [
+        120,
+        108
+       ],
+       [
+        121,
+        7
+       ],
+       [
+        123,
+        123
+       ],
+       [
+        125,
+        90
+       ],
+       [
+        126,
+        101
+       ],
+       [
+        127,
+        113
+       ]
+      ],
+      "coverageA": {
+       "g": 4,
+       "occupied": 12,
+       "coverage": 7500,
+       "bboxCells": 12,
+       "concentration": 10000,
+       "counts": {
+        "0": 11,
+        "1": 14,
+        "2": 18,
+        "3": 2,
+        "4": 3,
+        "5": 12,
+        "6": 12,
+        "7": 15,
+        "8": 6,
+        "9": 9,
+        "10": 5,
+        "11": 7,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 9,
+       "coverage": 5625,
+       "bboxCells": 9,
+       "concentration": 10000,
+       "counts": {
+        "0": 14,
+        "1": 22,
+        "2": 18,
+        "3": 0,
+        "4": 5,
+        "5": 24,
+        "6": 21,
+        "7": 0,
+        "8": 3,
+        "9": 4,
+        "10": 3,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": true,
+      "note": "8 mutual region pairs, positional best k=5",
+      "matchedK": 5,
+      "pairs": 8,
+      "positional": 3043,
+      "mutual": 7272,
+      "raw": 4452,
+      "nullVal": 1501,
+      "margin": 3472,
+      "evidence": 3472
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 223,
+      "nullVal": 0,
+      "margin": 223,
+      "evidence": 223
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 2678 at k=2 (null 2688)",
+      "matchedK": 2,
+      "raw": 3462,
+      "nullVal": 3438,
+      "margin": 36,
+      "evidence": 36
+     },
+     "palette": {
+      "measurable": true,
+      "note": "11/255 colours, tone shift 32",
+      "toneShift": 32,
+      "curveSim": 6563,
+      "occSim": 7006,
+      "raw": 6710,
+      "nullVal": 3723,
+      "margin": 4758,
+      "evidence": 4758
+     },
+     "spatial": {
+      "measurable": true,
+      "note": "best k=0",
+      "matchedK": 0,
+      "raw": 5896,
+      "nullVal": 2529,
+      "margin": 4506,
+      "evidence": 4506
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 12,
+      "coverage": 7500,
+      "bboxCells": 12,
+      "concentration": 10000,
+      "counts": {
+       "0": 9,
+       "1": 12,
+       "2": 19,
+       "3": 3,
+       "4": 9,
+       "5": 24,
+       "6": 12,
+       "7": 2,
+       "8": 10,
+       "9": 4,
+       "10": 2,
+       "11": 3,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 9,
+      "coverage": 5625,
+      "bboxCells": 9,
+      "concentration": 10000,
+      "counts": {
+       "0": 7,
+       "1": 12,
+       "2": 18,
+       "3": 0,
+       "4": 9,
+       "5": 32,
+       "6": 17,
+       "7": 0,
+       "8": 5,
+       "9": 5,
+       "10": 4,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "geometry"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "support spans 9 cells",
+     "bboxCells": 9
+    },
+    "brightness": {
+     "shift": 0
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 36,
+     "regionPairs": 44,
+     "sketchAgree": 63,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "standard",
+     "kpA": 287,
+     "kpB": 281
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "e25174e99bb7b9125df61cf4f29bc834"
+    ],
+    "budgetUsed": 2283968
+   }
+  },
+  {
+   "name": "negative-noise",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "e5595a4f2d2cde6e768c70c43dddf1bfe312f47122b1c05b84c470651f15a13e",
+    "t2": "cad71d5893233840309c037a977814a14df92082962ea77658e0550d0bb2ad8c"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": false,
+    "verdict": "Unrelated",
+    "evidenceClass": "NONE",
+    "basis": [
+     "no axis reached its floor"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 1223,
+     "channelsMeasured": 4,
+     "secondaries": 1
+    },
+    "geometric": {
+     "measurable": false,
+     "note": "too few keypoints (287/0)",
+     "value": 0,
+     "raw": 0,
+     "control": 0,
+     "margin": 0,
+     "confidence": 0,
+     "correspondences": 0,
+     "totalInliers": 0,
+     "independentEvidence": 0,
+     "models": [],
+     "topology": {
+      "models": 0,
+      "primaryShare": 0,
+      "klass": "none"
+     },
+     "degraded": false,
+     "invGate": -1,
+     "invertedFamilyRan": false,
+     "ctlMember": "none"
+    },
+    "diversity": {
+     "measurable": false,
+     "value": 0,
+     "components": null,
+     "repeat": 0,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 955/1024 at k=2 (null 975)",
+      "ham": 955,
+      "matchedK": 2,
+      "raw": 674,
+      "nullVal": 479,
+      "margin": 204,
+      "evidence": 204
+     },
+     "local": {
+      "measurable": false,
+      "note": "too few keypoints on one side",
+      "alignedK": 0,
+      "alignedInverted": false,
+      "matches": 0,
+      "cmax": 0,
+      "w": 0,
+      "cap": 1,
+      "path": "none",
+      "ctlW": 0,
+      "ctlN": 0,
+      "ctlMember": "none",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0,
+      "diversity": 0,
+      "pairs": [],
+      "coverageA": {
+       "g": 4,
+       "occupied": 0,
+       "coverage": 0,
+       "bboxCells": 0,
+       "concentration": 0,
+       "counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 0,
+       "coverage": 0,
+       "bboxCells": 0,
+       "concentration": 0,
+       "counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": false,
+      "note": "too few coded regions (63/0)",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0,
+      "matchedK": 0,
+      "pairs": 0
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 199,
+      "nullVal": 0,
+      "margin": 199,
+      "evidence": 199
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 2476 at k=1 (null 2472)",
+      "matchedK": 1,
+      "raw": 3956,
+      "nullVal": 3965,
+      "margin": 0,
+      "evidence": 0
+     },
+     "palette": {
+      "measurable": true,
+      "note": "11/255 colours, tone shift 23",
+      "toneShift": 23,
+      "curveSim": 6771,
+      "occSim": 7574,
+      "raw": 7038,
+      "nullVal": 4461,
+      "margin": 4652,
+      "evidence": 4652
+     },
+     "spatial": {
+      "measurable": false,
+      "note": "too few keypoints (287/0)",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0,
+      "matchedK": 0
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 0,
+      "coverage": 0,
+      "bboxCells": 0,
+      "concentration": 0,
+      "counts": {
+       "0": 0,
+       "1": 0,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 0,
+       "6": 0,
+       "7": 0,
+       "8": 0,
+       "9": 0,
+       "10": 0,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 0,
+      "coverage": 0,
+      "bboxCells": 0,
+      "concentration": 0,
+      "counts": {
+       "0": 0,
+       "1": 0,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 0,
+       "6": 0,
+       "7": 0,
+       "8": 0,
+       "9": 0,
+       "10": 0,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "none"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "no geometric models"
+    },
+    "brightness": {
+     "shift": -70
+    },
+    "screen": {
+     "verdict": "REJECT",
+     "coarseMatches": 0,
+     "regionPairs": 0,
+     "sketchAgree": 0,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "light",
+     "kpA": 287,
+     "kpB": 0
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "be25e946ccb4b0f4b099841a3f9842b3"
+    ],
+    "budgetUsed": 0
+   }
+  },
+  {
+   "name": "structural-only",
+   "a": {
+    "t1": "110d01e27c8f326a54c08c0bf7ce1b0b2bc0ea6b5653f3cc8b86846e27bec42e",
+    "t2": "5eaa55586de18a9fcf5fa1f81ab871feb65b4c4d15d11d12d29ca2a5368177c0"
+   },
+   "b": {
+    "t1": "eef496106e605d352cb8a234232bc6ac7200bebeb0d841a44cef10daa1fbcdfb",
+    "t2": null
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": true,
+    "verdict": "Suspected",
+    "evidenceClass": "STRUCT_WEAK",
+    "basis": [
+     "S>=strong without certification"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 6598,
+     "channelsMeasured": 6,
+     "secondaries": 6
+    },
+    "geometric": {
+     "measurable": false,
+     "note": "tier 2 absent on side B",
+     "value": 0,
+     "raw": 0,
+     "control": 0,
+     "margin": 0,
+     "confidence": 0,
+     "correspondences": 0,
+     "totalInliers": 0,
+     "independentEvidence": 0,
+     "models": [],
+     "topology": {
+      "models": 0,
+      "primaryShare": 0,
+      "klass": "none"
+     },
+     "degraded": false,
+     "invGate": -1,
+     "invertedFamilyRan": false,
+     "ctlMember": "none"
+    },
+    "diversity": {
+     "measurable": false,
+     "value": 0,
+     "components": null,
+     "repeat": 0,
+     "repetitionExtreme": false
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 405/1024 at k=1 (null 993)",
+      "ham": 405,
+      "matchedK": 1,
+      "raw": 6045,
+      "nullVal": 303,
+      "margin": 5921,
+      "evidence": 5921
+     },
+     "local": {
+      "measurable": false,
+      "note": "tier 2 absent on side B",
+      "alignedK": 0,
+      "alignedInverted": false,
+      "matches": 0,
+      "cmax": 0,
+      "w": 0,
+      "cap": 1,
+      "path": "none",
+      "ctlW": 0,
+      "ctlN": 0,
+      "ctlMember": "none",
+      "raw": 0,
+      "nullVal": 0,
+      "margin": 0,
+      "evidence": 0,
+      "diversity": 0,
+      "pairs": [],
+      "coverageA": {
+       "g": 4,
+       "occupied": 0,
+       "coverage": 0,
+       "bboxCells": 0,
+       "concentration": 0,
+       "counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 0,
+       "coverage": 0,
+       "bboxCells": 0,
+       "concentration": 0,
+       "counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0
+       }
+      }
+     },
+     "region": {
+      "measurable": true,
+      "note": "26 mutual region pairs, positional best k=1",
+      "matchedK": 1,
+      "pairs": 26,
+      "positional": 3650,
+      "mutual": 8387,
+      "raw": 5229,
+      "nullVal": 2145,
+      "margin": 3926,
+      "evidence": 3926
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 10000,
+      "nullVal": 0,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 826 at k=1 (null 1024)",
+      "matchedK": 1,
+      "raw": 7984,
+      "nullVal": 7500,
+      "margin": 1936,
+      "evidence": 1936
+     },
+     "palette": {
+      "measurable": true,
+      "note": "11/11 colours, tone shift 0",
+      "toneShift": 0,
+      "curveSim": 10000,
+      "occSim": 10000,
+      "raw": 10000,
+      "nullVal": 4192,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "spatial": {
+      "measurable": true,
+      "note": "best k=1",
+      "matchedK": 1,
+      "raw": 9548,
+      "nullVal": 3678,
+      "margin": 9285,
+      "evidence": 9285
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 0,
+      "coverage": 0,
+      "bboxCells": 0,
+      "concentration": 0,
+      "counts": {
+       "0": 0,
+       "1": 0,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 0,
+       "6": 0,
+       "7": 0,
+       "8": 0,
+       "9": 0,
+       "10": 0,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 0,
+      "coverage": 0,
+      "bboxCells": 0,
+      "concentration": 0,
+      "counts": {
+       "0": 0,
+       "1": 0,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 0,
+       "6": 0,
+       "7": 0,
+       "8": 0,
+       "9": 0,
+       "10": 0,
+       "11": 0,
+       "12": 0,
+       "13": 0,
+       "14": 0,
+       "15": 0
+      }
+     },
+     "source": "none"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "no geometric models"
+    },
+    "brightness": {
+     "shift": 0
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 36,
+     "regionPairs": 63,
+     "sketchAgree": 57,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "standard",
+     "kpA": 287,
+     "kpB": 282
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "e76da923d390b4e123ccdb37fd4e0677",
+     "445048193c4232c585b72f8ade1ea95e"
+    ],
+    "budgetUsed": 0
+   }
+  },
+  {
+   "name": "tiles-rot90-repetition",
+   "a": {
+    "t1": "a011eee7be0c1448de3e5b976e295d27d9b32461e646a25f9048f989bf0dce3d",
+    "t2": "956b64c8c702f9b5f0dbe54ff9617625c94c0b98436b6c66f6616d07cd02715b"
+   },
+   "b": {
+    "t1": "caa29a341c0c6dec57772cf434e858fccc1580cd182deb1ad1f51bfcb1a2eb45",
+    "t2": "7ec1da582cf9e0aaff54a0ded11f98e84750fe736c00afcb90f2c711f0be9737"
+   },
+   "report": {
+    "comparator": 51,
+    "container": 3,
+    "calibrationId": "139953a5641cdcf5",
+    "calibrationName": "CAL-051-PROVISIONAL (provisional)",
+    "swapped": true,
+    "verdict": "Copy",
+    "evidenceClass": "STRUCT_GEO",
+    "basis": [
+     "S>=strong AND G>=certifying AND D>=floor"
+    ],
+    "reasons": [],
+    "structural": {
+     "measurable": true,
+     "value": 6463,
+     "channelsMeasured": 7,
+     "secondaries": 6
+    },
+    "geometric": {
+     "measurable": true,
+     "note": "16 hypotheses (with inverted family), 135 correspondences, 2 model(s)",
+     "value": 9929,
+     "raw": 9750,
+     "control": 500,
+     "margin": 9736,
+     "ctlMember": "shift 1/2",
+     "confidence": 8437,
+     "correspondences": 135,
+     "totalInliers": 54,
+     "independentEvidence": 39,
+     "models": [
+      {
+       "m": 5,
+       "inverted": false,
+       "rotation": 90,
+       "mirrored": false,
+       "sQ16": 65579,
+       "scaleMilli": 1000,
+       "t": [
+        -1,
+        -4
+       ],
+       "inliers": 50,
+       "indep": 35,
+       "resMedBucket": 0,
+       "mass": 45112,
+       "peakKey": 204736,
+       "pairs": [
+        [
+         72,
+         0
+        ],
+        [
+         146,
+         3
+        ],
+        [
+         76,
+         7
+        ],
+        [
+         65,
+         8
+        ],
+        [
+         66,
+         9
+        ],
+        [
+         68,
+         13
+        ],
+        [
+         67,
+         15
+        ],
+        [
+         49,
+         17
+        ],
+        [
+         31,
+         19
+        ],
+        [
+         54,
+         21
+        ],
+        [
+         57,
+         22
+        ],
+        [
+         55,
+         23
+        ],
+        [
+         53,
+         28
+        ],
+        [
+         144,
+         31
+        ],
+        [
+         174,
+         32
+        ],
+        [
+         187,
+         33
+        ],
+        [
+         154,
+         38
+        ],
+        [
+         178,
+         40
+        ],
+        [
+         173,
+         41
+        ],
+        [
+         156,
+         44
+        ],
+        [
+         10,
+         47
+        ],
+        [
+         81,
+         54
+        ],
+        [
+         170,
+         55
+        ],
+        [
+         97,
+         58
+        ],
+        [
+         0,
+         59
+        ],
+        [
+         82,
+         60
+        ],
+        [
+         137,
+         67
+        ],
+        [
+         1,
+         70
+        ],
+        [
+         83,
+         73
+        ],
+        [
+         108,
+         74
+        ],
+        [
+         141,
+         80
+        ],
+        [
+         110,
+         82
+        ],
+        [
+         7,
+         93
+        ],
+        [
+         4,
+         102
+        ],
+        [
+         80,
+         103
+        ],
+        [
+         6,
+         105
+        ],
+        [
+         113,
+         106
+        ],
+        [
+         11,
+         108
+        ],
+        [
+         44,
+         117
+        ],
+        [
+         196,
+         118
+        ],
+        [
+         197,
+         119
+        ],
+        [
+         195,
+         123
+        ],
+        [
+         58,
+         130
+        ],
+        [
+         105,
+         149
+        ],
+        [
+         35,
+         151
+        ],
+        [
+         198,
+         152
+        ],
+        [
+         21,
+         167
+        ],
+        [
+         13,
+         186
+        ],
+        [
+         33,
+         191
+        ],
+        [
+         14,
+         195
+        ]
+       ]
+      },
+      {
+       "m": 5,
+       "inverted": false,
+       "rotation": 90,
+       "mirrored": false,
+       "sQ16": 63840,
+       "scaleMilli": 974,
+       "t": [
+        45,
+        -58
+       ],
+       "inliers": 4,
+       "indep": 4,
+       "resMedBucket": 3,
+       "mass": 1390,
+       "peakKey": 204736,
+       "pairs": [
+        [
+         176,
+         84
+        ],
+        [
+         150,
+         86
+        ],
+        [
+         112,
+         95
+        ],
+        [
+         77,
+         145
+        ]
+       ]
+      }
+     ],
+     "topology": {
+      "models": 2,
+      "primaryShare": 8974,
+      "klass": "dominant"
+     },
+     "degraded": false,
+     "hypothesesFinished": 16,
+     "invGate": 24,
+     "invertedFamilyRan": true
+    },
+    "diversity": {
+     "measurable": true,
+     "value": 8060,
+     "total": 8060,
+     "components": {
+      "Dspace": 7407,
+      "Dscale": 10000,
+      "Dmodel": 8000,
+      "Ddesc": 8704,
+      "Dregion": 10000,
+      "Dunique": 9814
+     },
+     "repeat": 1666,
+     "repetitionExtreme": true
+    },
+    "channels": {
+     "dct": {
+      "measurable": true,
+      "note": "ham 2/1024 at k=2 (null 1026)",
+      "ham": 2,
+      "matchedK": 2,
+      "raw": 9981,
+      "nullVal": 0,
+      "margin": 9981,
+      "evidence": 9981
+     },
+     "local": {
+      "measurable": true,
+      "note": "126 of 128 assigned (sparse) at k=6, 109 expected under bitrev",
+      "alignedK": 5,
+      "alignedInverted": false,
+      "matches": 126,
+      "cmax": 128,
+      "w": 147155,
+      "cap": 179648,
+      "path": "sparse",
+      "ctlW": 128296,
+      "ctlN": 109,
+      "ctlMember": "bitrev",
+      "raw": 5155,
+      "nullVal": 4812,
+      "margin": 661,
+      "evidence": 661,
+      "diversity": 1403,
+      "pairs": [
+       [
+        0,
+        0
+       ],
+       [
+        101,
+        1
+       ],
+       [
+        84,
+        2
+       ],
+       [
+        11,
+        3
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        6,
+        5
+       ],
+       [
+        7,
+        6
+       ],
+       [
+        2,
+        7
+       ],
+       [
+        8,
+        8
+       ],
+       [
+        5,
+        9
+       ],
+       [
+        10,
+        10
+       ],
+       [
+        20,
+        11
+       ],
+       [
+        12,
+        12
+       ],
+       [
+        14,
+        13
+       ],
+       [
+        27,
+        14
+       ],
+       [
+        26,
+        15
+       ],
+       [
+        25,
+        16
+       ],
+       [
+        15,
+        17
+       ],
+       [
+        33,
+        18
+       ],
+       [
+        24,
+        19
+       ],
+       [
+        17,
+        20
+       ],
+       [
+        16,
+        21
+       ],
+       [
+        18,
+        22
+       ],
+       [
+        22,
+        23
+       ],
+       [
+        21,
+        24
+       ],
+       [
+        28,
+        25
+       ],
+       [
+        93,
+        26
+       ],
+       [
+        30,
+        27
+       ],
+       [
+        37,
+        28
+       ],
+       [
+        23,
+        29
+       ],
+       [
+        19,
+        30
+       ],
+       [
+        76,
+        31
+       ],
+       [
+        34,
+        32
+       ],
+       [
+        32,
+        33
+       ],
+       [
+        31,
+        34
+       ],
+       [
+        36,
+        35
+       ],
+       [
+        39,
+        36
+       ],
+       [
+        103,
+        37
+       ],
+       [
+        45,
+        38
+       ],
+       [
+        40,
+        39
+       ],
+       [
+        46,
+        40
+       ],
+       [
+        35,
+        41
+       ],
+       [
+        38,
+        42
+       ],
+       [
+        48,
+        43
+       ],
+       [
+        29,
+        44
+       ],
+       [
+        96,
+        45
+       ],
+       [
+        49,
+        46
+       ],
+       [
+        50,
+        47
+       ],
+       [
+        42,
+        48
+       ],
+       [
+        52,
+        49
+       ],
+       [
+        41,
+        50
+       ],
+       [
+        56,
+        51
+       ],
+       [
+        43,
+        52
+       ],
+       [
+        47,
+        53
+       ],
+       [
+        60,
+        54
+       ],
+       [
+        68,
+        55
+       ],
+       [
+        51,
+        56
+       ],
+       [
+        74,
+        57
+       ],
+       [
+        53,
+        58
+       ],
+       [
+        64,
+        59
+       ],
+       [
+        72,
+        60
+       ],
+       [
+        44,
+        61
+       ],
+       [
+        99,
+        62
+       ],
+       [
+        9,
+        63
+       ],
+       [
+        65,
+        64
+       ],
+       [
+        70,
+        65
+       ],
+       [
+        62,
+        66
+       ],
+       [
+        63,
+        67
+       ],
+       [
+        105,
+        68
+       ],
+       [
+        119,
+        69
+       ],
+       [
+        57,
+        70
+       ],
+       [
+        73,
+        72
+       ],
+       [
+        69,
+        73
+       ],
+       [
+        122,
+        74
+       ],
+       [
+        80,
+        75
+       ],
+       [
+        78,
+        76
+       ],
+       [
+        100,
+        77
+       ],
+       [
+        113,
+        78
+       ],
+       [
+        85,
+        79
+       ],
+       [
+        67,
+        80
+       ],
+       [
+        66,
+        81
+       ],
+       [
+        83,
+        82
+       ],
+       [
+        82,
+        83
+       ],
+       [
+        79,
+        84
+       ],
+       [
+        88,
+        85
+       ],
+       [
+        75,
+        86
+       ],
+       [
+        55,
+        87
+       ],
+       [
+        91,
+        88
+       ],
+       [
+        89,
+        89
+       ],
+       [
+        123,
+        90
+       ],
+       [
+        97,
+        91
+       ],
+       [
+        90,
+        92
+       ],
+       [
+        98,
+        93
+       ],
+       [
+        58,
+        94
+       ],
+       [
+        59,
+        95
+       ],
+       [
+        61,
+        96
+       ],
+       [
+        109,
+        97
+       ],
+       [
+        106,
+        98
+       ],
+       [
+        92,
+        99
+       ],
+       [
+        81,
+        100
+       ],
+       [
+        102,
+        101
+       ],
+       [
+        95,
+        102
+       ],
+       [
+        115,
+        103
+       ],
+       [
+        111,
+        104
+       ],
+       [
+        112,
+        105
+       ],
+       [
+        104,
+        106
+       ],
+       [
+        110,
+        107
+       ],
+       [
+        114,
+        109
+       ],
+       [
+        108,
+        110
+       ],
+       [
+        94,
+        111
+       ],
+       [
+        120,
+        112
+       ],
+       [
+        116,
+        113
+       ],
+       [
+        118,
+        114
+       ],
+       [
+        121,
+        115
+       ],
+       [
+        13,
+        116
+       ],
+       [
+        71,
+        117
+       ],
+       [
+        125,
+        118
+       ],
+       [
+        117,
+        119
+       ],
+       [
+        77,
+        120
+       ],
+       [
+        126,
+        121
+       ],
+       [
+        127,
+        122
+       ],
+       [
+        54,
+        123
+       ],
+       [
+        87,
+        124
+       ],
+       [
+        107,
+        125
+       ],
+       [
+        1,
+        126
+       ],
+       [
+        124,
+        127
+       ]
+      ],
+      "coverageA": {
+       "g": 4,
+       "occupied": 14,
+       "coverage": 8750,
+       "bboxCells": 16,
+       "concentration": 10000,
+       "counts": {
+        "0": 3,
+        "1": 11,
+        "2": 2,
+        "3": 0,
+        "4": 7,
+        "5": 15,
+        "6": 4,
+        "7": 11,
+        "8": 17,
+        "9": 14,
+        "10": 15,
+        "11": 7,
+        "12": 1,
+        "13": 14,
+        "14": 5,
+        "15": 0
+       }
+      },
+      "coverageB": {
+       "g": 4,
+       "occupied": 14,
+       "coverage": 8750,
+       "bboxCells": 16,
+       "concentration": 10000,
+       "counts": {
+        "0": 0,
+        "1": 12,
+        "2": 5,
+        "3": 0,
+        "4": 2,
+        "5": 2,
+        "6": 20,
+        "7": 7,
+        "8": 12,
+        "9": 17,
+        "10": 11,
+        "11": 14,
+        "12": 3,
+        "13": 6,
+        "14": 14,
+        "15": 1
+       }
+      }
+     },
+     "region": {
+      "measurable": true,
+      "note": "19 mutual region pairs, positional best k=6",
+      "matchedK": 5,
+      "pairs": 19,
+      "positional": 10000,
+      "mutual": 6129,
+      "raw": 8709,
+      "nullVal": 2687,
+      "margin": 8234,
+      "evidence": 8234
+     },
+     "topology": {
+      "measurable": true,
+      "note": "20/20 adjacency pairs",
+      "raw": 10000,
+      "nullVal": 0,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "texture": {
+      "measurable": true,
+      "note": "dist 93 at k=6 (null 546)",
+      "matchedK": 5,
+      "raw": 9773,
+      "nullVal": 8667,
+      "margin": 8297,
+      "evidence": 8297
+     },
+     "palette": {
+      "measurable": true,
+      "note": "9/9 colours, tone shift 0",
+      "toneShift": 0,
+      "curveSim": 10000,
+      "occSim": 10000,
+      "raw": 10000,
+      "nullVal": 6268,
+      "margin": 10000,
+      "evidence": 10000
+     },
+     "spatial": {
+      "measurable": true,
+      "note": "best k=6",
+      "matchedK": 5,
+      "raw": 8341,
+      "nullVal": 4028,
+      "margin": 7222,
+      "evidence": 7222
+     }
+    },
+    "coverage": {
+     "a": {
+      "g": 4,
+      "occupied": 13,
+      "coverage": 8125,
+      "bboxCells": 16,
+      "concentration": 10000,
+      "counts": {
+       "0": 3,
+       "1": 4,
+       "2": 0,
+       "3": 0,
+       "4": 1,
+       "5": 4,
+       "6": 4,
+       "7": 3,
+       "8": 8,
+       "9": 6,
+       "10": 1,
+       "11": 1,
+       "12": 5,
+       "13": 8,
+       "14": 2,
+       "15": 0
+      }
+     },
+     "b": {
+      "g": 4,
+      "occupied": 13,
+      "coverage": 8125,
+      "bboxCells": 16,
+      "concentration": 10000,
+      "counts": {
+       "0": 0,
+       "1": 3,
+       "2": 1,
+       "3": 0,
+       "4": 0,
+       "5": 4,
+       "6": 1,
+       "7": 2,
+       "8": 4,
+       "9": 4,
+       "10": 7,
+       "11": 8,
+       "12": 3,
+       "13": 1,
+       "14": 7,
+       "15": 5
+      }
+     },
+     "source": "geometry"
+    },
+    "assetRisk": {
+     "level": "LOW",
+     "note": "support spans 16 cells",
+     "bboxCells": 16
+    },
+    "brightness": {
+     "shift": 0
+    },
+    "screen": {
+     "verdict": "PASS",
+     "coarseMatches": 60,
+     "regionPairs": 62,
+     "sketchAgree": 54,
+     "floors": {
+      "coarse": 6,
+      "region": 2,
+      "sketch": 3
+     },
+     "costClass": "light",
+     "kpA": 199,
+     "kpB": 196
+    },
+    "extractionProfileIds": [
+     "d697172ad64ac17c",
+     "d697172ad64ac17c"
+    ],
+    "contentTags": [
+     "fe2a263f54a1abb8703dfb61e79af923",
+     "8b54fdc85303cbb69cfe5a43e566aee2"
+    ],
+    "budgetUsed": 1290648
+   }
+  }
+ ]
+}

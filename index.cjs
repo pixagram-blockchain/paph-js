@@ -1,36 +1,25 @@
-/* CommonJS entry for @pixagram/paph-js — PAPH 4.2.
-   One wire (tier 1 + tier 2, unchanged in format; Tier 2 now carries up to 512
-   keypoints), one comparator on the entry (42), one shipped calibration.
-   Comparator 41 stays reachable as compare41/cal41 so verdicts issued under 4.1
-   remain reproducible.  The WebAssembly backend is ESM-only (it uses import.meta.url to
-   find its own .wasm), so require() gets the JavaScript wire engine; use
-   `await import('@pixagram/paph-js/wasm')` from CJS if you want WebAssembly. */
+/* @pixagram/paph-js 5.1 — CommonJS entry.
+ * Wire engine + comparator 51 under one roof; ./wire stays importable
+ * on its own for extraction-only consumers. */
+'use strict';
 const wire = require('./src/wire.cjs');
-const paph = require('./src/paph-js.cjs');
+const cmp = require('./src/paph-js.cjs');
 
-module.exports = Object.assign({}, paph, {
-  /* the wire layer, for callers that only want fingerprints */
-  wire: wire,
-  Config: wire.Config,
-  Paph: wire.Paph,
-  parseT1: wire.parseT1,
-  parseT2: wire.parseT2,
-  WIRE_VERSION: wire.VERSION,
-  T1_BYTES: wire.T1_BYTES,
-  KP_MAX: wire.KP_MAX,
-  F_KPQ: wire.F_KPQ,
-  SECTIONS: wire.SECTIONS,
-  SECTION_OFFSETS: wire.SECTION_OFFSETS,
-  DEFAULT_CONFIG: wire.DEFAULT_CONFIG,
-  load: async function (opts) {
-    const prefer = (opts && opts.prefer) || 'wasm';
-    if (prefer === 'js') return { backend: 'js', Config: wire.Config, Paph: wire.Paph };
-    try {
-      const w = await import('./wasm/paph-js-wasm.js');
-      await w.init(opts && opts.wasm);
-      return { backend: 'wasm', Config: w.Config, Paph: w.Paph };
-    } catch (e) {
-      return { backend: 'js', Config: wire.Config, Paph: wire.Paph, reason: String((e && e.message) || e) };
-    }
-  }
-});
+module.exports = {
+  /* extraction */
+  hash: wire.hash, parseT1: wire.parseT1, parseT2: wire.parseT2,
+  WIRE_VERSION: wire.WIRE_VERSION, TIER1_BYTES: wire.TIER1_BYTES,
+  MAX_KP: wire.MAX_KP, EXTRACTION_PROFILE: wire.EXTRACTION_PROFILE,
+  extractionProfileId: wire.extractionProfileId,
+  /* comparison */
+  compare: cmp.compare, screen: cmp.screen,
+  COMPARATOR: cmp.COMPARATOR, CONTAINER: cmp.CONTAINER, SCALE: cmp.SCALE,
+  CHANNEL_ORDER: cmp.CHANNEL_ORDER,
+  /* calibration profiles */
+  cal: cmp.cal, lutIdentity: cmp.lutIdentity, lutEval: cmp.lutEval,
+  profileEncode: cmp.profileEncode, profileDecode: cmp.profileDecode,
+  profileValidate: cmp.profileValidate, profileId: cmp.profileId,
+  profileIdHex16: cmp.profileIdHex16, profileName: cmp.profileName,
+  /* namespaced originals */
+  wire: wire, comparator: cmp
+};
